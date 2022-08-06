@@ -44,32 +44,31 @@ CruiseAltitudeMatrix = [CruiseAltitudeMin]; % :CruiseAltitudeInterval:CruiseAlti
 RangeMin = 2000;
 RangeMax = 3500;
 RangeInterval = 100;
-RangeMatrix = [RangeMin]; % :RangeInterval:RangeMax
+RangeMatrix = [RangeMin:RangeInterval:RangeMax]; % 
 
 % LoverD_Cruise
 LoverD_CruiseMin = 13;
 LoverD_CruiseMax = 14;
 LoverD_CruiseInterval = 0.1;
-LoverD_CruiseMatrix = [LoverD_CruiseMin]; % :LoverD_CruiseInterval:LoverD_CruiseMax
+LoverD_CruiseMatrix = [LoverD_CruiseMin:LoverD_CruiseInterval:LoverD_CruiseMax]; % 
 
 % LoverD_Loiter
 LoverD_LoiterMin = 17;
 LoverD_LoiterMax = 18;
 LoverD_LoiterInterval = 0.1;
-LoverD_LoiterMatrix = [LoverD_LoiterMin]; % :LoverD_LoiterInterval:LoverD_LoiterMax
+LoverD_LoiterMatrix = [LoverD_LoiterMin:LoverD_LoiterInterval:LoverD_LoiterMax]; % 
 
 % c_j_cruise
 c_j_cruiseMin = 0.5;
 c_j_cruiseMax = 0.6;
 c_j_cruiseInterval = 0.01;
-c_j_cruiseMatrix = [c_j_cruiseMin]; % :c_j_cruiseInterval:c_j_cruiseMax
+c_j_cruiseMatrix = [c_j_cruiseMin:c_j_cruiseInterval:c_j_cruiseMax]; % 
 
 % c_j_loiter
 c_j_loiterMin = 0.5;
 c_j_loiterMax = 0.6;
 c_j_loiterInterval =0.01;
-c_j_loiterMatrix = [c_j_loiterMin]; % :c_j_loiterInterval:c_j_loiterMax
-
+c_j_loiterMatrix = [c_j_loiterMin:c_j_loiterInterval:c_j_loiterMax]; % 
 %
 Endurance = 0.5;            % Loiter, unit: hr 
 AverageClimbRate = 2500;    % unit: fpm
@@ -110,12 +109,12 @@ ResultMatrix = zeros(Result_row,Result_column);
 
 % Create InputParametersMatrix1
 n=1;
-for CruiseAltitude = CruiseAltitudeMin%:CruiseAltitudeInterval:CruiseAltitudeMax
-    for Range = RangeMin%:RangeInterval:RangeMax
-        for LoverD_Cruise = LoverD_CruiseMin%:LoverD_CruiseInterval:LoverD_CruiseMax
-            for LoverD_Loiter = LoverD_LoiterMin%:LoverD_LoiterInterval:LoverD_LoiterMax
-                for c_j_cruise = c_j_cruiseMin%:c_j_cruiseInterval:c_j_cruiseMax
-                    for c_j_loiter = c_j_loiterMin%:c_j_loiterInterval:c_j_loiterMax
+for CruiseAltitude = CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax
+    for Range = RangeMin:RangeInterval:RangeMax
+        for LoverD_Cruise = LoverD_CruiseMin:LoverD_CruiseInterval:LoverD_CruiseMax
+            for LoverD_Loiter = LoverD_LoiterMin:LoverD_LoiterInterval:LoverD_LoiterMax
+                for c_j_cruise = c_j_cruiseMin:c_j_cruiseInterval:c_j_cruiseMax
+                    for c_j_loiter = c_j_loiterMin:c_j_loiterInterval:c_j_loiterMax
                         InputParametersMatrixTemp(n,1) = CruiseAltitude;
                         InputParametersMatrixTemp(n,2) = Range;
                         InputParametersMatrixTemp(n,3) = LoverD_Cruise;
