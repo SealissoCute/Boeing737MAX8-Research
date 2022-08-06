@@ -4,10 +4,10 @@ format long
 clc
 clear
 
-% output file directory
+%% Output file directory (Notice: Need to be customized at different computer)
 WorkspaceSavedDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity.mat';
-SelectedResultDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_Result.mat';
-RecordTimeDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_RecordTime.txt';
+SelectedResultOutputDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_Result/Boeing737MAX8_WTO_Sensitivity_Result.txt';
+RecordTimeDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_RunTimeRecord/Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
 
 %% Start time record
 %
@@ -38,37 +38,37 @@ W_crew = (175+30)*8;        % 2 Pilots and 6 flight attendents at 175 lbs each a
 CruiseAltitudeMin = 23000;
 CruiseAltitudeMax = 41000;
 CruiseAltitudeInterval = 1000;
-CruiseAltitudeMatrix = [CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax];
+CruiseAltitudeMatrix = [CruiseAltitudeMin]; % :CruiseAltitudeInterval:CruiseAltitudeMax
 
 % Range (unit: nm)
 RangeMin = 2000;
 RangeMax = 3500;
 RangeInterval = 100;
-RangeMatrix = [RangeMin:RangeInterval:RangeMax];
+RangeMatrix = [RangeMin]; % :RangeInterval:RangeMax
 
 % LoverD_Cruise
 LoverD_CruiseMin = 13;
 LoverD_CruiseMax = 14;
 LoverD_CruiseInterval = 0.1;
-LoverD_CruiseMatrix = [LoverD_CruiseMin:LoverD_CruiseInterval:LoverD_CruiseMax];
+LoverD_CruiseMatrix = [LoverD_CruiseMin]; % :LoverD_CruiseInterval:LoverD_CruiseMax
 
 % LoverD_Loiter
 LoverD_LoiterMin = 17;
 LoverD_LoiterMax = 18;
 LoverD_LoiterInterval = 0.1;
-LoverD_LoiterMatrix = [LoverD_LoiterMin:LoverD_LoiterInterval:LoverD_LoiterMax];
+LoverD_LoiterMatrix = [LoverD_LoiterMin]; % :LoverD_LoiterInterval:LoverD_LoiterMax
 
 % c_j_cruise
 c_j_cruiseMin = 0.5;
 c_j_cruiseMax = 0.6;
 c_j_cruiseInterval = 0.01;
-c_j_cruiseMatrix = [c_j_cruiseMin:c_j_cruiseInterval:c_j_cruiseMax];
+c_j_cruiseMatrix = [c_j_cruiseMin]; % :c_j_cruiseInterval:c_j_cruiseMax
 
 % c_j_loiter
 c_j_loiterMin = 0.5;
 c_j_loiterMax = 0.6;
 c_j_loiterInterval =0.01;
-c_j_loiterMatrix = [c_j_loiterMin:c_j_loiterInterval:c_j_loiterMax];
+c_j_loiterMatrix = [c_j_loiterMin]; % :c_j_loiterInterval:c_j_loiterMax
 
 %
 Endurance = 0.5;            % Loiter, unit: hr 
@@ -110,12 +110,12 @@ ResultMatrix = zeros(Result_row,Result_column);
 
 % Create InputParametersMatrix1
 n=1;
-for CruiseAltitude = CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax
-    for Range = RangeMin:RangeInterval:RangeMax
-        for LoverD_Cruise = LoverD_CruiseMin:LoverD_CruiseInterval:LoverD_CruiseMax
-            for LoverD_Loiter = LoverD_LoiterMin:LoverD_LoiterInterval:LoverD_LoiterMax
-                for c_j_cruise = c_j_cruiseMin:c_j_cruiseInterval:c_j_cruiseMax
-                    for c_j_loiter = c_j_loiterMin:c_j_loiterInterval:c_j_loiterMax
+for CruiseAltitude = CruiseAltitudeMin%:CruiseAltitudeInterval:CruiseAltitudeMax
+    for Range = RangeMin%:RangeInterval:RangeMax
+        for LoverD_Cruise = LoverD_CruiseMin%:LoverD_CruiseInterval:LoverD_CruiseMax
+            for LoverD_Loiter = LoverD_LoiterMin%:LoverD_LoiterInterval:LoverD_LoiterMax
+                for c_j_cruise = c_j_cruiseMin%:c_j_cruiseInterval:c_j_cruiseMax
+                    for c_j_loiter = c_j_loiterMin%:c_j_loiterInterval:c_j_loiterMax
                         InputParametersMatrixTemp(n,1) = CruiseAltitude;
                         InputParametersMatrixTemp(n,2) = Range;
                         InputParametersMatrixTemp(n,3) = LoverD_Cruise;
@@ -133,7 +133,7 @@ for CruiseAltitude = CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax
 end
 
 % section saved
-save('Boeing737MAX8_WTO_Sensitivity.mat');
+save(WorkspaceSavedDirectory);
 time = now;
 date = datetime(time,'ConvertFrom','datenum');
 string_RecordTime1=[' RecordTime: ',datestr(date)];
@@ -191,7 +191,7 @@ parfor row1 = 1:height(InputParametersMatrix)
 end
 
 % section saved
-save('Boeing737MAX8_WTO_Sensitivity.mat');
+save(WorkspaceSavedDirectory);
 time = now;
 date = datetime(time,'ConvertFrom','datenum');
 string_RecordTime2=[' RecordTime: ',datestr(date),];
@@ -270,66 +270,7 @@ parfor row2 = 1:height(ResultMatrixApprox)
     end
 end
 
-     % W_TO_guess iteration previous version
-%     for W_TO_guess = W_TO_guess_LowerBound:W_TO_wiki
-%         W_tfo = W_TO_guess*0.005;
-%         W_F_used = (1-M_ff)*W_TO_guess;       % Fuel used
-%         W_F = W_F_used;                       % Since the fuel reserves are already accounted for.
-%         W_OE_tent = W_TO_guess - W_F - W_PL;
-%         W_E_tent = W_OE_tent - W_tfo - W_crew;
-%         W_E_real = 10^((log10(W_TO_guess)-A)/B);
-%         error = abs(W_E_tent - W_E_real)/ W_E_real;
-%         if error < 0.005
-%             % Calculate relative error of W_E_real
-% %             W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew
-% %             W_E_error =  abs(W_E_real - W_E_wiki)/W_E_real;
-% 
-%             % Output data
-%             temp2(1) = CruiseAltitude;
-%             temp2(2) = Range;
-%             temp2(3) = LoverD_Cruise;
-%             temp2(4) = LoverD_Loiter;
-%             temp2(5) = c_j_cruise;
-%             temp2(6) = c_j_loiter;
-%             temp2(7) = M_ff;
-%             temp2(8) = W_TO_guess;
-%             temp2(9) = W_E_tent;
-%             temp2(10) = W_E_real;
-% %             temp2(11) = W_E_error;
-%             % Output calculate result into Result matrix
-%             ResultMatrixApprox(row2, :) = temp2;
-%             break
-%         end
-%     end
-% end 
-
-     % test output
-%     disp('----------------------------------------------------')
-%     disp('Iteration Result')
-%     string_CruiseAltitude=['CruiseAltitude = ',num2str(CruiseAltitude),' ft'];
-%     disp(string_CruiseAltitude)
-%     string_Range=['Range = ',num2str(Range),' nm'];
-%     disp(string_Range)
-%     string_LoverD_Cruise=['L/D Cruise = ',num2str(LoverD_Cruise)];
-%     disp(string_LoverD_Cruise)
-%     string_LoverD_Loiter=['L/D Loiter = ',num2str(LoverD_Loiter)];
-%     disp(string_LoverD_Loiter)
-%     string_c_j_cruise=['c_j Cruise = ',num2str(c_j_cruise)];
-%     disp(string_c_j_cruise)
-%     string_c_j_loiter=['c_j Loiter = ',num2str(c_j_loiter)];
-%     disp(string_c_j_loiter)
-%     string_M_ff=['M_ff = ',num2str(M_ff)];
-%     disp(string_M_ff)
-%     string_W_TO_guess=['W_TO_guess = ',num2str(W_TO_guess),' lbs'];
-%     disp(string_W_TO_guess)
-%     string_W_E_tent=['W_E_tent = ',num2str(W_E_tent),' lbs'];
-%     disp(string_W_E_tent)
-%     string_W_E_real=['W_E_real = ',num2str(W_E_real),' lbs'];
-%     disp(string_W_E_real)
-%     string_Error=['Error = ',num2str(abs(W_E_real - (99360 - W_tfo - W_crew))/W_E_real*100),' %'];
-%     disp(string_Error)
-%
-save('Boeing737MAX8_WTO_Sensitivity.mat');
+save(WorkspaceSavedDirectory);
 time = now;
 date = datetime(time,'ConvertFrom','datenum');
 string_RecordTime3=[' RecordTime: ',datestr(date)];
@@ -382,7 +323,7 @@ parfor row3 = 1:height(ResultMatrix)
 end
 
 % section saved
-save('Boeing737MAX8_WTO_Sensitivity.mat');
+save(WorkspaceSavedDirectory);
 time = now;
 date = datetime(time,'ConvertFrom','datenum');
 string_RecordTime4=[' RecordTime: ',datestr(date)];
@@ -391,49 +332,15 @@ disp('----------------------------------------------------')
 disp(string_Workspace_saved4)
 disp(string_RecordTime4)
 
-%% W_TO_guess Result select section
-%
-% clc
-% for row = 1:1:height(Result)
-%     if  (Result(row,8) < 182200) && (Result(row,11)/100 < 0.00001)
-%         disp('----------------------------------------------------')
-%         disp('Iteration Result')
-%         string_CruiseAltitude=['CruiseAltitude = ',num2str(Result(row,1)),' ft'];
-%         disp(string_CruiseAltitude)
-%         string_Range=['Range = ',num2str(Result(row,2)),' nm'];
-%         disp(string_Range)
-%         string_LoverD_Cruise=['L/D Cruise = ',num2str(Result(row,3))];
-%         disp(string_LoverD_Cruise)
-%         string_LoverD_Loiter=['L/D Loiter = ',num2str(Result(row,4))];
-%         disp(string_LoverD_Loiter)
-%         string_c_j_cruise=['c_j Cruise = ',num2str(Result(row,5))];
-%         disp(string_c_j_cruise)
-%         string_c_j_loiter=['c_j Loiter = ',num2str(Result(row,6))];
-%         disp(string_c_j_loiter)
-%         string_M_ff=['M_ff = ',num2str(Result(row7))];
-%         disp(string_M_ff)
-%         string_W_TO_guess=['W_TO_guess = ',num2str(Result(row,8)),' lbs'];
-%         disp(string_W_TO_guess)
-%         string_W_E_tent=['W_E_tent = ',num2str(Result(row,9)),' lbs'];
-%         disp(string_W_E_tent)
-%         string_W_E_real=['W_E_real = ',num2str(Result(row,10)),' lbs'];
-%         disp(string_W_E_real)
-%         
-%         string_Error=['Error = ',num2str(Result(row,11)*100),' %'];
-%         disp(string_Error)
-%     end
-% end
-% disp('----------------------------------------------------')
-%
 %% Sensitivity section 
 %
 m = 0;
 
 % Open TransportJet_WTO_CheatingVersion_result.txt
-fid = fopen('Boeing737MAX8_WTO_Sensitivity_Result.mat','wt');
+fid = fopen(SelectedResultOutputDirectory,'wt');
 %
     for row = 1:1:height(ResultMatrix)
-        if ResultMatrix(row,11) < 0.000005
+%         if ResultMatrix(row,11) < 0.000005
             % Read data
             CruiseAltitude = InputParametersMatrix(row,1);
             Range = InputParametersMatrix(row,2);
@@ -443,7 +350,7 @@ fid = fopen('Boeing737MAX8_WTO_Sensitivity_Result.mat','wt');
             c_j_loiter = InputParametersMatrix(row,6);
             CruiseSpeed = InputParametersMatrix(row,7);
             M_ff = ResultMatrix(row,7);
-            C = InputParametersMatrix(row2,14);
+            C = InputParametersMatrix(row,14);
             W_TO_guess = ResultMatrix(row,8);
              
             % Sensitivity calculate
@@ -479,9 +386,6 @@ fid = fopen('Boeing737MAX8_WTO_Sensitivity_Result.mat','wt');
             ResultMatrix(row,19) = W_TO_over_c_j_Loiter;
             ResultMatrix(row,20) = W_TO_over_LoverD_Loiter;
 
-           
-
-
             % W_TO_guess Iteration Result
             string_CruiseAltitude=[' 1.CruiseAltitude = ',num2str(ResultMatrix(row,1)),' ft'];
             string_Range=[' 2.Range = ',num2str(ResultMatrix(row,2)),' nm'];
@@ -495,8 +399,6 @@ fid = fopen('Boeing737MAX8_WTO_Sensitivity_Result.mat','wt');
             string_W_E_real=[' 10.W_E_real = ',num2str(ResultMatrix(row,10)),' lbs'];
             string_W_E_error=[' 11.W_E_error = ',num2str(ResultMatrix(row,11)*100),' %% (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005  - W_crew)'];
 
-
-
             % Sensitivity Result
             string_W_TO_over_W_PL=[' 12.W_TO_over_W_PL = ',num2str(ResultMatrix(row,12))];
             string_W_TO_over_W_E=[' 13.W_TO_over_W_E = ',num2str(ResultMatrix(row,13))];
@@ -508,32 +410,6 @@ fid = fopen('Boeing737MAX8_WTO_Sensitivity_Result.mat','wt');
             string_W_TO_over_LoverD_Range=[' 18.W_TO_over_LoverD_Range = ',num2str(ResultMatrix(row,18)),' lbs'];
             string_W_TO_over_c_j_Loiter=[' 19.W_TO_over_c_j_Loiter = ',num2str(ResultMatrix(row,19)),' lbs/lbs/lbs/hr'];
             string_W_TO_over_LoverD_Loiter=[' 20.W_TO_over_LoverD_Loiter = ',num2str(ResultMatrix(row,20)),' lbs'];
-            
-%             disp('----------------------------------------------------')
-            
-%             disp(' W_TO_guess Iteration Result')
-%             disp(string_CruiseAltitude)
-%             disp(string_Range)
-%             disp(string_LoverD_Cruise)
-%             disp(string_LoverD_Loiter)
-%             disp(string_c_j_cruise)
-%             disp(string_c_j_loiter)
-%             disp(string_M_ff)
-%             disp(string_W_TO_guess)
-%             disp(string_W_E_tent)
-%             disp(string_W_E_real)
-%             disp(string_W_E_error)
-
-%             disp(' Sensitivity Result')
-%             disp(string_W_TO_over_W_PL)
-%             disp(string_W_TO_over_W_E)
-%             disp(string_W_TO_over_Range) 
-%             disp(string_W_TO_over_Endurance)            
-%             disp(string_W_TO_over_CriuseSpeed)            
-%             disp(string_W_TO_over_c_j_Range)            
-%             disp(string_W_TO_over_LoverD_Range)           
-%             disp(string_W_TO_over_c_j_Loiter)            
-%             disp(string_W_TO_over_LoverD_Loiter)
 
             % Print result in txt
             fprintf(fid,' ----------------------------------------------------' );
@@ -583,9 +459,34 @@ fid = fopen('Boeing737MAX8_WTO_Sensitivity_Result.mat','wt');
             fprintf(fid,string_W_TO_over_LoverD_Loiter );
             fprintf(fid,'\n');
 
+            % Print result at command line
+%             disp('----------------------------------------------------')           
+%             disp(' W_TO_guess Iteration Result')
+%             disp(string_CruiseAltitude)
+%             disp(string_Range)
+%             disp(string_LoverD_Cruise)
+%             disp(string_LoverD_Loiter)
+%             disp(string_c_j_cruise)
+%             disp(string_c_j_loiter)
+%             disp(string_M_ff)
+%             disp(string_W_TO_guess)
+%             disp(string_W_E_tent)
+%             disp(string_W_E_real)
+%             disp(string_W_E_error)
+%             disp(' Sensitivity Result')
+%             disp(string_W_TO_over_W_PL)
+%             disp(string_W_TO_over_W_E)
+%             disp(string_W_TO_over_Range) 
+%             disp(string_W_TO_over_Endurance)            
+%             disp(string_W_TO_over_CriuseSpeed)            
+%             disp(string_W_TO_over_c_j_Range)            
+%             disp(string_W_TO_over_LoverD_Range)           
+%             disp(string_W_TO_over_c_j_Loiter)            
+%             disp(string_W_TO_over_LoverD_Loiter)
+
             % Numbers of result are printed
             m=m+1;
-        end
+%         end
     end
 
     disp('----------------------------------------------------')
@@ -599,7 +500,7 @@ fid = fopen('Boeing737MAX8_WTO_Sensitivity_Result.mat','wt');
 fclose(fid);
 
 % section saved
-% save(WorkspaceSavedDirectory);
+save(WorkspaceSavedDirectory);
 time = now;
 date = datetime(time,'ConvertFrom','datenum');
 string_RecordTime5 = [' RecordTime: ',datestr(date)];
@@ -610,7 +511,7 @@ disp(string_RecordTime5)
 
 %% Section record time
 %
-fid = fopen('Boeing737MAX8_WTO_Sensitivity_RecordTime.txt','wt');
+fid = fopen(RecordTimeDirectory,'wt');
     fprintf(fid,'----------------------------------------------------');
     fprintf(fid,'\n');
     fprintf(fid,string_StartTime);
@@ -641,7 +542,7 @@ fid = fopen('Boeing737MAX8_WTO_Sensitivity_RecordTime.txt','wt');
     fprintf(fid,'\n');
 
     %
-%     save(WorkspaceSavedDirectory);
+    save(WorkspaceSavedDirectory);
     time = now;
     date = datetime(time,'ConvertFrom','datenum');
     string_EndTime=[' EndTime: ' ,datestr(date)];
@@ -653,6 +554,7 @@ fid = fopen('Boeing737MAX8_WTO_Sensitivity_RecordTime.txt','wt');
     fprintf(fid,string_EndTime);
     
 fclose(fid);
+
 %%
 function [a]=Standard_Atmosphere(h)
 % Standard Atmosphere (SI Units)
