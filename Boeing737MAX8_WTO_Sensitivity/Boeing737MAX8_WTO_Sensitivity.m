@@ -38,7 +38,7 @@ W_crew = (175+30)*8;        % 2 Pilots and 6 flight attendents at 175 lbs each a
 CruiseAltitudeMin = 23000;
 CruiseAltitudeMax = 41000;
 CruiseAltitudeInterval = 1000;
-CruiseAltitudeMatrix = [CruiseAltitudeMin]; % :CruiseAltitudeInterval:CruiseAltitudeMax
+CruiseAltitudeMatrix = [CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax]; % 
 
 % Range (unit: nm)
 RangeMin = 2000;
@@ -110,7 +110,7 @@ ResultMatrix = zeros(Result_row,Result_column);
 
 % Create InputParametersMatrix1
 n=1;
-for CruiseAltitude = CruiseAltitudeMin%:CruiseAltitudeInterval:CruiseAltitudeMax
+for CruiseAltitude = CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax
     for Range = RangeMin%:RangeInterval:RangeMax
         for LoverD_Cruise = LoverD_CruiseMin%:LoverD_CruiseInterval:LoverD_CruiseMax
             for LoverD_Loiter = LoverD_LoiterMin%:LoverD_LoiterInterval:LoverD_LoiterMax
