@@ -6,8 +6,8 @@ clear
 
 %% Output file directory (Notice: Need to be customized at different computer)
 WorkspaceSavedDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity.mat';
-SelectedResultOutputDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_Result/Boeing737MAX8_WTO_Sensitivity_Result.txt';
-RecordTimeDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_RunTimeRecord/Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
+SelectedResultOutputDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_Result.txt';
+RecordTimeDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
 
 %% Start time record
 %
