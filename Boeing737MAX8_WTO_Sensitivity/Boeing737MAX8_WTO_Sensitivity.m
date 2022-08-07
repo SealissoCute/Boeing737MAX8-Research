@@ -4,11 +4,19 @@ format long
 clc
 clear
 
-%% Output file directory (Notice: Need to be customized at different computer)
-WorkspaceSavedDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity.mat';
-SelectedResultOutputDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_Result.txt';
-RecordTimeDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
+%% Setup output file directory (Notice: Need to be customized at different computer)
+OS = input('Which OS are you using? (Windos/MacOS) Ans:','s');
+if OS == 'MacOS'
+    WorkspaceSavedDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity.mat';
+    SelectedResultOutputDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_Result.txt';
+    RecordTimeDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
 
+elseif OS == 'Windows'  
+    WorkspaceSavedDirectory = 'Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity.mat';
+    SelectedResultOutputDirectory = 'Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_Result.txt';
+    RecordTimeDirectory = 'Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
+    
+end
 %% Start time record
 %
 time = now;
@@ -68,7 +76,7 @@ c_j_cruiseMatrix = [c_j_cruiseMin:c_j_cruiseInterval:c_j_cruiseMax]; %
 c_j_loiterMin = 0.5;
 c_j_loiterMax = 0.6;
 c_j_loiterInterval =0.01;
-c_j_loiterMatrix = [c_j_loiterMin:c_j_loiterInterval:c_j_loiterMax]; %4
+c_j_loiterMatrix = [c_j_loiterMin:c_j_loiterInterval:c_j_loiterMax]; %
 
 %
 Endurance = 0.5;            % Loiter, unit: hr
@@ -108,7 +116,7 @@ InputParametersMatrixTemp = zeros(Result_row,InputParametersMatrix_column);
 ResultMatrixApprox = zeros(Result_row,Result_column);
 ResultMatrix = zeros(Result_row,Result_column);
 
-% Create InputParametersMatrix1
+% Create InputParametersMatrix
 n=1;
 for CruiseAltitude = CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax
     for Range = RangeMin:RangeInterval:RangeMax
@@ -147,7 +155,7 @@ parfor row1 = 1:height(InputParametersMatrix)
     % Temporary matrix for parallel computing
     temp1 = zeros(1,InputParametersMatrix_column);
 
-    % Read data form InputParametersMatrix
+    % Read data form InputParametersMatrixtemp
     CruiseAltitude = InputParametersMatrixTemp(row1,1);
     Range = InputParametersMatrixTemp(row1,2);
     LoverD_Cruise = InputParametersMatrixTemp(row1,3);
