@@ -279,6 +279,18 @@ disp('----------------------------------------------------')
 disp(string_Workspace_saved3)
 disp(string_RecordTime3)
 
+%% Check the amount of numerical approximation solutions
+k = 0
+for row = 1:1:height(ResultMatrix)
+    if ResultMatrixApprox(row3,8) < W_TO_wiki
+        k = k+1;
+    end
+end
+
+disp('----------------------------------------------------')
+string_solutions=[' There are ',num2str(k),' numerical approximation of W_TO_guess less than W_TO_wiki .'];
+disp(string_solutions)
+
 %% Numerical solution of W_TO_guess
 x1 = sym('x1', [1,height(ResultMatrix)]);
 parfor row3 = 1:height(ResultMatrix)
