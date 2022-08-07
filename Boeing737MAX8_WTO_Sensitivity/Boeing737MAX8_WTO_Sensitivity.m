@@ -5,7 +5,7 @@ clc
 clear
 
 %% Setup output file directory (Notice: Need to be customized at different computer)
-OS = input('Which OS are you using? (Windos/MacOS) Ans:','s');
+OS = input('Which OS are you using? (Windows/MacOS) Ans:','s');
 if OS == 'MacOS'
     WorkspaceSavedDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity.mat';
     SelectedResultOutputDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_Result.txt';
@@ -15,7 +15,7 @@ elseif OS == 'Windows'
     WorkspaceSavedDirectory = 'Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity.mat';
     SelectedResultOutputDirectory = 'Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_Result.txt';
     RecordTimeDirectory = 'Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
-    
+
 end
 %% Start time record
 %
