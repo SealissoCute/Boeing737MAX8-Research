@@ -14,11 +14,12 @@ if strcmp(OS,'MacOS')
     RecordTimeDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
 
 elseif strcmp(OS,'Windows') 
-    WorkspaceSavedDirectory = 'C:\Users\WEI\Desktop\Boeing737MAX8 Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity.mat';
-    SelectedResultOutputDirectory = 'C:\Users\WEI\Desktop\Boeing737MAX8 Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_Result.txt';
-    RecordTimeDirectory = 'C:\Users\WEI\Desktop\Boeing737MAX8 Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
+    WorkspaceSavedDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity.mat';
+    SelectedResultOutputDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_Result.txt';
+    RecordTimeDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
+    
 else
-    error
+    error;
 end
 %% Start time record
 %
@@ -71,12 +72,12 @@ LoverD_LoiterMatrix = [LoverD_LoiterMin:LoverD_LoiterInterval:LoverD_LoiterMax];
 
 % c_j_cruise
 c_j_cruiseMin = 0.5;
-c_j_cruiseMax = 0.6;
+c_j_cruiseMax = 0.55;
 c_j_cruiseInterval = 0.01;
 c_j_cruiseMatrix = [c_j_cruiseMin:c_j_cruiseInterval:c_j_cruiseMax]; %
 
 % c_j_loiter
-c_j_loiterMin = 0.5;
+c_j_loiterMin = 0.55;
 c_j_loiterMax = 0.6;
 c_j_loiterInterval =0.01;
 c_j_loiterMatrix = [c_j_loiterMin:c_j_loiterInterval:c_j_loiterMax]; %
