@@ -29,6 +29,10 @@ hold off
 
 %% FAR25 CLIMB RATE SIZING
 
+%% DIRECT CLIMB SIZING
+
+%% CRUISE SPEED SIZING
+
 %%
 function [a,rho]=Standard_Atmosphere(h)
 % Standard Atmosphere (SI Units)
