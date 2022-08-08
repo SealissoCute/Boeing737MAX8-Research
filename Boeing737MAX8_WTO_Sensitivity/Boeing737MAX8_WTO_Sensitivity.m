@@ -217,12 +217,21 @@ disp(string_RecordTime2)
 %% Plot W_E_real/W_E_tent_min/W_E_tent_max
 %
 D = W_crew + W_PL;
+<<<<<<< Updated upstream
 W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew
 W_E_wiki2W_TO_guess = 10^(A+B*log10(W_E_wiki))
 %
 C_min = min(InputParametersMatrix(:,14));
 C_max = max(InputParametersMatrix(:,14));
 W_E_real_wiki = 10^((log10(W_TO_wiki)-A)/B)
+=======
+
+%
+C_min = min(InputParametersMatrix(:,14));
+C_max = max(InputParametersMatrix(:,14));
+W_E_real_wiki = 10^((log10(W_TO_wiki)-A)/B);
+
+>>>>>>> Stashed changes
 %
 x_W_TO_guess = 0:100:500000;
 y_W_E_real = 10.^((log10(x_W_TO_guess)-A)/B);
@@ -246,6 +255,7 @@ x4 = [0 182200];
 y4 = [96889 96889];
 
 hold on
+plot()
 plot(x_W_TO_guess,y_W_E_real)
 plot(x_W_TO_guess,y_W_E_tent_min)
 plot(x_W_TO_guess,y_W_E_tent_max)
