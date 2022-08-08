@@ -33,11 +33,6 @@ end
 hold off
 
 %% FAR25 CLIMB RATE SIZING
-% For Take-off Climb
-% FAR25.111 (OEI) CGR>0.012
-W_TO = 182200;
-c = 0.0199; d = 0.7531; % From Table 3.5
-S_wet = 10^(c+d*log10(W_TO))
 
 %% DIRECT CLIMB SIZING
 
