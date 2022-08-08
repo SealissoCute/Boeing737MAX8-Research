@@ -14,9 +14,9 @@ if strcmp(OS,'MacOS')
     RecordTimeDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
 
 elseif strcmp(OS,'Windows') 
-    WorkspaceSavedDirectory = 'C:\Users\WEI\Desktop\Boeing737MAX8 Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity.mat';
-    SelectedResultOutputDirectory = 'C:\Users\WEI\Desktop\Boeing737MAX8 Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_Result.txt';
-    RecordTimeDirectory = 'C:\Users\WEI\Desktop\Boeing737MAX8 Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
+    WorkspaceSavedDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity.mat';
+    SelectedResultOutputDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_Result.txt';
+    RecordTimeDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
     
 else
     error;
@@ -113,8 +113,7 @@ W9_W8_ratio = 0.992;                                                   % Landing
 
 %% InputParametersMatrix setup section
 % ResultMatrix sizing
-Result_row = width(CruiseAltitudeMatrix)*widt
-h(RangeMatrix)*width(LoverD_CruiseMatrix)...
+Result_row = width(CruiseAltitudeMatrix)*width(RangeMatrix)*width(LoverD_CruiseMatrix)...
     *width(LoverD_LoiterMatrix)*width(c_j_cruiseMatrix)*width(c_j_loiterMatrix);
 Result_column = 20;
 InputParametersMatrix_column = 14;
@@ -218,31 +217,51 @@ disp(string_RecordTime2)
 %% Plot W_E_real/W_E_tent_min/W_E_tent_max
 %
 D = W_crew + W_PL;
+W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew
+W_E_wiki2W_TO_guess = 10^(A+B*log10(W_E_wiki))
 %
 C_min = min(InputParametersMatrix(:,14));
 C_max = max(InputParametersMatrix(:,14));
-W_E_real_wiki = 10^((log10(W_TO_wiki)-A)/B);
+W_E_real_wiki = 10^((log10(W_TO_wiki)-A)/B)
 %
 x_W_TO_guess = 0:100:500000;
 y_W_E_real = 10.^((log10(x_W_TO_guess)-A)/B);
 y_W_E_tent_min = C_min.*x_W_TO_guess - D;
 y_W_E_tent_max = C_max.*x_W_TO_guess - D;
+
+% Find the lower and upper bound of W_To_guess
+syms x
+W_TO_guess_min = vpasolve( A + B*log10(C_max*x - D) - log10(x) == 0 )
+W_TO_guess_max = vpasolve( A + B*log10(C_min*x - D) - log10(x) == 0 )
+W_TO_guess_LowerBound = floor(W_TO_guess_min)
+W_to_guess_UpperBound = ceil(W_TO_guess_max);
+%
+x1 = [182044 182044];
+y1 = [-0.5*10^5 96809];
+x2 = [182200 182200];
+y2 = [-0.5*10^5 96889];
+x3 = [0 182044];
+y3 = [96809 96809];
+x4 = [0 182200];
+y4 = [96889 96889];
+
 hold on
 plot(x_W_TO_guess,y_W_E_real)
 plot(x_W_TO_guess,y_W_E_tent_min)
 plot(x_W_TO_guess,y_W_E_tent_max)
+plot(x1,y1,'--b')
+plot(x2,y2,'--m')
+plot(x3,y3,'--b')
+plot(x4,y4,'--m')
+line1 = xline(double(W_TO_guess_min),'--');
+line2 = xline(double(W_TO_guess_max),'--');
+line1.LabelVerticalAlignment = 'bottom';
+line2.LabelVerticalAlignment = 'bottom';
 xlabel('W_T_Oguess')
 ylabel('W_E')
 legend('W_Ereal','W_Etent_m_i_n','W_Etent_m_a_x');
 hold off
 
-%%
-% Find the lower and upper bound of W_To_guess
-syms x
-W_TO_guess_min = vpasolve( A + B*log10(C_max*x - D) - log10(x) == 0 );
-W_TO_guess_max = vpasolve( A + B*log10(C_min*x - D) - log10(x) == 0 );
-W_TO_guess_LowerBound = floor(W_TO_guess_min);
-W_to_guess_UpperBound = ceil(W_TO_guess_max);
 
 
 %% Numerical approximation of W_TO_guess
@@ -261,7 +280,7 @@ parfor row2 = 1:height(ResultMatrix)
     M_ff = InputParametersMatrix(row2,13);
     C = InputParametersMatrix(row2,14);
   
-    for W_TO_guess = 166401:182200 % W_TO_guess_LowerBound:W_TO_wiki
+    for W_TO_guess = 165991:182200 % W_TO_guess_LowerBound:W_TO_wiki
         W_E_real = 10^((log10(W_TO_guess)-A)/B);
         W_E_tent = C*W_TO_guess - D;
         error = abs(W_E_tent - W_E_real)/ W_E_real;
@@ -297,7 +316,7 @@ disp(string_RecordTime3)
 
 %% Check the amount of numerical approximation solutions
 k = 0;
-for row = 1:1:height(ResultMatrix)
+for row = 1:height(ResultMatrix)
     if ResultMatrixApprox(row,8) > 0 && ResultMatrixApprox(row,8) < W_TO_wiki
         if ResultMatrixApprox(row,11) < 0.005 | ResultMatrixApprox(row,10) < W_E_wiki
             k = k+1;
@@ -773,24 +792,4 @@ end
 %            13.0-15.0,   0.5-0.9,                                 14.0-18.0,   0.4-0.6,                     Transport Jets
 
 % Table 2.15 Regression Line Constants A and B of Equation
-% 1.A,       2.B       
-%   0.3411     0.9519   Homebuilts-Pers. fun and transportation
-%   0.5542     0.8654   Homebuilts-Scaled Fighters
-%   0.8222     0.8050   Homebuilts-Composites
-%  -0.1140     1.1162   Single Engine Propeller Driven
-%   0.0966     1.0298   Twin Engine-Propeller Driven
-%   0.1130     1.0403   Twin Engine-Composites
-%  -0.4398     1.1946   Agricultural
-%   0.2678     0.9979   Business Jets
-%   0.3774     0.9647   Regional TBP
-%   0.0833     1.0383   Transport Jets
 
-% Table 3.1 Typical Values For Maximun Lift Coefficient
-% 1.CL_max   2.CL_max_TO   3.CL_max_L
-%   1.2-1.8    1.2-1.8       1.2-2.0
-%   1.3-1.9    1.3-1.9       1.6-2.3
-%   1.2-1.8    1.4-2.0       1.6-2.5
-%   1.3-1.9    1.3-1.9       1.3-1.9
-%   1.4-1.8    1.6-2.2       1.6-2.6
-%   1.5-1.9    1.7-2.1       1.9-3.3
-%   1.2-1.8    1.6-2.2       1.8-2.8
