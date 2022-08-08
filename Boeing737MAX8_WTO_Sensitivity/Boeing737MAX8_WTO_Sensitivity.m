@@ -14,9 +14,9 @@ if strcmp(OS,'MacOS')
     RecordTimeDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
 
 elseif strcmp(OS,'Windows') 
-    WorkspaceSavedDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity.mat';
-    SelectedResultOutputDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_Result.txt';
-    RecordTimeDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
+    WorkspaceSavedDirectory = 'C:\Users\WEI\Desktop\Boeing737MAX8 Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity.mat';
+    SelectedResultOutputDirectory = 'C:\Users\WEI\Desktop\Boeing737MAX8 Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_Result.txt';
+    RecordTimeDirectory = 'C:\Users\WEI\Desktop\Boeing737MAX8 Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
     
 else
     error;
@@ -763,3 +763,24 @@ end
 %            13.0-15.0,   0.5-0.9,                                 14.0-18.0,   0.4-0.6,                     Transport Jets
 
 % Table 2.15 Regression Line Constants A and B of Equation
+% 1.A,       2.B       
+%   0.3411     0.9519   Homebuilts-Pers. fun and transportation
+%   0.5542     0.8654   Homebuilts-Scaled Fighters
+%   0.8222     0.8050   Homebuilts-Composites
+%  -0.1140     1.1162   Single Engine Propeller Driven
+%   0.0966     1.0298   Twin Engine-Propeller Driven
+%   0.1130     1.0403   Twin Engine-Composites
+%  -0.4398     1.1946   Agricultural
+%   0.2678     0.9979   Business Jets
+%   0.3774     0.9647   Regional TBP
+%   0.0833     1.0383   Transport Jets
+
+% Table 3.1 Typical Values For Maximun Lift Coefficient
+% 1.CL_max   2.CL_max_TO   3.CL_max_L
+%   1.2-1.8    1.2-1.8       1.2-2.0
+%   1.3-1.9    1.3-1.9       1.6-2.3
+%   1.2-1.8    1.4-2.0       1.6-2.5
+%   1.3-1.9    1.3-1.9       1.3-1.9
+%   1.4-1.8    1.6-2.2       1.6-2.6
+%   1.5-1.9    1.7-2.1       1.9-3.3
+%   1.2-1.8    1.6-2.2       1.8-2.8
