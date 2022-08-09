@@ -343,7 +343,6 @@ toc
 x1 = sym('x1', [1,height(ResultMatrixApproxSolutions)]);
 
 parfor row3 = 1:height(ResultMatrixApproxSolutions)
-    tic
     % Temporary matrix for parallel computing
     temp3 = zeros(1,Result_column);
    
@@ -381,7 +380,6 @@ parfor row3 = 1:height(ResultMatrixApproxSolutions)
     
             % Output calculate result into Result matrix
             ResultMatrix(row3, :) = temp3;
-    toc
 end
 
 % section saved
