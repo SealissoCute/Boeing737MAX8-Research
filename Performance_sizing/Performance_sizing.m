@@ -52,6 +52,7 @@ WoverS = 100; % from textbook
 S = W_TO/WoverS;
 CD_0_clean = f_2/S; % Take cf = 0.003
 syms CL
+<<<<<<< HEAD
 CD_clean = vpa(CD_0_clean + CL^2/(pi*AR*e));
 CD_TO_GearUp = vpa(CD_0_clean+delta_CD0_TOflaps+CL^2/(pi*AR*e_TOflaps));
 CD_TO_GearDown = vpa(CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps));
@@ -103,6 +104,9 @@ yline(ToverW_TO6)
 hold off
 %% DIRECT CLIMB SIZING
 
+=======
+CD = vpa(CD0_2 + CL^2/(pi*AR*e));
+>>>>>>> CRUISE-SPEED-SIZING
 %% CRUISE SPEED SIZING
 
 %%
