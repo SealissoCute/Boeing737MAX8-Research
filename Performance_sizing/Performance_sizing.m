@@ -102,11 +102,7 @@ yline(ToverW_TO4)
 yline(ToverW_TO5)
 yline(ToverW_TO6)
 hold off
-%% DIRECT CLIMB SIZING
 
-=======
-CD = vpa(CD0_2 + CL^2/(pi*AR*e));
->>>>>>> CRUISE-SPEED-SIZING
 %% CRUISE SPEED SIZING
 
 %%
