@@ -104,7 +104,16 @@ yline(ToverW_TO6)
 hold off
 
 %% CRUISE SPEED SIZING
-
+    [a,rho]=Standard_Atmosphere(CruiseAltitude);
+    CruiseSpeed_Mach = 0.79;
+    CruiseSpeed = CruiseSpeed_Mach*a;
+    WoverS = 0:10:200;
+    C_D0 = 0.00184; %p.145&182 low speed,clean drag polar
+    delta_C_D0 = 0.0001*2.5; % p.166 figure 3.32
+    C_D0_modification = C_D0 + delta_C_D0;
+    q_overline = 0.5*rho*CruiseSpeed^2;
+    ToverW_reqd = C_D0_modification*q_overline./WoverS+WoverS./(pi*AR*e);
+    plot(WoverS,ToverW_reqd)
 %%
 function [a,rho]=Standard_Atmosphere(h)
 % Standard Atmosphere (SI Units)
