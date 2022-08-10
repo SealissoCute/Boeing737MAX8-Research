@@ -47,8 +47,6 @@ CD0_2 = f_2/S_wet;
 CD0_3 = f_3/S_wet;
 syms CL
 CD = vpa(CD0_2 + CL^2/(pi*AR*e));
-%% DIRECT CLIMB SIZING
-
 %% CRUISE SPEED SIZING
    [a,rho]=Standard_Atmosphere(CruiseAltitude);
    CruiseSpeed_Mach = 0.79;
