@@ -14,9 +14,9 @@ S_wet = 10^(c+d*log10(W_TO));
 cf_1 = 0.002; a_1 = -2.6990; b_1 = 1;
 cf_2 = 0.003; a_2 = -2.5229; b_2 = 1;
 cf_3 = 0.004; a_3 = -2.3979; b_3 = 1;
-f_1 = 10^(a_1+b_1*log10(S_wet))
-f_2 = 10^(a_2+b_2*log10(S_wet))
-f_3 = 10^(a_3+b_3*log10(S_wet))
+f_1 = 10^(a_1+b_1*log10(S_wet));
+f_2 = 10^(a_2+b_2*log10(S_wet));
+f_3 = 10^(a_3+b_3*log10(S_wet));
 AR = 10;
 e =0.85;
 %% FAR25 TAKEOFF DISTANCE SIZING
