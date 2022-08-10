@@ -1,4 +1,4 @@
-%% Reverse Engineering of Boeing 737 MAX 8
+ %% Reverse Engineering of Boeing 737 MAX 8
 % Clear previous data
 
 format long
@@ -100,6 +100,7 @@ W_OE_wiki = 99360;
 W_TO_wiki = 182200;
 W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew;
 W_E_wiki2W_TO_guess = 10^(A+B*log10(W_E_wiki));
+error_wiki = abs(W_E_real_wiki-W_E_wiki)/W_E_real_wiki;
 
 %% Fuel Fraction parameters
 %
@@ -174,7 +175,8 @@ parfor row1 = 1:height(InputParametersMatrix)
     CruiseSpeed = CruiseSpeed_Mach*a*ft_s_to_kt;                                 % unit: kts
     AverageClimbSpeed = CruiseSpeed*0.6;                                         % unit: kts
     ClimbTime = CruiseAltitude/AverageClimbRate;                                 % Climb time, unit: minute
-    ClimbRange = AverageClimbSpeed*(ClimbTime/60);                               % Climb range, unit: nm
+    Climb
+    Range = AverageClimbSpeed*(ClimbTime/60);                               % Climb range, unit: nm
     CruiseRange = Range - ClimbRange;                                            % Cruise range, unit: nm
     W5_W4_ratio = 1/(exp(CruiseRange/(CruiseSpeed/c_j_cruise*LoverD_Cruise)));   % Cruise, from Breguet's range equation
     W6_W5_ratio = 1/(exp(0.5/(1/c_j_loiter*LoverD_Loiter)));                     % Loiter, from Breguet's endurance equation
@@ -217,21 +219,18 @@ disp(string_RecordTime2)
 %% Plot W_E_real/W_E_tent_min/W_E_tent_max
 %
 D = W_crew + W_PL;
-<<<<<<< Updated upstream
-W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew
-W_E_wiki2W_TO_guess = 10^(A+B*log10(W_E_wiki))
+W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew;
+W_E_wiki2W_TO_guess = 10^(A+B*log10(W_E_wiki));
 %
 C_min = min(InputParametersMatrix(:,14));
 C_max = max(InputParametersMatrix(:,14));
-W_E_real_wiki = 10^((log10(W_TO_wiki)-A)/B)
-=======
+W_E_real_wiki = 10^((log10(W_TO_wiki)-A)/B);
 
 %
 C_min = min(InputParametersMatrix(:,14));
 C_max = max(InputParametersMatrix(:,14));
 W_E_real_wiki = 10^((log10(W_TO_wiki)-A)/B);
 
->>>>>>> Stashed changes
 %
 x_W_TO_guess = 0:100:500000;
 y_W_E_real = 10.^((log10(x_W_TO_guess)-A)/B);
@@ -240,9 +239,9 @@ y_W_E_tent_max = C_max.*x_W_TO_guess - D;
 
 % Find the lower and upper bound of W_To_guess
 syms x
-W_TO_guess_min = vpasolve( A + B*log10(C_max*x - D) - log10(x) == 0 )
-W_TO_guess_max = vpasolve( A + B*log10(C_min*x - D) - log10(x) == 0 )
-W_TO_guess_LowerBound = floor(W_TO_guess_min)
+W_TO_guess_min = vpasolve( A + B*log10(C_max*x - D) - log10(x) == 0 );
+W_TO_guess_max = vpasolve( A + B*log10(C_min*x - D) - log10(x) == 0 );
+W_TO_guess_LowerBound = floor(W_TO_guess_min);;
 W_to_guess_UpperBound = ceil(W_TO_guess_max);
 %
 x1 = [182044 182044];
@@ -255,7 +254,6 @@ x4 = [0 182200];
 y4 = [96889 96889];
 
 hold on
-plot()
 plot(x_W_TO_guess,y_W_E_real)
 plot(x_W_TO_guess,y_W_E_tent_min)
 plot(x_W_TO_guess,y_W_E_tent_max)
@@ -267,12 +265,10 @@ line1 = xline(double(W_TO_guess_min),'--');
 line2 = xline(double(W_TO_guess_max),'--');
 line1.LabelVerticalAlignment = 'bottom';
 line2.LabelVerticalAlignment = 'bottom';
-xlabel('W_T_Oguess')
-ylabel('W_E')
-legend('W_Ereal','W_Etent_Cm_i_n','W_Etent_Cm_a_x');
+xlabel('W_T_Oguess');
+ylabel('W_E');
+legend('W_Ereal','W_Etent_m_i_n','W_Etent_m_a_x');
 hold off
-
-
 
 %% Numerical approximation of W_TO_guess
 %
@@ -296,6 +292,7 @@ parfor row2 = 1:height(ResultMatrix)
         error = abs(W_E_tent - W_E_real)/ W_E_real;
         if error < 0.005
             W_E_error =  abs(W_E_real - W_E_wiki)/W_E_real;
+
             % Output data
             temp2(1) = CruiseAltitude;
             temp2(2) = Range;
@@ -304,10 +301,12 @@ parfor row2 = 1:height(ResultMatrix)
             temp2(5) = c_j_cruise;
             temp2(6) = c_j_loiter;
             temp2(7) = M_ff;
-            temp2(8) = W_TO_guess;
-            temp2(9) = W_E_tent;
-            temp2(10) = W_E_real;
-            temp2(11) = W_E_error;
+            temp2(8) = C;
+            temp2(9) = W_TO_guess;
+            temp2(10) = W_E_tent;
+            temp2(11) = W_E_real;
+            temp2(12) = W_E_error;
+
             % Output calculate result into Result matrix
             ResultMatrixApprox(row2, :) = temp2;
             break
@@ -326,39 +325,41 @@ disp(string_RecordTime3)
 
 %% Check the amount of numerical approximation solutions
 k = 0;
+ResultMatrixApproxSolutions = zeros(20);
+tic
 for row = 1:height(ResultMatrix)
     if ResultMatrixApprox(row,8) > 0 && ResultMatrixApprox(row,8) < W_TO_wiki
-        if ResultMatrixApprox(row,11) < 0.005 | ResultMatrixApprox(row,10) < W_E_wiki
+        if ResultMatrixApprox(row,12) < 0.005 | ResultMatrixApprox(row,11) < W_E_wiki
             k = k+1;
+            ResultMatrixApproxSolutions(k,:) = ResultMatrixApprox(row,:);
         end
     end
 end
-
 disp('----------------------------------------------------')
 string_solutions=[' There are ',num2str(k),' numerical approximation of W_TO_guess less than W_TO_wiki.'];
 disp(string_solutions)
+toc
 
 %% Numerical solution of W_TO_guess
-x1 = sym('x1', [1,height(ResultMatrix)]);
+x1 = sym('x1', [1,height(ResultMatrixApproxSolutions)]);
 
-parfor row3 = 1:height(ResultMatrix)
+parfor row3 = 1:height(ResultMatrixApproxSolutions)
     % Temporary matrix for parallel computing
     temp3 = zeros(1,Result_column);
-
-    if ResultMatrixApprox(row3,8) > 0 && ResultMatrixApprox(row3,8) < W_TO_wiki
-        if ResultMatrixApprox(row3,11) < 0.005 | ResultMatrixApprox(row3,10) < W_E_wiki
+   
             % Read data
-            CruiseAltitude = InputParametersMatrix(row3,1);
-            Range = InputParametersMatrix(row3,2);
-            LoverD_Cruise = InputParametersMatrix(row3,3);
-            LoverD_Loiter = InputParametersMatrix(row3,4);
-            c_j_cruise  = InputParametersMatrix(row3,5);
-            c_j_loiter = InputParametersMatrix(row3,6);
-            M_ff = InputParametersMatrix(row3,13);
-            C = InputParametersMatrix(row3,14);
+            CruiseAltitude = ResultMatrixApproxSolutions(row3,1);
+            Range = ResultMatrixApproxSolutions(row3,2);
+            LoverD_Cruise = ResultMatrixApproxSolutions(row3,3);
+            LoverD_Loiter = ResultMatrixApproxSolutions(row3,4);
+            c_j_cruise  = ResultMatrixApproxSolutions(row3,5);
+            c_j_loiter = ResultMatrixApproxSolutions(row3,6);
+            M_ff = ResultMatrixApproxSolutions(row3,7);
+            C = ResultMatrixApproxSolutions(row3,8);
     
-            % Using Matlab vpasolve function
+
             W_TO_guess = vpasolve( A + B*log10(C*x1(row3) - D) - log10(x1(row3)) == 0 );
+            
     
             % Computing
             W_E_real = 10^((log10(W_TO_guess)-A)/B);
@@ -380,9 +381,6 @@ parfor row3 = 1:height(ResultMatrix)
     
             % Output calculate result into Result matrix
             ResultMatrix(row3, :) = temp3;
-
-        end
-    end
 end
 
 % section saved
@@ -403,7 +401,7 @@ m = 0;
 fid = fopen(SelectedResultOutputDirectory,'wt');
 %
 for row = 1:1:height(ResultMatrix)
-    if ResultMatrix(row,11) < 0.000005 % need to be correct e.g. error_wiki = abs(W_E_real_wiki-W_E_wiki)/W_E_real_wiki
+    if ResultMatrix(row,1) >0 && ResultMatrix(row,11) < error_wiki/250 % need to be correct e.g. error_wiki = abs(W_E_real_wiki-W_E_wiki)/W_E_real_wiki
         % Read data
         CruiseAltitude = InputParametersMatrix(row,1);
         Range = InputParametersMatrix(row,2);
@@ -460,7 +458,7 @@ for row = 1:1:height(ResultMatrix)
         string_W_TO_guess=[' 8.W_TO_guess = ',num2str(ResultMatrix(row,8)),' lbs'];
         string_W_E_tent=[' 9.W_E_tent = ',num2str(ResultMatrix(row,9)),' lbs'];
         string_W_E_real=[' 10.W_E_real = ',num2str(ResultMatrix(row,10)),' lbs'];
-        string_W_E_error=[' 11.W_E_error = ',num2str(ResultMatrix(row,11)*100),' %% (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)'];
+        string_W_E_error=[' 11.W_E_error = ',num2str(ResultMatrix(row,11)*100),' %% (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)/250'];
 
         % Sensitivity Result
         string_W_TO_over_W_PL=[' 12.W_TO_over_W_PL = ',num2str(ResultMatrix(row,12))];
