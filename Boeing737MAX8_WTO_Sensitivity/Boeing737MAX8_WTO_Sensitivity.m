@@ -269,7 +269,7 @@ line1.LabelVerticalAlignment = 'bottom';
 line2.LabelVerticalAlignment = 'bottom';
 xlabel('W_T_Oguess')
 ylabel('W_E')
-legend('W_Ereal','W_Etent_m_i_n','W_Etent_m_a_x');
+legend('W_Ereal','W_Etent_Cm_i_n','W_Etent_Cm_a_x');
 hold off
 
 
