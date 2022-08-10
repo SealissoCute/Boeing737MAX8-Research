@@ -14,9 +14,9 @@ S_wet = 10^(c+d*log10(W_TO));
 cf_1 = 0.002; a_1 = -2.6990; b_1 = 1;
 cf_2 = 0.003; a_2 = -2.5229; b_2 = 1;
 cf_3 = 0.004; a_3 = -2.3979; b_3 = 1;
-f_1 = 10^(a_1+b_1*log10(S_wet))
-f_2 = 10^(a_2+b_2*log10(S_wet))
-f_3 = 10^(a_3+b_3*log10(S_wet))
+f_1 = 10^(a_1+b_1*log10(S_wet));
+f_2 = 10^(a_2+b_2*log10(S_wet));
+f_3 = 10^(a_3+b_3*log10(S_wet));
 AR = 10;
 e =0.85;
 %% FAR25 TAKEOFF DISTANCE SIZING
@@ -43,14 +43,24 @@ hold off
 %% FAR25 CLIMB RATE SIZING
 % For Take-off Climb
 CD0_1 = f_1/S_wet;
-CD0_2 = f_2/S_wet
+CD0_2 = f_2/S_wet;
 CD0_3 = f_3/S_wet;
 syms CL
 CD = vpa(CD0_2 + CL^2/(pi*AR*e));
 %% DIRECT CLIMB SIZING
 
 %% CRUISE SPEED SIZING
-
+   [a,rho]=Standard_Atmosphere(CruiseAltitude);
+   CruiseSpeed_Mach = 0.79;
+   CruiseSpeed = CruiseSpeed_Mach*a;
+   WoverS = 0:10:200;
+   C_D0 = 0.0184; %p.145&182 low speed,clean drag polar
+   delta_C_D0 = 0.0001*2.5; % p.166 figure 3.32
+   C_D0_modification = C_D0 + delta_C_D0;
+   q_overline = 0.5*rho*CruiseSpeed^2;
+   ToverW_cruise_reqd = C_D0_modification*q_overline./WoverS + WoverS./(q_overline*pi*AR*e);
+   ToverW_TO = ToverW_cruise_reqd./0.23;
+   plot(WoverS,ToverW_TO)
 %%
 function [a,rho]=Standard_Atmosphere(h)
 % Standard Atmosphere (SI Units)
