@@ -6,6 +6,19 @@ Range = 2300;
 [a,rho]=Standard_Atmosphere(FieldAltitude);
 ft_s_to_kt = 0.592484;
 WoverS = 0:10:200;
+W_TO = 182200;
+c = 0.0199;
+d = 0.7531;
+S_wet = 10^(c+d*log10(W_TO));
+% From Table 3.4 Correlation Coefficients For Parasite Area Versus Wetted Area
+cf_1 = 0.002; a_1 = -2.6990; b_1 = 1;
+cf_2 = 0.003; a_2 = -2.5229; b_2 = 1;
+cf_3 = 0.004; a_3 = -2.3979; b_3 = 1;
+f_1 = 10^(a_1+b_1*log10(S_wet))
+f_2 = 10^(a_2+b_2*log10(S_wet))
+f_3 = 10^(a_3+b_3*log10(S_wet))
+AR = 10;
+e =0.85;
 %% FAR25 TAKEOFF DISTANCE SIZING
 figure()
 hold on
@@ -28,7 +41,12 @@ end
 hold off
 
 %% FAR25 CLIMB RATE SIZING
-
+% For Take-off Climb
+CD0_1 = f_1/S_wet;
+CD0_2 = f_2/S_wet
+CD0_3 = f_3/S_wet;
+syms CL
+CD = vpa(CD0_2 + CL^2/(pi*AR*e));
 %% DIRECT CLIMB SIZING
 
 %% CRUISE SPEED SIZING
