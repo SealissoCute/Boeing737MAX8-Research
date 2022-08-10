@@ -100,6 +100,7 @@ W_OE_wiki = 99360;
 W_TO_wiki = 182200;
 W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew;
 W_E_wiki2W_TO_guess = 10^(A+B*log10(W_E_wiki));
+error_wiki = abs(W_E_real_wiki-W_E_wiki)/W_E_real_wiki;
 
 %% Fuel Fraction parameters
 %
@@ -400,7 +401,7 @@ m = 0;
 fid = fopen(SelectedResultOutputDirectory,'wt');
 %
 for row = 1:1:height(ResultMatrix)
-    if ResultMatrix(row,11) < error_wiki % need to be correct e.g. error_wiki = abs(W_E_real_wiki-W_E_wiki)/W_E_real_wiki
+    if ResultMatrix(row,1) >0 && ResultMatrix(row,11) < error_wiki/250 % need to be correct e.g. error_wiki = abs(W_E_real_wiki-W_E_wiki)/W_E_real_wiki
         % Read data
         CruiseAltitude = InputParametersMatrix(row,1);
         Range = InputParametersMatrix(row,2);
@@ -457,7 +458,7 @@ for row = 1:1:height(ResultMatrix)
         string_W_TO_guess=[' 8.W_TO_guess = ',num2str(ResultMatrix(row,8)),' lbs'];
         string_W_E_tent=[' 9.W_E_tent = ',num2str(ResultMatrix(row,9)),' lbs'];
         string_W_E_real=[' 10.W_E_real = ',num2str(ResultMatrix(row,10)),' lbs'];
-        string_W_E_error=[' 11.W_E_error = ',num2str(ResultMatrix(row,11)*100),' %% (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)'];
+        string_W_E_error=[' 11.W_E_error = ',num2str(ResultMatrix(row,11)*100),' %% (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)/250'];
 
         % Sensitivity Result
         string_W_TO_over_W_PL=[' 12.W_TO_over_W_PL = ',num2str(ResultMatrix(row,12))];
