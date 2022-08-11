@@ -41,28 +41,27 @@ end
 hold off
 
 %% FAR25 CLIMB RATE SIZING
-% For Take-off Climb
-% From Table 3.6
-delta_CD0_TOflaps = 0.015;
-delta_CDO_Lflaps = 0.065;
-delta_CD0_LG = 0.02;
-e_TOflaps = 0.8;
-e_Lflaps = 0.75;
-WoverS = 100; % from textbook
+delta_CD0_TOflaps = 0.015;  % From p.127, Table 3.6
+delta_CDO_Lflaps = 0.065;   % From p.127, Table 3.6
+delta_CD0_LG = 0.02;        % From p.127, Table 3.6
+e_TOflaps = 0.8;            % From p.127, Table 3.6
+e_Lflaps = 0.75;            % From p.127, Table 3.6
+W_L = W_TO*0.84;            % 0.84 is from p.107, Table 3.3
+WoverS = 100;               % from example in the book ( 0:200 )
 S = W_TO/WoverS;
-CD_0_clean = f_2/S; % Take cf = 0.003
-syms CL
-<<<<<<< HEAD
-CD_clean = vpa(CD_0_clean + CL^2/(pi*AR*e));
-CD_TO_GearUp = vpa(CD_0_clean+delta_CD0_TOflaps+CL^2/(pi*AR*e_TOflaps));
-CD_TO_GearDown = vpa(CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps));
-CD_L_GearUp = vpa(CD_0_clean+delta_CDO_Lflaps+CL^2/(pi*AR*e_Lflaps));
-CD_L_GearDown = vpa(CD_0_clean+delta_CDO_Lflaps+delta_CD0_LG+CL^2/(pi*AR*e_Lflaps));
+CD_0_clean = f_2/S;         % Take cf = 0.003
+
+% CD_clean = CD_0_clean + CL^2/(pi*AR*e)
+% CD_TO_GearUp = CD_0_clean+delta_CD0_TOflaps+CL^2/(pi*AR*e_TOflaps)
+% CD_TO_GearDown = CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps)
+% CD_L_GearUp = CD_0_clean+delta_CDO_Lflaps+CL^2/(pi*AR*e_Lflaps)
+% CD_L_GearDown = CD_0_clean+delta_CDO_Lflaps+delta_CD0_LG+CL^2/(pi*AR*e_Lflaps)
+
 % FAR25.111 OEI (P.145)
-CL_TO_max = 2; % From Table 3.1
-CL = CL_TO_max/1.2^2; % at 1.2 V_stall_TO
+CL_TO_max = 2;                     % From Table 3.1
+CL = CL_TO_max/1.2^2;              % at 1.2 V_stall_TO
 LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps)); % CL/CD_TO_GearDown
-ToverW_TO = 2*(1/LoverD+0.012); % CGR>0.012
+ToverW_TO = 2*(1/LoverD+0.012);    % CGR>0.012
 ToverW_TO1 = ToverW_TO/0.8; % 50°F效應(除以0.8)
 % FAR25.121 OEI
 CL = CL_TO_max/1.1^2; % V_LOF = 1.1 V_stall_TO
@@ -85,7 +84,6 @@ CL_max_L = 2.8; % From Table 3.1
 CL = CL_max_L/1.3^2; % at 1.3 V_stall_L
 LoverD = CL/(CD_0_clean+delta_CDO_Lflaps+delta_CD0_LG+CL^2/(pi*AR*e_Lflaps));
 ToverW_L = 1/LoverD+0.032; % CGR>0.032
-W_L = W_TO*0.84; % 0.84 is from Table 3.3
 ToverW_TO5 = ToverW_L*(W_L/W_TO)/0.8;
 % FAR25.121 OEI
 CL_max_A = 2.4; % From Table 3.1
@@ -103,17 +101,17 @@ yline(ToverW_TO5)
 yline(ToverW_TO6)
 hold off
 
+% Table 3.6 First Estimates for ΔCD_0 and e With Flaps and Gear Down
+% Configuration     ΔCD_0           e
+% Clean             0               0.80 - 0.85
+% Take-off flaps    0.010 - 0.020   0.75 - 0.80
+% Landing flaps     0.055 - 0.075   0.70 - 0.75
+% Landing Gear      0.015 - 0.025   no effect
+
+%% DIRECT CLIMB SIZING
+
 %% CRUISE SPEED SIZING
-    [a,rho]=Standard_Atmosphere(CruiseAltitude);
-    CruiseSpeed_Mach = 0.79;
-    CruiseSpeed = CruiseSpeed_Mach*a;
-    WoverS = 0:10:200;
-    C_D0 = 0.00184; %p.145&182 low speed,clean drag polar
-    delta_C_D0 = 0.0001*2.5; % p.166 figure 3.32
-    C_D0_modification = C_D0 + delta_C_D0;
-    q_overline = 0.5*rho*CruiseSpeed^2;
-    ToverW_reqd = C_D0_modification*q_overline./WoverS+WoverS./(pi*AR*e);
-    plot(WoverS,ToverW_reqd)
+
 %%
 function [a,rho]=Standard_Atmosphere(h)
 % Standard Atmosphere (SI Units)
