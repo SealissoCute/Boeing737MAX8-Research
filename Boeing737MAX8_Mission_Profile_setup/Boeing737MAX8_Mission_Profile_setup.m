@@ -46,7 +46,7 @@ W_crew = (175+30)*8;        % 2 Pilots and 6 flight attendents at 175 lbs each a
 D = W_crew + W_PL;
 
 % CruiseAltitude (unit: ft)
-CruiseAltitudeMin = 23000;
+CruiseAltitudeMin = 35000;
 CruiseAltitudeMax = 41000;
 CruiseAltitudeInterval = 1000;
 CruiseAltitudeMatrix = [CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax]; %
