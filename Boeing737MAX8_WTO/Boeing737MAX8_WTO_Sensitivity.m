@@ -9,10 +9,14 @@ clear
 prompt = ' Which OS are you using? (Windows/MacOS) Ans:';
 OS = input(prompt,'s');
 if strcmp(OS,'MacOS')
-    WorkspaceSavedDirectory = 'Boeing737MAX8_Mission_Profile_setup/Boeing737MAX8_Mission_Profile_setup.mat';
+    WorkspaceSavedDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity.mat';
+    SelectedResultOutputDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_Result.txt';
+    RecordTimeDirectory = 'Boeing737MAX8_WTO_Sensitivity/Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
 
 elseif strcmp(OS,'Windows') 
-    WorkspaceSavedDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_Mission_Profile_setup\Boeing737MAX8_Mission_Profile_setup.mat';
+    WorkspaceSavedDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity.mat';
+%     SelectedResultOutputDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_Result.txt';
+%     RecordTimeDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
     
 else
     error;
@@ -41,9 +45,6 @@ W_PL = (175+30)*180;        % 180 Passengers at 175 lbs each and 30 lbs of bagga
 
 % Crew weight (unit: lbs)
 W_crew = (175+30)*8;        % 2 Pilots and 6 flight attendents at 175 lbs each and 30 lbs of baggage each
-
-%
-D = W_crew + W_PL;
 
 % CruiseAltitude (unit: ft)
 CruiseAltitudeMin = 23000;
@@ -99,7 +100,6 @@ W_OE_wiki = 99360;
 W_TO_wiki = 182200;
 W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew;
 W_E_wiki2W_TO_guess = 10^(A+B*log10(W_E_wiki));
-W_E_real_wiki = 10^((log10(W_TO_wiki)-A)/B);
 error_wiki = abs(W_E_real_wiki-W_E_wiki)/W_E_real_wiki;
 
 %% Fuel Fraction parameters
@@ -145,6 +145,15 @@ for CruiseAltitude = CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax
     disp(string_CruiseAltitude)
 end
 
+% section saved
+save(WorkspaceSavedDirectory);
+time = now;
+date = datetime(time,'ConvertFrom','datenum');
+string_RecordTime1=[' RecordTime: ',datestr(date)];
+string_Workspace_saved1=[' Workspace is saved 1'];
+disp('----------------------------------------------------')
+disp(string_Workspace_saved1)
+disp(string_RecordTime1)
 
 %% Parallel computing CruiseSpeed/AverageClimbSpeed/ClimbTime/CruiseRange/W5_W4_ratio/W6_W5_ratio/M_ff
 parfor row1 = 1:InputParametersMatrix_row
@@ -198,20 +207,26 @@ end
 save(WorkspaceSavedDirectory);
 time = now;
 date = datetime(time,'ConvertFrom','datenum');
-string_RecordTime=[' RecordTime: ',datestr(date)];
-string_Workspace_saved=[' Workspace is saved'];
+string_RecordTime2=[' RecordTime: ',datestr(date),];
+string_Workspace_saved2=[' Workspace is saved 2'];
 disp('----------------------------------------------------')
-disp(string_Workspace_saved)
-disp(string_RecordTime)
+disp(string_Workspace_saved2)
+disp(string_RecordTime2)
 
 %% Plot W_E_real/W_E_tent_min/W_E_tent_max
 %
+D = W_crew + W_PL;
+W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew;
+W_E_wiki2W_TO_guess = 10^(A+B*log10(W_E_wiki));
+%
 C_min = min(InputParametersMatrix(:,14));
 C_max = max(InputParametersMatrix(:,14));
+W_E_real_wiki = 10^((log10(W_TO_wiki)-A)/B);
 
 %
 C_min = min(InputParametersMatrix(:,14));
 C_max = max(InputParametersMatrix(:,14));
+W_E_real_wiki = 10^((log10(W_TO_wiki)-A)/B);
 
 %
 x_W_TO_guess = 0:100:500000;
@@ -251,6 +266,278 @@ xlabel('W_T_Oguess');
 ylabel('W_E');
 legend('W_Ereal','W_Etent_m_i_n','W_Etent_m_a_x');
 hold off
+
+%% Numerical approximation of W_TO_guess
+%
+parfor row2 = 1:height(ResultMatrix)
+    % Temporary matrix for parallel computing
+    temp2 = zeros(1,Result_column);
+
+    % Read data
+    CruiseAltitude = InputParametersMatrix(row2,1);
+    Range = InputParametersMatrix(row2,2);
+    LoverD_Cruise = InputParametersMatrix(row2,3);
+    LoverD_Loiter = InputParametersMatrix(row2,4);
+    c_j_cruise  = InputParametersMatrix(row2,5);
+    c_j_loiter = InputParametersMatrix(row2,6);
+    M_ff = InputParametersMatrix(row2,13);
+    C = InputParametersMatrix(row2,14);
+  
+    for W_TO_guess = 165991:182200 % W_TO_guess_LowerBound:W_TO_wiki
+        W_E_real = 10^((log10(W_TO_guess)-A)/B);
+        W_E_tent = C*W_TO_guess - D;
+        error = abs(W_E_tent - W_E_real)/ W_E_real;
+        if error < 0.005
+            W_E_error =  abs(W_E_real - W_E_wiki)/W_E_real;
+
+            % Output data
+            temp2(1) = CruiseAltitude;
+            temp2(2) = Range;
+            temp2(3) = LoverD_Cruise;
+            temp2(4) = LoverD_Loiter;
+            temp2(5) = c_j_cruise;
+            temp2(6) = c_j_loiter;
+            temp2(7) = M_ff;
+            temp2(8) = C;
+            temp2(9) = W_TO_guess;
+            temp2(10) = W_E_tent;
+            temp2(11) = W_E_real;
+            temp2(12) = W_E_error;
+
+            % Output calculate result into Result matrix
+            ResultMatrixApprox(row2, :) = temp2;
+            break
+        end
+    end
+end
+
+save(WorkspaceSavedDirectory);
+time = now;
+date = datetime(time,'ConvertFrom','datenum');
+string_RecordTime3=[' RecordTime: ',datestr(date)];
+string_Workspace_saved3=[' Workspace is saved 3'];
+disp('----------------------------------------------------')
+disp(string_Workspace_saved3)
+disp(string_RecordTime3)
+
+%% Check the amount of numerical approximation solutions
+k = 0;
+ResultMatrixApproxSolutions = zeros(20);
+for row = 1:height(ResultMatrix)
+    if ResultMatrixApprox(row,8) > 0 && ResultMatrixApprox(row,8) < W_TO_wiki
+        if ResultMatrixApprox(row,12) < 0.005 | ResultMatrixApprox(row,11) < W_E_wiki
+            k = k+1;
+            ResultMatrixApproxSolutions(k,:) = ResultMatrixApprox(row,:);
+        end
+    end
+end
+disp('----------------------------------------------------')
+string_solutions=[' There are ',num2str(k),' numerical approximation of W_TO_guess less than W_TO_wiki.'];
+disp(string_solutions)
+
+%% Numerical solution of W_TO_guess
+x1 = sym('x1', [1,height(ResultMatrixApproxSolutions)]);
+
+parfor row3 = 1:height(ResultMatrixApproxSolutions)
+    % Temporary matrix for parallel computing
+    temp3 = zeros(1,Result_column);
+   
+            % Read data
+            CruiseAltitude = ResultMatrixApproxSolutions(row3,1);
+            Range = ResultMatrixApproxSolutions(row3,2);
+            LoverD_Cruise = ResultMatrixApproxSolutions(row3,3);
+            LoverD_Loiter = ResultMatrixApproxSolutions(row3,4);
+            c_j_cruise  = ResultMatrixApproxSolutions(row3,5);
+            c_j_loiter = ResultMatrixApproxSolutions(row3,6);
+            M_ff = ResultMatrixApproxSolutions(row3,7);
+            C = ResultMatrixApproxSolutions(row3,8);
+    
+
+            W_TO_guess = vpasolve( A + B*log10(C*x1(row3) - D) - log10(x1(row3)) == 0 );
+            
+    
+            % Computing
+            W_E_real = 10^((log10(W_TO_guess)-A)/B);
+            W_E_tent = C*W_TO_guess-D;
+            W_E_error =  abs(W_E_real - W_E_wiki)/W_E_real;
+    
+            % Output data
+            temp3(1) = CruiseAltitude;
+            temp3(2) = Range;
+            temp3(3) = LoverD_Cruise;
+            temp3(4) = LoverD_Loiter;
+            temp3(5) = c_j_cruise;
+            temp3(6) = c_j_loiter;
+            temp3(7) = M_ff;
+            temp3(8) = W_TO_guess;
+            temp3(9) = W_E_tent;
+            temp3(10) = W_E_real;
+            temp3(11) = W_E_error;
+    
+            % Output calculate result into Result matrix
+            ResultMatrix(row3, :) = temp3;
+end
+
+% section saved
+save(WorkspaceSavedDirectory);
+time = now;
+date = datetime(time,'ConvertFrom','datenum');
+string_RecordTime4=[' RecordTime: ',datestr(date)];
+string_Workspace_saved4=[' Workspace is saved 4'];
+disp('----------------------------------------------------')
+disp(string_Workspace_saved4)
+disp(string_RecordTime4)
+
+%% Sensitivity section
+%
+m = 0;
+
+% Open TransportJet_WTO_CheatingVersion_result.txt
+fid = fopen(SelectedResultOutputDirectory,'wt');
+%
+for row = 1:1:height(ResultMatrix)
+    if ResultMatrix(row,1) > 0 && ResultMatrix(row,11) < error_wiki/250 % need to be correct e.g. error_wiki = abs(W_E_real_wiki-W_E_wiki)/W_E_real_wiki
+        % Read data
+        CruiseAltitude = InputParametersMatrix(row,1);
+        Range = InputParametersMatrix(row,2);
+        LoverD_Cruise = InputParametersMatrix(row,3);
+        LoverD_Loiter = InputParametersMatrix(row,4);
+        c_j_cruise  = InputParametersMatrix(row,5);
+        c_j_loiter = InputParametersMatrix(row,6);
+        CruiseSpeed = InputParametersMatrix(row,7);
+        M_ff = ResultMatrix(row,7);
+        C = InputParametersMatrix(row,14);
+        W_TO_guess = ResultMatrix(row,8);
+
+        % Sensitivity calculate
+        W_TO = W_TO_guess;
+        F=-B*(W_TO^2)*((C*W_TO*(1-B)-D)^-1)*(1+0)*M_ff;
+        % W_TO over W_PL
+        W_TO_over_W_PL = B*W_TO*(D-C*(1-B)*W_TO)^-1;
+        % W_TO over W_E
+        W_TO_over_W_E = B*W_TO*(10^((log10(W_TO)-A)/B))^-1;
+        % W_TO over Range
+        W_TO_over_Range = F*c_j_cruise*(CruiseSpeed*LoverD_Cruise)^-1;
+        % W_TO over Endurance
+        W_TO_over_Endurance = F*c_j_loiter*LoverD_Loiter^-1;
+        % W_TO over Cruise speed
+        W_TO_over_CriuseSpeed = -F*Range*c_j_cruise*(CruiseSpeed^2*LoverD_Cruise)^-1;
+        % W_TO over c_j_Range
+        W_TO_over_c_j_Range = F*Range*(CruiseSpeed*LoverD_Cruise)^-1;
+        % W_TO over L/D_Range
+        W_TO_over_LoverD_Range = -F*Range*c_j_cruise*(CruiseSpeed*LoverD_Cruise^2)^-1;
+        % W_TO over c_j_Loiter
+        W_TO_over_c_j_Loiter = F*Endurance*LoverD_Loiter^-1;
+        % W_TO over L/D_Loiter
+        W_TO_over_LoverD_Loiter = -F*Endurance*c_j_loiter*LoverD_Loiter^-2;
+
+        % Output sensitivity calculate result
+        ResultMatrix(row,12) = W_TO_over_W_PL;
+        ResultMatrix(row,13) = W_TO_over_W_E ;
+        ResultMatrix(row,14) = W_TO_over_Range;
+        ResultMatrix(row,15) = W_TO_over_Endurance;
+        ResultMatrix(row,16) = W_TO_over_CriuseSpeed;
+        ResultMatrix(row,17) = W_TO_over_c_j_Range;
+        ResultMatrix(row,18) = W_TO_over_LoverD_Range;
+        ResultMatrix(row,19) = W_TO_over_c_j_Loiter;
+        ResultMatrix(row,20) = W_TO_over_LoverD_Loiter;
+
+        % W_TO_guess Iteration Result
+        string_CruiseAltitude=[' 1.CruiseAltitude = ',num2str(ResultMatrix(row,1)),' ft'];
+        string_Range=[' 2.Range = ',num2str(ResultMatrix(row,2)),' nm'];
+        string_LoverD_Cruise=[' 3.L/D Cruise = ',num2str(ResultMatrix(row,3))];
+        string_LoverD_Loiter=[' 4.L/D Loiter = ',num2str(ResultMatrix(row,4))];
+        string_c_j_cruise=[' 5.c_j Cruise = ',num2str(ResultMatrix(row,5))];
+        string_c_j_loiter=[' 6.c_j Loiter = ',num2str(ResultMatrix(row,6))];
+        string_M_ff=[' 7.M_ff = ',num2str(ResultMatrix(row,7))];
+        string_W_TO_guess=[' 8.W_TO_guess = ',num2str(ResultMatrix(row,8)),' lbs'];
+        string_W_E_tent=[' 9.W_E_tent = ',num2str(ResultMatrix(row,9)),' lbs'];
+        string_W_E_real=[' 10.W_E_real = ',num2str(ResultMatrix(row,10)),' lbs'];
+        string_W_E_error=[' 11.W_E_error = ',num2str(ResultMatrix(row,11)*100),' %% (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)/250'];
+
+        % Sensitivity Result
+        string_W_TO_over_W_PL=[' 12.W_TO_over_W_PL = ',num2str(ResultMatrix(row,12))];
+        string_W_TO_over_W_E=[' 13.W_TO_over_W_E = ',num2str(ResultMatrix(row,13))];
+        string_W_TO_over_Range=[' 14.W_TO_over_Range = ',num2str(ResultMatrix(row,14)),' lbs/nm'];
+        string_W_TO_over_Endurance=[' 15.W_TO_over_Endurance = ',num2str(ResultMatrix(row,15)),' lbs/hr'];
+        string_W_TO_over_CriuseSpeed=[' 16.W_TO_over_CriuseSpeed = ',num2str(ResultMatrix(row,16)),' lbs/kt'];
+        string_W_TO_over_c_j_Range=[' 17.W_TO_over_c_j_Range = ',num2str(ResultMatrix(row,17)),' lbs/lbs/lbs/hr'];
+        string_W_TO_over_LoverD_Range=[' 18.W_TO_over_LoverD_Range = ',num2str(ResultMatrix(row,18)),' lbs'];
+        string_W_TO_over_LoverD_Range=[' 18.W_TO_over_LoverD_Range = ',num2str(ResultMatrix(row,18)),' lbs'];
+        string_W_TO_over_c_j_Loiter=[' 19.W_TO_over_c_j_Loiter = ',num2str(ResultMatrix(row,19)),' lbs/lbs/lbs/hr'];
+        string_W_TO_over_LoverD_Loiter=[' 20.W_TO_over_LoverD_Loiter = ',num2str(ResultMatrix(row,20)),' lbs'];
+
+        % Print result in txt
+        fprintf(fid,' ----------------------------------------------------' );
+        fprintf(fid,'\n');
+        fprintf(fid,' W_TO_guess Iteration Result' );
+        fprintf(fid,'\n');
+        fprintf(fid,string_CruiseAltitude );
+        fprintf(fid,'\n');
+        fprintf(fid,string_Range );
+        fprintf(fid,'\n');
+        fprintf(fid,string_LoverD_Cruise );
+        fprintf(fid,'\n');
+        fprintf(fid,string_LoverD_Loiter );
+        fprintf(fid,'\n');
+        fprintf(fid,string_c_j_cruise );
+        fprintf(fid,'\n');
+        fprintf(fid,string_c_j_loiter );
+        fprintf(fid,'\n');
+        fprintf(fid,string_M_ff );
+        fprintf(fid,'\n');
+        fprintf(fid,string_W_TO_guess );
+        fprintf(fid,'\n');
+        fprintf(fid,string_W_E_tent );
+        fprintf(fid,'\n');
+        fprintf(fid,string_W_E_real );
+        fprintf(fid,'\n');
+        fprintf(fid,string_W_E_error );
+        fprintf(fid,'\n');
+        fprintf(fid,' Sensitivity Result' );
+        fprintf(fid,'\n');
+        fprintf(fid,string_W_TO_over_W_PL );
+        fprintf(fid,'\n');
+        fprintf(fid,string_W_TO_over_W_E );
+        fprintf(fid,'\n');
+        fprintf(fid,string_W_TO_over_Range );
+        fprintf(fid,'\n');
+        fprintf(fid,string_W_TO_over_Endurance );
+        fprintf(fid,'\n');
+        fprintf(fid,string_W_TO_over_CriuseSpeed );
+        fprintf(fid,'\n');
+        fprintf(fid,string_W_TO_over_c_j_Range );
+        fprintf(fid,'\n');
+        fprintf(fid,string_W_TO_over_LoverD_Range );
+        fprintf(fid,'\n');
+        fprintf(fid,string_W_TO_over_c_j_Loiter );
+        fprintf(fid,'\n');
+        fprintf(fid,string_W_TO_over_LoverD_Loiter );
+        fprintf(fid,'\n');
+
+        m=m+1;
+    end
+end
+
+disp('----------------------------------------------------')
+string_solutions=[' There are ',num2str(m),' solutions printed in txt file.'];
+disp(string_solutions)
+fprintf(fid,'----------------------------------------------------');
+fprintf(fid,'\n');
+fprintf(fid,string_solutions );
+
+% Close TransportJet_WTO_CheatingVersion_result.txt
+fclose(fid);
+
+% section saved
+save(WorkspaceSavedDirectory);
+time = now;
+date = datetime(time,'ConvertFrom','datenum');
+string_RecordTime5 = [' RecordTime: ',datestr(date)];
+string_Workspace_saved5 = [' Workspace is saved 5'];
+disp('----------------------------------------------------')
+disp(string_Workspace_saved5)
+disp(string_RecordTime5)
 
 %%
 function [a]=Standard_Atmosphere(h)
