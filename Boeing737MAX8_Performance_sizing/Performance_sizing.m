@@ -108,10 +108,18 @@ hold off
 % Landing flaps     0.055 - 0.075   0.70 - 0.75
 % Landing Gear      0.015 - 0.025   no effect
 
-%% DIRECT CLIMB SIZING
-
 %% CRUISE SPEED SIZING
-
+    [a,rho]=Standard_Atmosphere(CruiseAltitude);
+    CruiseSpeed_Mach = 0.79;
+    CruiseSpeed = CruiseSpeed_Mach*a;
+    WoverS = 0:10:200;
+    C_D0 = 0.0184; % p.145&182 low speed,clean drag polar
+    delta_C_D0 = 0.0001*2.5; % p.166 figure 3.32
+    C_D0_modification = C_D0 + delta_C_D0;
+    q_overline = 0.5*rho*CruiseSpeed^2;
+    ToverW_cruise_reqd = C_D0_modification*q_overline./WoverS + WoverS./(q_overline*pi*AR*e);
+    ToverW_TO = ToverW_cruise_reqd./0.23;
+    plot(WoverS,ToverW_TO)
 %%
 function [a,rho]=Standard_Atmosphere(h)
 % Standard Atmosphere (SI Units)
