@@ -1,4 +1,4 @@
- %% Reverse Engineering of Boeing 737 MAX 8
+%% Reverse Engineering of Boeing 737 MAX 8
 % Clear previous data
 
 format long
@@ -15,8 +15,8 @@ if strcmp(OS,'MacOS')
 
 elseif strcmp(OS,'Windows') 
     WorkspaceSavedDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity.mat';
-    SelectedResultOutputDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_Result.txt';
-    RecordTimeDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
+%     SelectedResultOutputDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_Result.txt';
+%     RecordTimeDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO_Sensitivity\Boeing737MAX8_WTO_Sensitivity_RunTimeRecord.txt';
     
 else
     error;
@@ -114,14 +114,12 @@ W9_W8_ratio = 0.992;                                                   % Landing
 
 %% InputParametersMatrix setup section
 % ResultMatrix sizing
-Result_row = width(CruiseAltitudeMatrix)*width(RangeMatrix)*width(LoverD_CruiseMatrix)...
+InputParametersMatrix_row = width(CruiseAltitudeMatrix)*width(RangeMatrix)*width(LoverD_CruiseMatrix)...
     *width(LoverD_LoiterMatrix)*width(c_j_cruiseMatrix)*width(c_j_loiterMatrix);
-Result_column = 20;
 InputParametersMatrix_column = 14;
-InputParametersMatrix = zeros(Result_row,InputParametersMatrix_column);
-InputParametersMatrixTemp = zeros(Result_row,InputParametersMatrix_column);
-ResultMatrixApprox = zeros(Result_row,Result_column);
-ResultMatrix = zeros(Result_row,Result_column);
+InputParametersMatrixTemp = zeros(InputParametersMatrix_row,InputParametersMatrix_column);
+InputParametersMatrix = zeros(InputParametersMatrix_row,InputParametersMatrix_column);
+
 
 % Create InputParametersMatrix
 n=1;
@@ -158,7 +156,7 @@ disp(string_Workspace_saved1)
 disp(string_RecordTime1)
 
 %% Parallel computing CruiseSpeed/AverageClimbSpeed/ClimbTime/CruiseRange/W5_W4_ratio/W6_W5_ratio/M_ff
-parfor row1 = 1:height(InputParametersMatrix)
+parfor row1 = 1:InputParametersMatrix_row
     % Temporary matrix for parallel computing
     temp1 = zeros(1,InputParametersMatrix_column);
 
@@ -175,8 +173,7 @@ parfor row1 = 1:height(InputParametersMatrix)
     CruiseSpeed = CruiseSpeed_Mach*a*ft_s_to_kt;                                 % unit: kts
     AverageClimbSpeed = CruiseSpeed*0.6;                                         % unit: kts
     ClimbTime = CruiseAltitude/AverageClimbRate;                                 % Climb time, unit: minute
-    Climb
-    Range = AverageClimbSpeed*(ClimbTime/60);                               % Climb range, unit: nm
+    ClimbRange = AverageClimbSpeed*(ClimbTime/60);                               % Climb range, unit: nm
     CruiseRange = Range - ClimbRange;                                            % Cruise range, unit: nm
     W5_W4_ratio = 1/(exp(CruiseRange/(CruiseSpeed/c_j_cruise*LoverD_Cruise)));   % Cruise, from Breguet's range equation
     W6_W5_ratio = 1/(exp(0.5/(1/c_j_loiter*LoverD_Loiter)));                     % Loiter, from Breguet's endurance equation
@@ -326,7 +323,6 @@ disp(string_RecordTime3)
 %% Check the amount of numerical approximation solutions
 k = 0;
 ResultMatrixApproxSolutions = zeros(20);
-tic
 for row = 1:height(ResultMatrix)
     if ResultMatrixApprox(row,8) > 0 && ResultMatrixApprox(row,8) < W_TO_wiki
         if ResultMatrixApprox(row,12) < 0.005 | ResultMatrixApprox(row,11) < W_E_wiki
@@ -338,7 +334,6 @@ end
 disp('----------------------------------------------------')
 string_solutions=[' There are ',num2str(k),' numerical approximation of W_TO_guess less than W_TO_wiki.'];
 disp(string_solutions)
-toc
 
 %% Numerical solution of W_TO_guess
 x1 = sym('x1', [1,height(ResultMatrixApproxSolutions)]);
@@ -401,7 +396,7 @@ m = 0;
 fid = fopen(SelectedResultOutputDirectory,'wt');
 %
 for row = 1:1:height(ResultMatrix)
-    if ResultMatrix(row,1) >0 && ResultMatrix(row,11) < error_wiki/250 % need to be correct e.g. error_wiki = abs(W_E_real_wiki-W_E_wiki)/W_E_real_wiki
+    if ResultMatrix(row,1) > 0 && ResultMatrix(row,11) < error_wiki/250 % need to be correct e.g. error_wiki = abs(W_E_real_wiki-W_E_wiki)/W_E_real_wiki
         % Read data
         CruiseAltitude = InputParametersMatrix(row,1);
         Range = InputParametersMatrix(row,2);
@@ -520,32 +515,6 @@ for row = 1:1:height(ResultMatrix)
         fprintf(fid,string_W_TO_over_LoverD_Loiter );
         fprintf(fid,'\n');
 
-        % Print result at command line
-%             disp('----------------------------------------------------')
-%             disp(' W_TO_guess Iteration Result')
-%             disp(string_CruiseAltitude)
-%             disp(string_Range)
-%             disp(string_LoverD_Cruise)
-%             disp(string_LoverD_Loiter)
-%             disp(string_c_j_cruise)
-%             disp(string_c_j_loiter)
-%             disp(string_M_ff)
-%             disp(string_W_TO_guess)
-%             disp(string_W_E_tent)
-%             disp(string_W_E_real)
-%             disp(string_W_E_error)
-%             disp(' Sensitivity Result')
-%             disp(string_W_TO_over_W_PL)
-%             disp(string_W_TO_over_W_E)
-%             disp(string_W_TO_over_Range)
-%             disp(string_W_TO_over_Endurance)
-%             disp(string_W_TO_over_CriuseSpeed)
-%             disp(string_W_TO_over_c_j_Range)
-%             disp(string_W_TO_over_LoverD_Range)
-%             disp(string_W_TO_over_c_j_Loiter)
-%             disp(string_W_TO_over_LoverD_Loiter)
-
-        % Numbers of result are printed
         m=m+1;
     end
 end
@@ -569,52 +538,6 @@ string_Workspace_saved5 = [' Workspace is saved 5'];
 disp('----------------------------------------------------')
 disp(string_Workspace_saved5)
 disp(string_RecordTime5)
-
-%% Section record time
-%
-fid = fopen(RecordTimeDirectory,'wt');
-fprintf(fid,'----------------------------------------------------');
-fprintf(fid,'\n');
-fprintf(fid,string_StartTime);
-fprintf(fid,'\n');
-fprintf(fid,'----------------------------------------------------');
-fprintf(fid,'\n');
-fprintf(fid,string_Workspace_saved1);
-fprintf(fid,'\n');
-fprintf(fid,string_RecordTime1);
-fprintf(fid,'\n');
-fprintf(fid,'----------------------------------------------------');
-fprintf(fid,'\n');
-fprintf(fid,string_Workspace_saved2);
-fprintf(fid,'\n');
-fprintf(fid,string_RecordTime2);
-fprintf(fid,'\n');
-fprintf(fid,'----------------------------------------------------');
-fprintf(fid,'\n');
-fprintf(fid,string_Workspace_saved3);
-fprintf(fid,'\n');
-fprintf(fid,string_RecordTime3);
-fprintf(fid,'\n');
-fprintf(fid,'----------------------------------------------------');
-fprintf(fid,'\n');
-fprintf(fid,string_Workspace_saved4);
-fprintf(fid,'\n');
-fprintf(fid,string_RecordTime4);
-fprintf(fid,'\n');
-
-%
-save(WorkspaceSavedDirectory);
-time = now;
-date = datetime(time,'ConvertFrom','datenum');
-string_EndTime=[' EndTime: ' ,datestr(date)];
-disp('----------------------------------------------------')
-disp(string_EndTime)
-
-fprintf(fid,'----------------------------------------------------');
-fprintf(fid,'\n');
-fprintf(fid,string_EndTime);
-
-fclose(fid);
 
 %%
 function [a]=Standard_Atmosphere(h)
