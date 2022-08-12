@@ -9,18 +9,20 @@ clear
 prompt = ' Which OS are you using? (Windows/MacOS) Ans:';
 OS = input(prompt,'s');
 if strcmp(OS,'MacOS')
-    Boeing737MAX8_Mission_Profile_setup_WorkspaceSavedDirectory = 'Boeing737MAX8_Mission_Profile_setup/Boeing737MAX8_Mission_Profile_setup.mat';
     Boeing737MAX8_WTO_WorkspaceSavedDirectory = 'Boeing737MAX8_WTO/Boeing737MAX8_WTO.mat';
-
+    Boeing737MAX8_Sensitivity_WorkspaceSavedDirectory = 'Boeing737MAX8_Sensitivity/Boeing737MAX8_Sensitivity.mat';
+    Boeing737MAX8_W_TO_Senitivity_WorkspaceSavedDirectory = 'Boeing737MAX8_Sensitivity/Boeing737MAX8_W_TO_Senitivity.mat';
+    Boeing737MAX8_W_TO_Senitivity_OutputDirectory = 'Boeing737MAX8_Sensitivity/Boeing737MAX8_W_TO_Senitivity.txt;'
 elseif strcmp(OS,'Windows') 
-    Boeing737MAX8_Mission_Profile_setup_WorkspaceSavedDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_Mission_Profile_setup\Boeing737MAX8_Mission_Profile_setup.mat';
     Boeing737MAX8_WTO_WorkspaceSavedDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_WTO\Boeing737MAX8_WTO.mat';
-
+    Boeing737MAX8_Sensitivity_WorkspaceSavedDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_Sensitivity\Boeing737MAX8_Sensitivity.mat';
+    Boeing737MAX8_W_TO_Senitivity_WorkspaceSavedDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_Sensitivity\Boeing737MAX8_W_TO_Senitivity.mat';
+    Boeing737MAX8_W_TO_Senitivity_OutputDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_Sensitivity\Boeing737MAX8_W_TO_Senitivity.txt';
 else
     error;
 end
 
-load(Boeing737MAX8_Mission_Profile_setup_WorkspaceSavedDirectory);
+load(Boeing737MAX8_WTO_WorkspaceSavedDirectory);
 %% Start time record
 %
 time = now;
@@ -36,24 +38,24 @@ disp('----------------------------------------------------')
 n = 0;
 
 % Open TransportJet_WTO_CheatingVersion_result.txt
-fid = fopen(SelectedResultOutputDirectory,'wt');
-%
-for row = 1:1:height(W_TO)
-    if W_TO(row,1) > 0 && W_TO(row,11) < error_wiki/250 % need to be correct e.g. error_wiki = abs(W_E_real_wiki-W_E_wiki)/W_E_real_wiki
+fid = fopen(OutputDirectory,'wt');
+
+for row = 1:W_TO_solutions_row
+    if W_TO_solutions(row,1) > 0 && W_TO_solutions(row,13) < error_wiki/250 % need to be correct e.g. error_wiki = abs(W_E_real_wiki-W_E_wiki)/W_E_real_wiki
+        n = n+1;
         % Read data
-        CruiseAltitude = InputParametersMatrix(row,1);
-        Range = InputParametersMatrix(row,2);
-        LoverD_Cruise = InputParametersMatrix(row,3);
-        LoverD_Loiter = InputParametersMatrix(row,4);
-        c_j_cruise  = InputParametersMatrix(row,5);
-        c_j_loiter = InputParametersMatrix(row,6);
-        CruiseSpeed = InputParametersMatrix(row,7);
-        M_ff = W_TO(row,7);
-        C = InputParametersMatrix(row,14);
-        W_TO_guess = W_TO(row,8);
+        CruiseAltitude = W_TO_solutions(row,1);
+        Range = W_TO_solutions(row,2);
+        LoverD_Cruise = W_TO_solutions(row,3);
+        LoverD_Loiter = W_TO_solutions(row,4);
+        c_j_cruise  = W_TO_solutions(row,5);
+        c_j_loiter = W_TO_solutions(row,6);
+        CruiseSpeed = W_TO_solutions(row,7);
+        M_ff = W_TO_solutions(row,8);
+        C = W_TO_solutions(row,9);
+        W_TO = W_TO_solutions(row,10);
 
         % Sensitivity calculate
-        W_TO = W_TO_guess;
         F=-B*(W_TO^2)*((C*W_TO*(1-B)-D)^-1)*(1+0)*M_ff;
         % W_TO over W_PL
         W_TO_over_W_PL = B*W_TO*(D-C*(1-B)*W_TO)^-1;
@@ -74,41 +76,52 @@ for row = 1:1:height(W_TO)
         % W_TO over L/D_Loiter
         W_TO_over_LoverD_Loiter = -F*Endurance*c_j_loiter*LoverD_Loiter^-2;
 
-        % Output sensitivity calculate result
-        W_TO(row,12) = W_TO_over_W_PL;
-        W_TO(row,13) = W_TO_over_W_E ;
-        W_TO(row,14) = W_TO_over_Range;
-        W_TO(row,15) = W_TO_over_Endurance;
-        W_TO(row,16) = W_TO_over_CriuseSpeed;
-        W_TO(row,17) = W_TO_over_c_j_Range;
-        W_TO(row,18) = W_TO_over_LoverD_Range;
-        W_TO(row,19) = W_TO_over_c_j_Loiter;
-        W_TO(row,20) = W_TO_over_LoverD_Loiter;
+        % Output result
+        W_TO_Senitivity(row,1) = CruiseAltitude;
+        W_TO_Senitivity(row,2) = Range;
+        W_TO_Senitivity(row,3) = LoverD_Cruise;
+        W_TO_Senitivity(row,4) = LoverD_Loiter;
+        W_TO_Senitivity(row,5) = c_j_cruise;
+        W_TO_Senitivity(row,6) = c_j_loiter;
+        W_TO_Senitivity(row,7) = CruiseSpeed;
+        W_TO_Senitivity(row,8) = M_ff;
+        W_TO_Senitivity(row,9) = W_TO_guess;
+        W_TO_Senitivity(row,10) = W_E_real;
+        W_TO_Senitivity(row,11) = W_E_error;
+        W_TO_Senitivity(row,12) = W_TO_over_W_PL;
+        W_TO_Senitivity(row,13) = W_TO_over_W_E ;
+        W_TO_Senitivity(row,14) = W_TO_over_Range;
+        W_TO_Senitivity(row,15) = W_TO_over_Endurance;
+        W_TO_Senitivity(row,16) = W_TO_over_CriuseSpeed;
+        W_TO_Senitivity(row,17) = W_TO_over_c_j_Range;
+        W_TO_Senitivity(row,18) = W_TO_over_LoverD_Range;
+        W_TO_Senitivity(row,19) = W_TO_over_c_j_Loiter;
+        W_TO_Senitivity(row,20) = W_TO_over_LoverD_Loiter;
 
         % W_TO_guess Iteration Result
-        string_CruiseAltitude=[' 1.CruiseAltitude = ',num2str(W_TO(row,1)),' ft'];
-        string_Range=[' 2.Range = ',num2str(W_TO(row,2)),' nm'];
-        string_LoverD_Cruise=[' 3.L/D Cruise = ',num2str(W_TO(row,3))];
-        string_LoverD_Loiter=[' 4.L/D Loiter = ',num2str(W_TO(row,4))];
-        string_c_j_cruise=[' 5.c_j Cruise = ',num2str(W_TO(row,5))];
-        string_c_j_loiter=[' 6.c_j Loiter = ',num2str(W_TO(row,6))];
-        string_M_ff=[' 7.M_ff = ',num2str(W_TO(row,7))];
-        string_W_TO_guess=[' 8.W_TO_guess = ',num2str(W_TO(row,8)),' lbs'];
-        string_W_E_tent=[' 9.W_E_tent = ',num2str(W_TO(row,9)),' lbs'];
-        string_W_E_real=[' 10.W_E_real = ',num2str(W_TO(row,10)),' lbs'];
-        string_W_E_error=[' 11.W_E_error = ',num2str(W_TO(row,11)*100),' %% (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)/250'];
+        string_CruiseAltitude=[' 1.CruiseAltitude = ',num2str(W_TO_Senitivity(row,1)),' ft'];
+        string_Range=[' 2.Range = ',num2str(W_TO_Senitivity(row,2)),' nm'];
+        string_LoverD_Cruise=[' 3.L/D Cruise = ',num2str(W_TO_Senitivity(row,3))];
+        string_LoverD_Loiter=[' 4.L/D Loiter = ',num2str(W_TO_Senitivity(row,4))];
+        string_c_j_cruise=[' 5.c_j Cruise = ',num2str(W_TO_Senitivity(row,5))];
+        string_c_j_loiter=[' 6.c_j Loiter = ',num2str(W_TO_Senitivity(row,6))];
+        string_M_ff=[' 7.M_ff = ',num2str(W_TO_Senitivity(row,7))];
+        string_W_TO_guess=[' 8.W_TO_guess = ',num2str(W_TO_Senitivity(row,8)),' lbs'];
+        string_W_E_tent=[' 9.W_E_tent = ',num2str(W_TO_Senitivity(row,9)),' lbs'];
+        string_W_E_real=[' 10.W_E_real = ',num2str(W_TO_Senitivity(row,10)),' lbs'];
+        string_W_E_error=[' 11.W_E_error = ',num2str(W_TO_Senitivity(row,11)*100),' %% (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)/250'];
 
         % Sensitivity Result
-        string_W_TO_over_W_PL=[' 12.W_TO_over_W_PL = ',num2str(W_TO(row,12))];
-        string_W_TO_over_W_E=[' 13.W_TO_over_W_E = ',num2str(W_TO(row,13))];
-        string_W_TO_over_Range=[' 14.W_TO_over_Range = ',num2str(W_TO(row,14)),' lbs/nm'];
-        string_W_TO_over_Endurance=[' 15.W_TO_over_Endurance = ',num2str(W_TO(row,15)),' lbs/hr'];
-        string_W_TO_over_CriuseSpeed=[' 16.W_TO_over_CriuseSpeed = ',num2str(W_TO(row,16)),' lbs/kt'];
-        string_W_TO_over_c_j_Range=[' 17.W_TO_over_c_j_Range = ',num2str(W_TO(row,17)),' lbs/lbs/lbs/hr'];
-        string_W_TO_over_LoverD_Range=[' 18.W_TO_over_LoverD_Range = ',num2str(W_TO(row,18)),' lbs'];
-        string_W_TO_over_LoverD_Range=[' 18.W_TO_over_LoverD_Range = ',num2str(W_TO(row,18)),' lbs'];
-        string_W_TO_over_c_j_Loiter=[' 19.W_TO_over_c_j_Loiter = ',num2str(W_TO(row,19)),' lbs/lbs/lbs/hr'];
-        string_W_TO_over_LoverD_Loiter=[' 20.W_TO_over_LoverD_Loiter = ',num2str(W_TO(row,20)),' lbs'];
+        string_W_TO_over_W_PL=[' 12.W_TO_over_W_PL = ',num2str(W_TO_Senitivity(row,12))];
+        string_W_TO_over_W_E=[' 13.W_TO_over_W_E = ',num2str(W_TO_Senitivity(row,13))];
+        string_W_TO_over_Range=[' 14.W_TO_over_Range = ',num2str(W_TO_Senitivity(row,14)),' lbs/nm'];
+        string_W_TO_over_Endurance=[' 15.W_TO_over_Endurance = ',num2str(W_TO_Senitivity(row,15)),' lbs/hr'];
+        string_W_TO_over_CriuseSpeed=[' 16.W_TO_over_CriuseSpeed = ',num2str(W_TO_Senitivity(row,16)),' lbs/kt'];
+        string_W_TO_over_c_j_Range=[' 17.W_TO_over_c_j_Range = ',num2str(W_TO_Senitivity(row,17)),' lbs/lbs/lbs/hr'];
+        string_W_TO_over_LoverD_Range=[' 18.W_TO_over_LoverD_Range = ',num2str(W_TO_Senitivity(row,18)),' lbs'];
+        string_W_TO_over_LoverD_Range=[' 18.W_TO_over_LoverD_Range = ',num2str(W_TO_Senitivity(row,18)),' lbs'];
+        string_W_TO_over_c_j_Loiter=[' 19.W_TO_over_c_j_Loiter = ',num2str(W_TO_Senitivity(row,19)),' lbs/lbs/lbs/hr'];
+        string_W_TO_over_LoverD_Loiter=[' 20.W_TO_over_LoverD_Loiter = ',num2str(W_TO_Senitivity(row,20)),' lbs'];
 
         % Print result in txt
         fprintf(fid,' ----------------------------------------------------' );
@@ -157,8 +170,6 @@ for row = 1:1:height(W_TO)
         fprintf(fid,'\n');
         fprintf(fid,string_W_TO_over_LoverD_Loiter );
         fprintf(fid,'\n');
-
-        n=n+1;
     end
 end
 
@@ -173,7 +184,8 @@ fprintf(fid,string_solutions );
 fclose(fid);
 
 % section saved
-save(WorkspaceSavedDirectory);
+save(Boeing737MAX8_Sensitivity_WorkspaceSavedDirectory);
+save(Boeing737MAX8_W_TO_Senitivity_WorkspaceSavedDirectory,'W_TO_Senitivity');
 time = now;
 date = datetime(time,'ConvertFrom','datenum');
 string_RecordTime=[' RecordTime: ',datestr(date)];

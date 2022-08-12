@@ -31,10 +31,10 @@ disp(string_StartTime)
 %% Numerical approximation of W_TO_guess
 % ResultMatrixApporx sizing
 W_TO_Apporx_row = InputParametersMatrix_row;
-W_TO_Approx_column = 12;
+W_TO_Approx_column = 13;
 W_TO_Approx = zeros(W_TO_Apporx_row,W_TO_Approx_column);
 
-parfor row = 1:1324224 % W_TO_Apporx_row
+parfor row = 1:W_TO_Apporx_row
     % Temporary matrix for parallel computing
     temp = zeros(1,W_TO_Approx_column);
 
@@ -45,6 +45,7 @@ parfor row = 1:1324224 % W_TO_Apporx_row
     LoverD_Loiter = InputParametersMatrix(row,4);
     c_j_cruise  = InputParametersMatrix(row,5);
     c_j_loiter = InputParametersMatrix(row,6);
+    CruiseSpeed = InputParametersMatrix(row,7);
     M_ff = InputParametersMatrix(row,13);
     C = InputParametersMatrix(row,14);
   
@@ -62,12 +63,13 @@ parfor row = 1:1324224 % W_TO_Apporx_row
             temp(4) = LoverD_Loiter;
             temp(5) = c_j_cruise;
             temp(6) = c_j_loiter;
-            temp(7) = M_ff;
-            temp(8) = C;
-            temp(9) = W_TO_guess;
-            temp(10) = W_E_tent;
-            temp(11) = W_E_real;
-            temp(12) = W_E_error;
+            temp(7) = CruiseSpeed;
+            temp(8) = M_ff;
+            temp(9) = C;
+            temp(10) = W_TO_guess;
+            temp(11) = W_E_tent;
+            temp(12) = W_E_real;
+            temp(13) = W_E_error;
 
             % Output calculate result into Result matrix
             W_TO_Approx(row, :) = temp;
@@ -90,9 +92,9 @@ n = 0;
 % ResultMatrixApporxSolutions sizing
 W_TO_ApproxSolutions = zeros(W_TO_Approx_column);
 
-for row = 1:1324224 % W_TO_Apporx_row
-    if W_TO_Approx(row,9) > 0 && W_TO_Approx(row,9) < W_TO_wiki
-        if W_TO_Approx(row,12) < 0.005 | W_TO_Approx(row,11) < W_E_wiki
+for row = 1:W_TO_Apporx_row
+    if W_TO_Approx(row,10) > 0 && W_TO_Approx(row,10) < W_TO_wiki
+        if W_TO_Approx(row,13) < 0.005 | W_TO_Approx(row,12) < W_E_wiki
             n = n+1;
             W_TO_ApproxSolutions(n,:) = W_TO_Approx(row,:);
         end
@@ -105,14 +107,14 @@ disp(string_solutions)
 
 %% Numerical solution of W_TO_guess
 % ResultMatrix sizing
-W_TO_row = height(W_TO_ApproxSolutions);
-W_TO_column = width(W_TO_ApproxSolutions) ;
-W_TO = zeros(W_TO_row,W_TO_column);
+W_TO_solutions_row = height(W_TO_ApproxSolutions);
+W_TO_sloutions_column = width(W_TO_ApproxSolutions) ;
+W_TO_solutions = zeros(W_TO_solutions_row,W_TO_sloutions_column);
 
-x1 = sym('x1', [1,W_TO_row]);
-parfor row = 1: W_TO_row
+x = sym('x', [1,W_TO_solutions_row]);
+parfor row = 1: W_TO_solutions_row
     % Temporary matrix for parallel computing
-    temp = zeros(1,Result_column);
+    temp = zeros(1,W_TO_sloutions_column);
    
             % Read data
             CruiseAltitude = W_TO_ApproxSolutions(row,1);
@@ -121,16 +123,17 @@ parfor row = 1: W_TO_row
             LoverD_Loiter = W_TO_ApproxSolutions(row,4);
             c_j_cruise  = W_TO_ApproxSolutions(row,5);
             c_j_loiter = W_TO_ApproxSolutions(row,6);
-            M_ff = W_TO_ApproxSolutions(row,7);
-            C = W_TO_ApproxSolutions(row,8);
+            CruiseSpeed = W_TO_ApproxSolutions(row,7);
+            M_ff = W_TO_ApproxSolutions(row,8);
+            C = W_TO_ApproxSolutions(row,9);
     
             % vpasolve
-            W_TO_guess = vpasolve( A + B*log10(C*x1(row) - D) - log10(x1(row)) == 0 );
+            W_TO_guess = vpasolve( A + B*log10(C*x(row) - D) - log10(x(row)) == 0 );
             
             % Computing
             W_E_real = 10^((log10(W_TO_guess)-A)/B);
             W_E_tent = C*W_TO_guess-D;
-            W_E_error =  abs(W_E_real - W_E_wiki)/W_E_real;
+            W_E_error = abs(W_E_real - W_E_wiki)/W_E_real;
     
             % Output data
             temp(1) = CruiseAltitude;
@@ -139,15 +142,16 @@ parfor row = 1: W_TO_row
             temp(4) = LoverD_Loiter;
             temp(5) = c_j_cruise;
             temp(6) = c_j_loiter;
-            temp(7) = M_ff;
-            temp(8) = C;
-            temp(9) = W_TO_guess;
-            temp(10) = W_E_tent;
-            temp(11) = W_E_real;
-            temp(12) = W_E_error;
+            temp(7) = CruiseSpeed;
+            temp(8) = M_ff;
+            temp(9) = C;
+            temp(10) = W_TO_guess;
+            temp(11) = W_E_tent;
+            temp(12) = W_E_real;
+            temp(13) = W_E_error;
 
             % Output calculate result into Result matrix
-            W_TO(row, :) = temp;
+            W_TO_solutions(row, :) = temp;
 end
 
 % section saved
