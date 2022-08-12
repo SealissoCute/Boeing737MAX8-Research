@@ -1,0 +1,290 @@
+ ----------------------------------------------------
+ W_TO_guess Iteration Result
+ 1.CruiseAltitude = 24000 ft
+ 2.Range = 2100 nm
+ 3.L/D Cruise = 13.4
+ 4.L/D Loiter = 17.4
+ 5.c_j Cruise = 0.54
+ 6.c_j Loiter = 0.59
+ 7.Cruisespeed = 477.5643 kt
+ 8.M_ff = 0.7485
+ 9.W_TO = 182043.8449 lbs
+ 10.W_E_tent = 96808.9341 lbs
+ 11.W_E_real = 96808.9341 lbs
+ 12.W_E_error = 6.8085e-05 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
+ Sensitivity Result
+ 13.W_TO_over_W_PL = 6.8085e-07
+ 14.W_TO_over_W_E = 4.323
+ 15.W_TO_over_Range = 1.9525 lbs/nm
+ 16.W_TO_over_Endurance = 49.7053 lbs/hr
+ 17.W_TO_over_CriuseSpeed = 19973.2513 lbs/kt
+ 18.W_TO_over_c_j_Range = 193298.5528 lbs/lbs/lbs/hr
+ 19.W_TO_over_LoverD_Range = -7789.6432 lbs
+ 20.W_TO_over_c_j_Loiter = 16926.4842 lbs/lbs/lbs/hr
+ 21.W_TO_over_LoverD_Loiter = -573.944 lbs
+ ----------------------------------------------------
+ W_TO_guess Iteration Result
+ 1.CruiseAltitude = 25000 ft
+ 2.Range = 2100 nm
+ 3.L/D Cruise = 13.4
+ 4.L/D Loiter = 17.7
+ 5.c_j Cruise = 0.54
+ 6.c_j Loiter = 0.58
+ 7.Cruisespeed = 475.5991 kt
+ 8.M_ff = 0.7485
+ 9.W_TO = 182044.5444 lbs
+ 10.W_E_tent = 96809.2924 lbs
+ 11.W_E_real = 96809.2924 lbs
+ 12.W_E_error = 0.00030199 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
+ Sensitivity Result
+ 13.W_TO_over_W_PL = 3.0199e-06
+ 14.W_TO_over_W_E = 4.323
+ 15.W_TO_over_Range = 1.9525 lbs/nm
+ 16.W_TO_over_Endurance = 49.911 lbs/hr
+ 17.W_TO_over_CriuseSpeed = 19302.0491 lbs/kt
+ 18.W_TO_over_c_j_Range = 194098.4758 lbs/lbs/lbs/hr
+ 19.W_TO_over_LoverD_Range = -7821.8789 lbs
+ 20.W_TO_over_c_j_Loiter = 16639.6975 lbs/lbs/lbs/hr
+ 21.W_TO_over_LoverD_Loiter = -545.2556 lbs
+ ----------------------------------------------------
+ W_TO_guess Iteration Result
+ 1.CruiseAltitude = 26000 ft
+ 2.Range = 2300 nm
+ 3.L/D Cruise = 13.7
+ 4.L/D Loiter = 17.8
+ 5.c_j Cruise = 0.5
+ 6.c_j Loiter = 0.6
+ 7.Cruisespeed = 473.626 kt
+ 8.M_ff = 0.7485
+ 9.W_TO = 182043.631 lbs
+ 10.W_E_tent = 96808.8245 lbs
+ 11.W_E_real = 96808.8245 lbs
+ 12.W_E_error = 0.00018126 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
+ Sensitivity Result
+ 13.W_TO_over_W_PL = 1.8126e-06
+ 14.W_TO_over_W_E = 4.3229
+ 15.W_TO_over_Range = 1.9525 lbs/nm
+ 16.W_TO_over_Endurance = 45.3899 lbs/hr
+ 17.W_TO_over_CriuseSpeed = 19855.2989 lbs/kt
+ 18.W_TO_over_c_j_Range = 208793.4863 lbs/lbs/lbs/hr
+ 19.W_TO_over_LoverD_Range = -7620.2002 lbs
+ 20.W_TO_over_c_j_Loiter = 16546.0824 lbs/lbs/lbs/hr
+ 21.W_TO_over_LoverD_Loiter = -557.7331 lbs
+ ----------------------------------------------------
+ W_TO_guess Iteration Result
+ 1.CruiseAltitude = 28000 ft
+ 2.Range = 2100 nm
+ 3.L/D Cruise = 13.3
+ 4.L/D Loiter = 17.5
+ 5.c_j Cruise = 0.53
+ 6.c_j Loiter = 0.58
+ 7.Cruisespeed = 469.6553 kt
+ 8.M_ff = 0.7485
+ 9.W_TO = 182043.8026 lbs
+ 10.W_E_tent = 96808.9124 lbs
+ 11.W_E_real = 96808.9124 lbs
+ 12.W_E_error = 9.0486e-05 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
+ Sensitivity Result
+ 13.W_TO_over_W_PL = 9.0486e-07
+ 14.W_TO_over_W_E = 4.323
+ 15.W_TO_over_Range = 1.9525 lbs/nm
+ 16.W_TO_over_Endurance = 49.9794 lbs/hr
+ 17.W_TO_over_CriuseSpeed = 19522.5159 lbs/kt
+ 18.W_TO_over_c_j_Range = 198031.4847 lbs/lbs/lbs/hr
+ 19.W_TO_over_LoverD_Range = -7891.4802 lbs
+ 20.W_TO_over_c_j_Loiter = 16829.7551 lbs/lbs/lbs/hr
+ 21.W_TO_over_LoverD_Loiter = -557.7862 lbs
+ ----------------------------------------------------
+ W_TO_guess Iteration Result
+ 1.CruiseAltitude = 33000 ft
+ 2.Range = 2100 nm
+ 3.L/D Cruise = 13.5
+ 4.L/D Loiter = 17.1
+ 5.c_j Cruise = 0.53
+ 6.c_j Loiter = 0.55
+ 7.Cruisespeed = 459.5821 kt
+ 8.M_ff = 0.7485
+ 9.W_TO = 182043.3502 lbs
+ 10.W_E_tent = 96808.6807 lbs
+ 11.W_E_real = 96808.6807 lbs
+ 12.W_E_error = 0.00032981 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
+ Sensitivity Result
+ 13.W_TO_over_W_PL = 3.2981e-06
+ 14.W_TO_over_W_E = 4.3229
+ 15.W_TO_over_Range = 1.9525 lbs/nm
+ 16.W_TO_over_Endurance = 50.318 lbs/hr
+ 17.W_TO_over_CriuseSpeed = 18945.7012 lbs/kt
+ 18.W_TO_over_c_j_Range = 199373.0946 lbs/lbs/lbs/hr
+ 19.W_TO_over_LoverD_Range = -7827.24 lbs
+ 20.W_TO_over_c_j_Loiter = 17223.3647 lbs/lbs/lbs/hr
+ 21.W_TO_over_LoverD_Loiter = -553.9679 lbs
+ ----------------------------------------------------
+ W_TO_guess Iteration Result
+ 1.CruiseAltitude = 33000 ft
+ 2.Range = 2200 nm
+ 3.L/D Cruise = 13.6
+ 4.L/D Loiter = 17.8
+ 5.c_j Cruise = 0.51
+ 6.c_j Loiter = 0.56
+ 7.Cruisespeed = 459.5821 kt
+ 8.M_ff = 0.7485
+ 9.W_TO = 182044.2755 lbs
+ 10.W_E_tent = 96809.1546 lbs
+ 11.W_E_real = 96809.1546 lbs
+ 12.W_E_error = 0.00015968 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
+ Sensitivity Result
+ 13.W_TO_over_W_PL = 1.5968e-06
+ 14.W_TO_over_W_E = 4.323
+ 15.W_TO_over_Range = 1.9525 lbs/nm
+ 16.W_TO_over_Endurance = 48.0635 lbs/hr
+ 17.W_TO_over_CriuseSpeed = 18531.7179 lbs/kt
+ 18.W_TO_over_c_j_Range = 207332.9601 lbs/lbs/lbs/hr
+ 19.W_TO_over_LoverD_Range = -7774.986 lbs
+ 20.W_TO_over_c_j_Loiter = 16546.1767 lbs/lbs/lbs/hr
+ 21.W_TO_over_LoverD_Loiter = -520.5539 lbs
+ ----------------------------------------------------
+ W_TO_guess Iteration Result
+ 1.CruiseAltitude = 34000 ft
+ 2.Range = 2200 nm
+ 3.L/D Cruise = 13.5
+ 4.L/D Loiter = 17.4
+ 5.c_j Cruise = 0.5
+ 6.c_j Loiter = 0.6
+ 7.Cruisespeed = 457.5414 kt
+ 8.M_ff = 0.7485
+ 9.W_TO = 182043.4338 lbs
+ 10.W_E_tent = 96808.7235 lbs
+ 11.W_E_real = 96808.7235 lbs
+ 12.W_E_error = 0.00028562 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
+ Sensitivity Result
+ 13.W_TO_over_W_PL = 2.8562e-06
+ 14.W_TO_over_W_E = 4.3229
+ 15.W_TO_over_Range = 1.9525 lbs/nm
+ 16.W_TO_over_Endurance = 47.6815 lbs/hr
+ 17.W_TO_over_CriuseSpeed = 20311.7072 lbs/kt
+ 18.W_TO_over_c_j_Range = 209798.7717 lbs/lbs/lbs/hr
+ 19.W_TO_over_LoverD_Range = -7770.3249 lbs
+ 20.W_TO_over_c_j_Loiter = 16926.4226 lbs/lbs/lbs/hr
+ 21.W_TO_over_LoverD_Loiter = -583.6697 lbs
+ ----------------------------------------------------
+ W_TO_guess Iteration Result
+ 1.CruiseAltitude = 35000 ft
+ 2.Range = 2200 nm
+ 3.L/D Cruise = 14
+ 4.L/D Loiter = 17.4
+ 5.c_j Cruise = 0.52
+ 6.c_j Loiter = 0.56
+ 7.Cruisespeed = 455.4918 kt
+ 8.M_ff = 0.7485
+ 9.W_TO = 182043.4723 lbs
+ 10.W_E_tent = 96808.7433 lbs
+ 11.W_E_real = 96808.7433 lbs
+ 12.W_E_error = 0.00026521 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
+ Sensitivity Result
+ 13.W_TO_over_W_PL = 2.6521e-06
+ 14.W_TO_over_W_E = 4.3229
+ 15.W_TO_over_Range = 1.9525 lbs/nm
+ 16.W_TO_over_Endurance = 48.033 lbs/hr
+ 17.W_TO_over_CriuseSpeed = 18957.5998 lbs/kt
+ 18.W_TO_over_c_j_Range = 203216.3635 lbs/lbs/lbs/hr
+ 19.W_TO_over_LoverD_Range = -7548.0364 lbs
+ 20.W_TO_over_c_j_Loiter = 16926.4284 lbs/lbs/lbs/hr
+ 21.W_TO_over_LoverD_Loiter = -544.7586 lbs
+ ----------------------------------------------------
+ W_TO_guess Iteration Result
+ 1.CruiseAltitude = 36000 ft
+ 2.Range = 2000 nm
+ 3.L/D Cruise = 13.3
+ 4.L/D Loiter = 17.3
+ 5.c_j Cruise = 0.54
+ 6.c_j Loiter = 0.59
+ 7.Cruisespeed = 453.4331 kt
+ 8.M_ff = 0.7485
+ 9.W_TO = 182043.7008 lbs
+ 10.W_E_tent = 96808.8603 lbs
+ 11.W_E_real = 96808.8603 lbs
+ 12.W_E_error = 0.00014433 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
+ Sensitivity Result
+ 13.W_TO_over_W_PL = 1.4433e-06
+ 14.W_TO_over_W_E = 4.3229
+ 15.W_TO_over_Range = 1.9525 lbs/nm
+ 16.W_TO_over_Endurance = 52.7442 lbs/hr
+ 17.W_TO_over_CriuseSpeed = 20088.678 lbs/kt
+ 18.W_TO_over_c_j_Range = 195348.7306 lbs/lbs/lbs/hr
+ 19.W_TO_over_LoverD_Range = -7931.4522 lbs
+ 20.W_TO_over_c_j_Loiter = 17024.3034 lbs/lbs/lbs/hr
+ 21.W_TO_over_LoverD_Loiter = -580.5976 lbs
+ ----------------------------------------------------
+ W_TO_guess Iteration Result
+ 1.CruiseAltitude = 37000 ft
+ 2.Range = 2100 nm
+ 3.L/D Cruise = 13.1
+ 4.L/D Loiter = 17.6
+ 5.c_j Cruise = 0.51
+ 6.c_j Loiter = 0.55
+ 7.Cruisespeed = 453.1198 kt
+ 8.M_ff = 0.7485
+ 9.W_TO = 182044.5208 lbs
+ 10.W_E_tent = 96809.2802 lbs
+ 11.W_E_real = 96809.2802 lbs
+ 12.W_E_error = 0.00028946 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
+ Sensitivity Result
+ 13.W_TO_over_W_PL = 2.8946e-06
+ 14.W_TO_over_W_E = 4.323
+ 15.W_TO_over_Range = 1.9525 lbs/nm
+ 16.W_TO_over_Endurance = 50.6098 lbs/hr
+ 17.W_TO_over_CriuseSpeed = 18407.6615 lbs/kt
+ 18.W_TO_over_c_j_Range = 208393.2123 lbs/lbs/lbs/hr
+ 19.W_TO_over_LoverD_Range = -8113.0182 lbs
+ 20.W_TO_over_c_j_Loiter = 16734.2377 lbs/lbs/lbs/hr
+ 21.W_TO_over_LoverD_Loiter = -522.9449 lbs
+ ----------------------------------------------------
+ W_TO_guess Iteration Result
+ 1.CruiseAltitude = 40000 ft
+ 2.Range = 2100 nm
+ 3.L/D Cruise = 13.1
+ 4.L/D Loiter = 17.4
+ 5.c_j Cruise = 0.51
+ 6.c_j Loiter = 0.56
+ 7.Cruisespeed = 453.1198 kt
+ 8.M_ff = 0.7485
+ 9.W_TO = 182044.3903 lbs
+ 10.W_E_tent = 96809.2134 lbs
+ 11.W_E_real = 96809.2134 lbs
+ 12.W_E_error = 0.00022042 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
+ Sensitivity Result
+ 13.W_TO_over_W_PL = 2.2042e-06
+ 14.W_TO_over_W_E = 4.323
+ 15.W_TO_over_Range = 1.9525 lbs/nm
+ 16.W_TO_over_Endurance = 50.6097 lbs/hr
+ 17.W_TO_over_CriuseSpeed = 18957.7536 lbs/kt
+ 18.W_TO_over_c_j_Range = 208392.9719 lbs/lbs/lbs/hr
+ 19.W_TO_over_LoverD_Range = -8113.0088 lbs
+ 20.W_TO_over_c_j_Loiter = 16926.5658 lbs/lbs/lbs/hr
+ 21.W_TO_over_LoverD_Loiter = -544.763 lbs
+ ----------------------------------------------------
+ W_TO_guess Iteration Result
+ 1.CruiseAltitude = 40000 ft
+ 2.Range = 2200 nm
+ 3.L/D Cruise = 14
+ 4.L/D Loiter = 17.3
+ 5.c_j Cruise = 0.52
+ 6.c_j Loiter = 0.55
+ 7.Cruisespeed = 453.1198 kt
+ 8.M_ff = 0.7485
+ 9.W_TO = 182043.6225 lbs
+ 10.W_E_tent = 96808.8201 lbs
+ 11.W_E_real = 96808.8201 lbs
+ 12.W_E_error = 0.00018579 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
+ Sensitivity Result
+ 13.W_TO_over_W_PL = 1.8579e-06
+ 14.W_TO_over_W_E = 4.3229
+ 15.W_TO_over_Range = 1.9525 lbs/nm
+ 16.W_TO_over_Endurance = 48.2845 lbs/hr
+ 17.W_TO_over_CriuseSpeed = 18726.7208 lbs/kt
+ 18.W_TO_over_c_j_Range = 204280.4315 lbs/lbs/lbs/hr
+ 19.W_TO_over_LoverD_Range = -7587.5589 lbs
+ 20.W_TO_over_c_j_Loiter = 17024.2916 lbs/lbs/lbs/hr
+ 21.W_TO_over_LoverD_Loiter = -541.2347 lbs
+----------------------------------------------------
+ There are 12 solutions printed in txt file.
