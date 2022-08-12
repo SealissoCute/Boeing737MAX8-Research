@@ -117,11 +117,11 @@ for row = 1:W_TO_solutions_row
         string_W_E_error=[' 12.W_E_error = ',num2str(W_TO_Senitivity(n,12)*100),' %% (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)'];
 
         % Sensitivity Result
-        string_W_TO_over_W_PL=[' 13.W_TO_over_W_PL = ',num2str(W_TO_Senitivity(n,12))];
-        string_W_TO_over_W_E=[' 14.W_TO_over_W_E = ',num2str(W_TO_Senitivity(n,13))];
-        string_W_TO_over_Range=[' 15.W_TO_over_Range = ',num2str(W_TO_Senitivity(n,14)),' lbs/nm'];
-        string_W_TO_over_Endurance=[' 16.W_TO_over_Endurance = ',num2str(W_TO_Senitivity(n,15)),' lbs/hr'];
-        string_W_TO_over_CriuseSpeed=[' 17.W_TO_over_CriuseSpeed = ',num2str(W_TO_Senitivity(n,16)),' lbs/kt'];
+        string_W_TO_over_W_PL=[' 13.W_TO_over_W_PL = ',num2str(W_TO_Senitivity(n,13))];
+        string_W_TO_over_W_E=[' 14.W_TO_over_W_E = ',num2str(W_TO_Senitivity(n,14))];
+        string_W_TO_over_Range=[' 15.W_TO_over_Range = ',num2str(W_TO_Senitivity(n,15)),' lbs/nm'];
+        string_W_TO_over_Endurance=[' 16.W_TO_over_Endurance = ',num2str(W_TO_Senitivity(n,16)),' lbs/hr'];
+        string_W_TO_over_CriuseSpeed=[' 17.W_TO_over_CriuseSpeed = ',num2str(W_TO_Senitivity(n,17)),' lbs/kt'];
         string_W_TO_over_c_j_Range=[' 18.W_TO_over_c_j_Range = ',num2str(W_TO_Senitivity(n,18)),' lbs/lbs/lbs/hr'];
         string_W_TO_over_LoverD_Range=[' 19.W_TO_over_LoverD_Range = ',num2str(W_TO_Senitivity(n,19)),' lbs'];
         string_W_TO_over_c_j_Loiter=[' 20.W_TO_over_c_j_Loiter = ',num2str(W_TO_Senitivity(n,20)),' lbs/lbs/lbs/hr'];

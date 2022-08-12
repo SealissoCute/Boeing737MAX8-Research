@@ -13,11 +13,11 @@
  11.W_E_real = 96808.9341 lbs
  12.W_E_error = 6.8085e-05 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
  Sensitivity Result
- 13.W_TO_over_W_PL = 6.8085e-07
- 14.W_TO_over_W_E = 4.323
- 15.W_TO_over_Range = 1.9525 lbs/nm
- 16.W_TO_over_Endurance = 49.7053 lbs/hr
- 17.W_TO_over_CriuseSpeed = 19973.2513 lbs/kt
+ 13.W_TO_over_W_PL = 4.323
+ 14.W_TO_over_W_E = 1.9525
+ 15.W_TO_over_Range = 49.7053 lbs/nm
+ 16.W_TO_over_Endurance = 19973.2513 lbs/hr
+ 17.W_TO_over_CriuseSpeed = -218.57 lbs/kt
  18.W_TO_over_c_j_Range = 193298.5528 lbs/lbs/lbs/hr
  19.W_TO_over_LoverD_Range = -7789.6432 lbs
  20.W_TO_over_c_j_Loiter = 16926.4842 lbs/lbs/lbs/hr
@@ -37,11 +37,11 @@
  11.W_E_real = 96809.2924 lbs
  12.W_E_error = 0.00030199 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
  Sensitivity Result
- 13.W_TO_over_W_PL = 3.0199e-06
- 14.W_TO_over_W_E = 4.323
- 15.W_TO_over_Range = 1.9525 lbs/nm
- 16.W_TO_over_Endurance = 49.911 lbs/hr
- 17.W_TO_over_CriuseSpeed = 19302.0491 lbs/kt
+ 13.W_TO_over_W_PL = 4.323
+ 14.W_TO_over_W_E = 1.9525
+ 15.W_TO_over_Range = 49.911 lbs/nm
+ 16.W_TO_over_Endurance = 19302.0491 lbs/hr
+ 17.W_TO_over_CriuseSpeed = -220.3813 lbs/kt
  18.W_TO_over_c_j_Range = 194098.4758 lbs/lbs/lbs/hr
  19.W_TO_over_LoverD_Range = -7821.8789 lbs
  20.W_TO_over_c_j_Loiter = 16639.6975 lbs/lbs/lbs/hr
@@ -61,11 +61,11 @@
  11.W_E_real = 96808.8245 lbs
  12.W_E_error = 0.00018126 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
  Sensitivity Result
- 13.W_TO_over_W_PL = 1.8126e-06
- 14.W_TO_over_W_E = 4.3229
- 15.W_TO_over_Range = 1.9525 lbs/nm
- 16.W_TO_over_Endurance = 45.3899 lbs/hr
- 17.W_TO_over_CriuseSpeed = 19855.2989 lbs/kt
+ 13.W_TO_over_W_PL = 4.3229
+ 14.W_TO_over_W_E = 1.9525
+ 15.W_TO_over_Range = 45.3899 lbs/nm
+ 16.W_TO_over_Endurance = 19855.2989 lbs/hr
+ 17.W_TO_over_CriuseSpeed = -220.4202 lbs/kt
  18.W_TO_over_c_j_Range = 208793.4863 lbs/lbs/lbs/hr
  19.W_TO_over_LoverD_Range = -7620.2002 lbs
  20.W_TO_over_c_j_Loiter = 16546.0824 lbs/lbs/lbs/hr
@@ -85,11 +85,11 @@
  11.W_E_real = 96808.9124 lbs
  12.W_E_error = 9.0486e-05 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
  Sensitivity Result
- 13.W_TO_over_W_PL = 9.0486e-07
- 14.W_TO_over_W_E = 4.323
- 15.W_TO_over_Range = 1.9525 lbs/nm
- 16.W_TO_over_Endurance = 49.9794 lbs/hr
- 17.W_TO_over_CriuseSpeed = 19522.5159 lbs/kt
+ 13.W_TO_over_W_PL = 4.323
+ 14.W_TO_over_W_E = 1.9525
+ 15.W_TO_over_Range = 49.9794 lbs/nm
+ 16.W_TO_over_Endurance = 19522.5159 lbs/hr
+ 17.W_TO_over_CriuseSpeed = -223.476 lbs/kt
  18.W_TO_over_c_j_Range = 198031.4847 lbs/lbs/lbs/hr
  19.W_TO_over_LoverD_Range = -7891.4802 lbs
  20.W_TO_over_c_j_Loiter = 16829.7551 lbs/lbs/lbs/hr
@@ -109,11 +109,11 @@
  11.W_E_real = 96808.6807 lbs
  12.W_E_error = 0.00032981 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
  Sensitivity Result
- 13.W_TO_over_W_PL = 3.2981e-06
- 14.W_TO_over_W_E = 4.3229
- 15.W_TO_over_Range = 1.9525 lbs/nm
- 16.W_TO_over_Endurance = 50.318 lbs/hr
- 17.W_TO_over_CriuseSpeed = 18945.7012 lbs/kt
+ 13.W_TO_over_W_PL = 4.3229
+ 14.W_TO_over_W_E = 1.9525
+ 15.W_TO_over_Range = 50.318 lbs/nm
+ 16.W_TO_over_Endurance = 18945.7012 lbs/hr
+ 17.W_TO_over_CriuseSpeed = -229.9214 lbs/kt
  18.W_TO_over_c_j_Range = 199373.0946 lbs/lbs/lbs/hr
  19.W_TO_over_LoverD_Range = -7827.24 lbs
  20.W_TO_over_c_j_Loiter = 17223.3647 lbs/lbs/lbs/hr
@@ -133,11 +133,11 @@
  11.W_E_real = 96809.1546 lbs
  12.W_E_error = 0.00015968 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
  Sensitivity Result
- 13.W_TO_over_W_PL = 1.5968e-06
- 14.W_TO_over_W_E = 4.323
- 15.W_TO_over_Range = 1.9525 lbs/nm
- 16.W_TO_over_Endurance = 48.0635 lbs/hr
- 17.W_TO_over_CriuseSpeed = 18531.7179 lbs/kt
+ 13.W_TO_over_W_PL = 4.323
+ 14.W_TO_over_W_E = 1.9525
+ 15.W_TO_over_Range = 48.0635 lbs/nm
+ 16.W_TO_over_Endurance = 18531.7179 lbs/hr
+ 17.W_TO_over_CriuseSpeed = -230.0782 lbs/kt
  18.W_TO_over_c_j_Range = 207332.9601 lbs/lbs/lbs/hr
  19.W_TO_over_LoverD_Range = -7774.986 lbs
  20.W_TO_over_c_j_Loiter = 16546.1767 lbs/lbs/lbs/hr
@@ -157,11 +157,11 @@
  11.W_E_real = 96808.7235 lbs
  12.W_E_error = 0.00028562 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
  Sensitivity Result
- 13.W_TO_over_W_PL = 2.8562e-06
- 14.W_TO_over_W_E = 4.3229
- 15.W_TO_over_Range = 1.9525 lbs/nm
- 16.W_TO_over_Endurance = 47.6815 lbs/hr
- 17.W_TO_over_CriuseSpeed = 20311.7072 lbs/kt
+ 13.W_TO_over_W_PL = 4.3229
+ 14.W_TO_over_W_E = 1.9525
+ 15.W_TO_over_Range = 47.6815 lbs/nm
+ 16.W_TO_over_Endurance = 20311.7072 lbs/hr
+ 17.W_TO_over_CriuseSpeed = -229.2675 lbs/kt
  18.W_TO_over_c_j_Range = 209798.7717 lbs/lbs/lbs/hr
  19.W_TO_over_LoverD_Range = -7770.3249 lbs
  20.W_TO_over_c_j_Loiter = 16926.4226 lbs/lbs/lbs/hr
@@ -181,11 +181,11 @@
  11.W_E_real = 96808.7433 lbs
  12.W_E_error = 0.00026521 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
  Sensitivity Result
- 13.W_TO_over_W_PL = 2.6521e-06
- 14.W_TO_over_W_E = 4.3229
- 15.W_TO_over_Range = 1.9525 lbs/nm
- 16.W_TO_over_Endurance = 48.033 lbs/hr
- 17.W_TO_over_CriuseSpeed = 18957.5998 lbs/kt
+ 13.W_TO_over_W_PL = 4.3229
+ 14.W_TO_over_W_E = 1.9525
+ 15.W_TO_over_Range = 48.033 lbs/nm
+ 16.W_TO_over_Endurance = 18957.5998 lbs/hr
+ 17.W_TO_over_CriuseSpeed = -231.9965 lbs/kt
  18.W_TO_over_c_j_Range = 203216.3635 lbs/lbs/lbs/hr
  19.W_TO_over_LoverD_Range = -7548.0364 lbs
  20.W_TO_over_c_j_Loiter = 16926.4284 lbs/lbs/lbs/hr
@@ -205,11 +205,11 @@
  11.W_E_real = 96808.8603 lbs
  12.W_E_error = 0.00014433 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
  Sensitivity Result
- 13.W_TO_over_W_PL = 1.4433e-06
- 14.W_TO_over_W_E = 4.3229
- 15.W_TO_over_Range = 1.9525 lbs/nm
- 16.W_TO_over_Endurance = 52.7442 lbs/hr
- 17.W_TO_over_CriuseSpeed = 20088.678 lbs/kt
+ 13.W_TO_over_W_PL = 4.3229
+ 14.W_TO_over_W_E = 1.9525
+ 15.W_TO_over_Range = 52.7442 lbs/nm
+ 16.W_TO_over_Endurance = 20088.678 lbs/hr
+ 17.W_TO_over_CriuseSpeed = -232.6436 lbs/kt
  18.W_TO_over_c_j_Range = 195348.7306 lbs/lbs/lbs/hr
  19.W_TO_over_LoverD_Range = -7931.4522 lbs
  20.W_TO_over_c_j_Loiter = 17024.3034 lbs/lbs/lbs/hr
@@ -229,11 +229,11 @@
  11.W_E_real = 96809.2802 lbs
  12.W_E_error = 0.00028946 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
  Sensitivity Result
- 13.W_TO_over_W_PL = 2.8946e-06
- 14.W_TO_over_W_E = 4.323
- 15.W_TO_over_Range = 1.9525 lbs/nm
- 16.W_TO_over_Endurance = 50.6098 lbs/hr
- 17.W_TO_over_CriuseSpeed = 18407.6615 lbs/kt
+ 13.W_TO_over_W_PL = 4.323
+ 14.W_TO_over_W_E = 1.9525
+ 15.W_TO_over_Range = 50.6098 lbs/nm
+ 16.W_TO_over_Endurance = 18407.6615 lbs/hr
+ 17.W_TO_over_CriuseSpeed = -234.5529 lbs/kt
  18.W_TO_over_c_j_Range = 208393.2123 lbs/lbs/lbs/hr
  19.W_TO_over_LoverD_Range = -8113.0182 lbs
  20.W_TO_over_c_j_Loiter = 16734.2377 lbs/lbs/lbs/hr
@@ -253,11 +253,11 @@
  11.W_E_real = 96809.2134 lbs
  12.W_E_error = 0.00022042 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
  Sensitivity Result
- 13.W_TO_over_W_PL = 2.2042e-06
- 14.W_TO_over_W_E = 4.323
- 15.W_TO_over_Range = 1.9525 lbs/nm
- 16.W_TO_over_Endurance = 50.6097 lbs/hr
- 17.W_TO_over_CriuseSpeed = 18957.7536 lbs/kt
+ 13.W_TO_over_W_PL = 4.323
+ 14.W_TO_over_W_E = 1.9525
+ 15.W_TO_over_Range = 50.6097 lbs/nm
+ 16.W_TO_over_Endurance = 18957.7536 lbs/hr
+ 17.W_TO_over_CriuseSpeed = -234.5526 lbs/kt
  18.W_TO_over_c_j_Range = 208392.9719 lbs/lbs/lbs/hr
  19.W_TO_over_LoverD_Range = -8113.0088 lbs
  20.W_TO_over_c_j_Loiter = 16926.5658 lbs/lbs/lbs/hr
@@ -277,11 +277,11 @@
  11.W_E_real = 96808.8201 lbs
  12.W_E_error = 0.00018579 % (compare with W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew)
  Sensitivity Result
- 13.W_TO_over_W_PL = 1.8579e-06
- 14.W_TO_over_W_E = 4.3229
- 15.W_TO_over_Range = 1.9525 lbs/nm
- 16.W_TO_over_Endurance = 48.2845 lbs/hr
- 17.W_TO_over_CriuseSpeed = 18726.7208 lbs/kt
+ 13.W_TO_over_W_PL = 4.3229
+ 14.W_TO_over_W_E = 1.9525
+ 15.W_TO_over_Range = 48.2845 lbs/nm
+ 16.W_TO_over_Endurance = 18726.7208 lbs/hr
+ 17.W_TO_over_CriuseSpeed = -234.4321 lbs/kt
  18.W_TO_over_c_j_Range = 204280.4315 lbs/lbs/lbs/hr
  19.W_TO_over_LoverD_Range = -7587.5589 lbs
  20.W_TO_over_c_j_Loiter = 17024.2916 lbs/lbs/lbs/hr
