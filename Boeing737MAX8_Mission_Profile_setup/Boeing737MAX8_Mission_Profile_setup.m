@@ -9,10 +9,10 @@ clear
 prompt = ' Which OS are you using? (Windows/MacOS) Ans:';
 OS = input(prompt,'s');
 if strcmp(OS,'MacOS')
-    WorkspaceSavedDirectory = 'Boeing737MAX8_Mission_Profile_setup/Boeing737MAX8_Mission_Profile_setup.mat';
+    Boeing737MAX8_Mission_Profile_setup_WorkspaceSavedDirectory = 'Boeing737MAX8_Mission_Profile_setup/Boeing737MAX8_Mission_Profile_setup.mat';
 
 elseif strcmp(OS,'Windows') 
-    WorkspaceSavedDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_Mission_Profile_setup\Boeing737MAX8_Mission_Profile_setup.mat';
+    Boeing737MAX8_Mission_Profile_setup_WorkspaceSavedDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_Mission_Profile_setup\Boeing737MAX8_Mission_Profile_setup.mat';
     
 else
     error;
@@ -113,7 +113,7 @@ W8_W7_ratio = 1/(exp(AlternateRange/(AlternateCruiseSpeed/0.9*10)));   % Fly to 
 W9_W8_ratio = 0.992;                                                   % Landing, Taxi and Shutdown, From Table 2.1
 
 %% InputParametersMatrix setup section
-% ResultMatrix sizing
+% InputParametersMatrix sizing
 InputParametersMatrix_row = width(CruiseAltitudeMatrix)*width(RangeMatrix)*width(LoverD_CruiseMatrix)...
     *width(LoverD_LoiterMatrix)*width(c_j_cruiseMatrix)*width(c_j_loiterMatrix);
 InputParametersMatrix_column = 14;
@@ -147,17 +147,17 @@ end
 
 
 %% Parallel computing CruiseSpeed/AverageClimbSpeed/ClimbTime/CruiseRange/W5_W4_ratio/W6_W5_ratio/M_ff
-parfor row1 = 1:InputParametersMatrix_row
+parfor row = 1:InputParametersMatrix_row
     % Temporary matrix for parallel computing
-    temp1 = zeros(1,InputParametersMatrix_column);
+    temp = zeros(1,InputParametersMatrix_column);
 
     % Read data form InputParametersMatrixtemp
-    CruiseAltitude = InputParametersMatrixTemp(row1,1);
-    Range = InputParametersMatrixTemp(row1,2);
-    LoverD_Cruise = InputParametersMatrixTemp(row1,3);
-    LoverD_Loiter = InputParametersMatrixTemp(row1,4);
-    c_j_cruise  = InputParametersMatrixTemp(row1,5);
-    c_j_loiter = InputParametersMatrixTemp(row1,6);
+    CruiseAltitude = InputParametersMatrixTemp(row,1);
+    Range = InputParametersMatrixTemp(row,2);
+    LoverD_Cruise = InputParametersMatrixTemp(row,3);
+    LoverD_Loiter = InputParametersMatrixTemp(row,4);
+    c_j_cruise  = InputParametersMatrixTemp(row,5);
+    c_j_loiter = InputParametersMatrixTemp(row,6);
 
     % Calculate parameters
     [a]=Standard_Atmosphere(CruiseAltitude);                                     % unit:Imperial system
@@ -173,36 +173,26 @@ parfor row1 = 1:InputParametersMatrix_row
     C = 1-(1-M_ff)-0.005;
  
     % Output data
-    temp1(1) = CruiseAltitude;
-    temp1(2) = Range;
-    temp1(3) = LoverD_Cruise;
-    temp1(4) = LoverD_Loiter;
-    temp1(5) = c_j_cruise;
-    temp1(6) = c_j_loiter;
-    temp1(7) = CruiseSpeed;
-    temp1(8) = AverageClimbSpeed;
-    temp1(9) = ClimbTime;
-    temp1(10) = ClimbRange;
-    temp1(11) = CruiseRange;
-    temp1(12) = W5_W4_ratio;
-    temp1(12) = W6_W5_ratio;
-    temp1(13) = M_ff;
-    temp1(14) = C;
+    temp(1) = CruiseAltitude;
+    temp(2) = Range;
+    temp(3) = LoverD_Cruise;
+    temp(4) = LoverD_Loiter;
+    temp(5) = c_j_cruise;
+    temp(6) = c_j_loiter;
+    temp(7) = CruiseSpeed;
+    temp(8) = AverageClimbSpeed;
+    temp(9) = ClimbTime;
+    temp(10) = ClimbRange;
+    temp(11) = CruiseRange;
+    temp(12) = W5_W4_ratio;
+    temp(12) = W6_W5_ratio;
+    temp(13) = M_ff;
+    temp(14) = C;
 
     % Output calculate result into InputParametersMatrix
-    InputParametersMatrix(row1, :) = temp1;
+    InputParametersMatrix(row, :) = temp;
 
 end
-
-% section saved
-save(WorkspaceSavedDirectory);
-time = now;
-date = datetime(time,'ConvertFrom','datenum');
-string_RecordTime=[' RecordTime: ',datestr(date)];
-string_Workspace_saved=[' Workspace is saved'];
-disp('----------------------------------------------------')
-disp(string_Workspace_saved)
-disp(string_RecordTime)
 
 %% Plot W_E_real/W_E_tent_min/W_E_tent_max
 %
@@ -223,7 +213,7 @@ y_W_E_tent_max = C_max.*x_W_TO_guess - D;
 syms x
 W_TO_guess_min = vpasolve( A + B*log10(C_max*x - D) - log10(x) == 0 );
 W_TO_guess_max = vpasolve( A + B*log10(C_min*x - D) - log10(x) == 0 );
-W_TO_guess_LowerBound = floor(W_TO_guess_min);;
+W_TO_guess_LowerBound = floor(W_TO_guess_min);
 W_to_guess_UpperBound = ceil(W_TO_guess_max);
 %
 x1 = [182044 182044];
@@ -252,6 +242,15 @@ ylabel('W_E');
 legend('W_Ereal','W_Etent_m_i_n','W_Etent_m_a_x');
 hold off
 
+% section saved
+save(Boeing737MAX8_Mission_Profile_setup_WorkspaceSavedDirectory);
+time = now;
+date = datetime(time,'ConvertFrom','datenum');
+string_RecordTime=[' RecordTime: ',datestr(date)];
+string_Workspace_saved=[' Workspace is saved'];
+disp('----------------------------------------------------')
+disp(string_Workspace_saved)
+disp(string_RecordTime)
 %%
 function [a]=Standard_Atmosphere(h)
 % Standard Atmosphere (SI Units)
