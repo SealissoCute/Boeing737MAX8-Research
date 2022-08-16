@@ -1,39 +1,57 @@
 clc;clear
 format long
 %% Setup output file directory (Notice: Need to be customized at different computer)
-prompt = ' Which OS are you using? (Windows/MacOS) Ans:';
-OS = input(prompt,'s');
-if strcmp(OS,'MacOS')
-    Boeing737MAX8_W_TO_Senitivity_WorkspaceSavedDirectory = 'Boeing737MAX8_Sensitivity/Boeing737MAX8_W_TO_Senitivity.mat';
+%
+% prompt = ' Which OS are you using? (Windows/MacOS) Ans:';
+% OS = input(prompt,'s');
+% if strcmp(OS,'MacOS')
+%     Boeing737MAX8_W_TO_Senitivity_WorkspaceSavedDirectory = 'Boeing737MAX8_Sensitivity/Boeing737MAX8_W_TO_Senitivity.mat';
+% 
+% elseif strcmp(OS,'Windows') 
+%     Boeing737MAX8_W_TO_Senitivity_WorkspaceSavedDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_Sensitivity\Boeing737MAX8_W_TO_Senitivity.mat';
+%     
+% else
+%     error;
+% end
+% load(Boeing737MAX8_W_TO_Senitivity_WorkspaceSavedDirectory);
 
-elseif strcmp(OS,'Windows') 
-    Boeing737MAX8_W_TO_Senitivity_WorkspaceSavedDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_Sensitivity\Boeing737MAX8_W_TO_Senitivity.mat';
-    
-else
-    error;
-end
-load(Boeing737MAX8_W_TO_Senitivity_WorkspaceSavedDirectory);
+%% Unit exchange
+%
+ft_to_m = 0.3048;       % ft to m
+m_s_to_mph = 2.236936;  % m/s to mph
+m_s_to_kt = 1.943844;   % m/s to kt
+m_s_to_ft_s = 3.280840; % m/s to ft/s
+ft_s_to_kt = 0.592484;  % ft/s to kt
+ 
+
 %%
-CruiseAltitude = 36000;
+%
+W_TO = 182043.622463998;
+CruiseAltitude = 40000;
+[a,rho]=Standard_Atmosphere(CruiseAltitude);
+a_CruiseAltitude = a;
+rho_CruiseAltitude = rho;
+CruiseSpeed_Mach = 0.79;
+CruiseSpeed = CruiseSpeed_Mach*a_CruiseAltitude;
+q_overline = 0.5*rho_CruiseAltitude*CruiseSpeed^2;
+
+%
 FieldAltitude = 5000;
 [a,rho]=Standard_Atmosphere(FieldAltitude);
-ft_s_to_kt = 0.592484;
+rho_FieldAltitude = rho;
+
 WoverS = 0:10:200;
-W_TO = 182200;
 c = 0.0199;
 d = 0.7531;
 S_wet = 10^(c+d*log10(W_TO));
+AR = 10;%
+
 % From Table 3.4 Correlation Coefficients For Parasite Area Versus Wetted Area
-% cf_1 = 0.002; a_1 = -2.6990; b_1 = 1;
 cf_2 = 0.003; a_2 = -2.5229; b_2 = 1;
 cf_3 = 0.004; a_3 = -2.3979; b_3 = 1;
-% f_1 = 10^(a_1+b_1*log10(S_wet));
 f_2 = 10^(a_2+b_2*log10(S_wet));
 f_3 = 10^(a_3+b_3*log10(S_wet));
-AR = 10; %
 
-<<<<<<< Updated upstream
-=======
 %
 delta_CD0_TOflaps = 0.015;  % From p.127, Table 3.6
 delta_CDO_Lflaps = 0.065;   % From p.127, Table 3.6
@@ -92,7 +110,6 @@ ToverW_TO4 = ToverW_TO/0.94/0.8; % 最大推力校正(除以0.94), 50°F效應(�
 % FAR25.119 AEO
 CL_max_L = 2.8; % From Table 3.1
 CL = CL_max_L/1.3^2; % at 1.3 V_stall_L
-
 LoverD = CL/(CD_0_clean+delta_CDO_Lflaps+delta_CD0_LG+CL^2/(pi*AR*e_Lflaps));
 ToverW_L = 1/LoverD+0.032; % CGR>0.032
 ToverW_TO5 = ToverW_L*(W_L/W_TO)/0.8;
@@ -113,7 +130,6 @@ yline(ToverW_TO6)
 xlabel('W/S');
 ylabel('T/W');
 hold off
->>>>>>> Stashed changes
 
 %% FAR25 TAKEOFF DISTANCE SIZING
 figure()
@@ -132,24 +148,22 @@ hold off
 figure()
 hold on
 for CL_max_L = 1.8:0.2:2.8
-    xline(5000/0.3/1.69/2*rho*CL_max_L/ft_s_to_kt^2/0.85);
+    xline(5000/0.3/1.69/2*rho*CL_max_L/ft_s_to_kt^2)
 end
 hold off
 
 %% FAR25 CLIMB RATE SIZING
-delta_CD0_TOflaps = 0.01:0.005:0.02;  % From p.127, Table 3.6 
-delta_CDO_Lflaps = 0.055:0.01:0.075;  % From p.127, Table 3.6 
-delta_CD0_LG = 0.015:0.005:0.025;     % From p.127, Table 3.6
-e_clean = 0.80:0.05:0.85              % From p.127, Table 3.6
-e_TOflaps = 0.75:0.05:0.80;           % From p.127, Table 3.6
-e_Lflaps = 0.70:0.05:0.75;            % From p.127, Table 3.6
-WLoverWTO = 0.65:0.05:1;              % From p.107, Table 3.3
-W_L = W_TO*WLoverWTO;
+delta_CD0_TOflaps = 0.015;  % From p.127, Table 3.6
+delta_CDO_Lflaps = 0.065;   % From p.127, Table 3.6
+delta_CD0_LG = 0.02;        % From p.127, Table 3.6
+e_TOflaps = 0.8;            % From p.127, Table 3.6
+e_Lflaps = 0.75;            % From p.127, Table 3.6
+W_L = W_TO*0.84;            % 0.84 is from p.107, Table 3.3
+WoverS = 100;               % from example in the book ( 0:200 )
 S = W_TO/WoverS;
 CD_0_clean = f_2/S;         % Take cf = 0.003
 
-% Drag coefficient formula for different situation
-% CD_clean = CD_0_clean + CL^2/(pi*AR*e_clean)
+% CD_clean = CD_0_clean + CL^2/(pi*AR*e)
 % CD_TO_GearUp = CD_0_clean+delta_CD0_TOflaps+CL^2/(pi*AR*e_TOflaps)
 % CD_TO_GearDown = CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps)
 % CD_L_GearUp = CD_0_clean+delta_CDO_Lflaps+CL^2/(pi*AR*e_Lflaps)
@@ -161,33 +175,28 @@ CL = CL_TO_max/1.2^2;              % at 1.2 V_stall_TO
 LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps)); % CL/CD_TO_GearDown
 ToverW_TO = 2*(1/LoverD+0.012);    % CGR>0.012
 ToverW_TO1 = ToverW_TO/0.8; % 50°F效應(除以0.8)
-
 % FAR25.121 OEI
 CL = CL_TO_max/1.1^2; % V_LOF = 1.1 V_stall_TO
 LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps));
 ToverW_TO = 2*(1/LoverD); % CGR>0
 ToverW_TO2 = ToverW_TO/0.8; % 50°F效應(除以0.8)
-
 % FAR25.121 OEI
 CL = CL_TO_max/1.2^2; % at 1.2 V_stall_TO
 LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+CL^2/(pi*AR*e_TOflaps));
 ToverW_TO = 2*(1/LoverD+0.024); % CGR>0.024
 ToverW_TO3 = ToverW_TO/0.8;
-
 % FAR25.121 OEI
 CL_max = 1.4; % From Table 3.1
 CL = CL_max/1.25^2; % at 1.25 V_stall
-LoverD = CL/(CD_0_clean + CL^2/(pi*AR*e_clean));
+LoverD = CL/(CD_0_clean + CL^2/(pi*AR*e));
 ToverW_TO = 2*(1/LoverD+0.012); % CGR>0.012
 ToverW_TO4 = ToverW_TO/0.94/0.8; % 最大推力校正(除以0.94), 50°F效應(除以0.8)
-
 % FAR25.119 AEO
 CL_max_L = 2.8; % From Table 3.1
 CL = CL_max_L/1.3^2; % at 1.3 V_stall_L
 LoverD = CL/(CD_0_clean+delta_CDO_Lflaps+delta_CD0_LG+CL^2/(pi*AR*e_Lflaps));
 ToverW_L = 1/LoverD+0.032; % CGR>0.032
 ToverW_TO5 = ToverW_L*(W_L/W_TO)/0.8;
-
 % FAR25.121 OEI
 CL_max_A = 2.4; % From Table 3.1
 CL = CL_max_A/1.5^2; % at 1.5 V_stall_A
@@ -195,7 +204,6 @@ LoverD = CL/((CD_0_clean+delta_CD0_TOflaps+CD_0_clean+delta_CDO_Lflaps)/2+delta_
 ToverW_L = 2*(1/LoverD+0.021); % CGR>0.021
 ToverW_TO6 = ToverW_L*(W_L/W_TO)/0.8
 WoverS = 0:10:200;
-
 hold on
 yline(ToverW_TO1)
 yline(ToverW_TO2)
@@ -221,10 +229,9 @@ hold off
     delta_C_D0 = 0.0001*2.5; % p.166 figure 3.32
     C_D0_modification = C_D0 + delta_C_D0;
     q_overline = 0.5*rho*CruiseSpeed^2;
-    ToverW_cruise_reqd = C_D0_modification*q_overline./WoverS + WoverS./(q_overline*pi*AR*e_clean);
+    ToverW_cruise_reqd = C_D0_modification*q_overline./WoverS + WoverS./(q_overline*pi*AR*e);
     ToverW_TO = ToverW_cruise_reqd./0.23;
     plot(WoverS,ToverW_TO)
-
 %%
 function [a,rho]=Standard_Atmosphere(h)
 % Standard Atmosphere (SI Units)
