@@ -50,6 +50,7 @@ W_L = W_TO*WLoverWTO;
 S = W_TO/WoverS;
 CD_0_clean = f_2/S;         % Take cf = 0.003
 
+% Drag coefficient formula for different situation
 % CD_clean = CD_0_clean + CL^2/(pi*AR*e_clean)
 % CD_TO_GearUp = CD_0_clean+delta_CD0_TOflaps+CL^2/(pi*AR*e_TOflaps)
 % CD_TO_GearDown = CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps)
