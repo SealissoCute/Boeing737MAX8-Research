@@ -36,7 +36,7 @@ hold off
 figure()
 hold on
 for CL_max_L = 1.8:0.2:2.8
-    xline(5000/0.3/1.69/2*rho*CL_max_L/ft_s_to_kt^2)
+    xline(5000/0.3/1.69/2*rho*CL_max_L/ft_s_to_kt^2/0.85);
 end
 hold off
 
