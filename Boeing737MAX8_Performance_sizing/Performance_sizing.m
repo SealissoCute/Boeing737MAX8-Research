@@ -22,6 +22,7 @@ m_s_to_mph = 2.236936;  % m/s to mph
 m_s_to_kt = 1.943844;   % m/s to kt
 m_s_to_ft_s = 3.280840; % m/s to ft/s
 ft_s_to_kt = 0.592484;  % ft/s to kt
+ 
 
 %%
 %
