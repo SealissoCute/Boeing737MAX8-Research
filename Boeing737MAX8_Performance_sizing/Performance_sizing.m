@@ -1,5 +1,19 @@
 clc;clear
 format long
+%% Setup output file directory (Notice: Need to be customized at different computer)
+prompt = ' Which OS are you using? (Windows/MacOS) Ans:';
+OS = input(prompt,'s');
+if strcmp(OS,'MacOS')
+    Boeing737MAX8_W_TO_Senitivity_WorkspaceSavedDirectory = 'Boeing737MAX8_Sensitivity/Boeing737MAX8_W_TO_Senitivity.mat';
+
+elseif strcmp(OS,'Windows') 
+    Boeing737MAX8_W_TO_Senitivity_WorkspaceSavedDirectory = 'G:\飛設\Boeing737MAX8-Research\Boeing737MAX8_Sensitivity\Boeing737MAX8_W_TO_Senitivity.mat';
+    
+else
+    error;
+end
+load(Boeing737MAX8_W_TO_Senitivity_WorkspaceSavedDirectory);
+%%
 CruiseAltitude = 36000;
 FieldAltitude = 5000;
 [a,rho]=Standard_Atmosphere(FieldAltitude);
@@ -17,6 +31,8 @@ cf_3 = 0.004; a_3 = -2.3979; b_3 = 1;
 f_2 = 10^(a_2+b_2*log10(S_wet));
 f_3 = 10^(a_3+b_3*log10(S_wet));
 AR = 10; %
+
+
 %% FAR25 TAKEOFF DISTANCE SIZING
 figure()
 hold on
@@ -62,28 +78,33 @@ CL = CL_TO_max/1.2^2;              % at 1.2 V_stall_TO
 LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps)); % CL/CD_TO_GearDown
 ToverW_TO = 2*(1/LoverD+0.012);    % CGR>0.012
 ToverW_TO1 = ToverW_TO/0.8; % 50°F效應(除以0.8)
+
 % FAR25.121 OEI
 CL = CL_TO_max/1.1^2; % V_LOF = 1.1 V_stall_TO
 LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps));
 ToverW_TO = 2*(1/LoverD); % CGR>0
 ToverW_TO2 = ToverW_TO/0.8; % 50°F效應(除以0.8)
+
 % FAR25.121 OEI
 CL = CL_TO_max/1.2^2; % at 1.2 V_stall_TO
 LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+CL^2/(pi*AR*e_TOflaps));
 ToverW_TO = 2*(1/LoverD+0.024); % CGR>0.024
 ToverW_TO3 = ToverW_TO/0.8;
+
 % FAR25.121 OEI
 CL_max = 1.4; % From Table 3.1
 CL = CL_max/1.25^2; % at 1.25 V_stall
 LoverD = CL/(CD_0_clean + CL^2/(pi*AR*e_clean));
 ToverW_TO = 2*(1/LoverD+0.012); % CGR>0.012
 ToverW_TO4 = ToverW_TO/0.94/0.8; % 最大推力校正(除以0.94), 50°F效應(除以0.8)
+
 % FAR25.119 AEO
 CL_max_L = 2.8; % From Table 3.1
 CL = CL_max_L/1.3^2; % at 1.3 V_stall_L
 LoverD = CL/(CD_0_clean+delta_CDO_Lflaps+delta_CD0_LG+CL^2/(pi*AR*e_Lflaps));
 ToverW_L = 1/LoverD+0.032; % CGR>0.032
 ToverW_TO5 = ToverW_L*(W_L/W_TO)/0.8;
+
 % FAR25.121 OEI
 CL_max_A = 2.4; % From Table 3.1
 CL = CL_max_A/1.5^2; % at 1.5 V_stall_A
@@ -91,6 +112,7 @@ LoverD = CL/((CD_0_clean+delta_CD0_TOflaps+CD_0_clean+delta_CDO_Lflaps)/2+delta_
 ToverW_L = 2*(1/LoverD+0.021); % CGR>0.021
 ToverW_TO6 = ToverW_L*(W_L/W_TO)/0.8
 WoverS = 0:10:200;
+
 hold on
 yline(ToverW_TO1)
 yline(ToverW_TO2)
@@ -119,6 +141,7 @@ hold off
     ToverW_cruise_reqd = C_D0_modification*q_overline./WoverS + WoverS./(q_overline*pi*AR*e_clean);
     ToverW_TO = ToverW_cruise_reqd./0.23;
     plot(WoverS,ToverW_TO)
+
 %%
 function [a,rho]=Standard_Atmosphere(h)
 % Standard Atmosphere (SI Units)
