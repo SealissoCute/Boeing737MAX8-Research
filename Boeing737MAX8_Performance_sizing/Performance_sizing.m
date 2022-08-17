@@ -22,12 +22,13 @@ m_s_to_mph = 2.236936;  % m/s to mph
 m_s_to_kt = 1.943844;   % m/s to kt
 m_s_to_ft_s = 3.280840; % m/s to ft/s
 ft_s_to_kt = 0.592484;  % ft/s to kt
- 
 
-%%
-%
+%% Parameters
+% Take-off weight (unit: lbs)
 W_TO = 182043.622463998;
-CruiseAltitude = 40000;
+
+% Parameters at CruiseAltitude
+CruiseAltitude = 40000; % unit: ft
 [a,rho]=Standard_Atmosphere(CruiseAltitude);
 a_CruiseAltitude = a;
 rho_CruiseAltitude = rho;
@@ -35,16 +36,19 @@ CruiseSpeed_Mach = 0.79;
 CruiseSpeed = CruiseSpeed_Mach*a_CruiseAltitude;
 q_overline = 0.5*rho_CruiseAltitude*CruiseSpeed^2;
 
-%
-FieldAltitude = 5000;
+% Parameters at FieldAltitude
+FieldAltitude = 5000; % unit: ft
 [a,rho]=Standard_Atmosphere(FieldAltitude);
 rho_FieldAltitude = rho;
 
+%
 WoverS = 0:10:200;
 c = 0.0199;
 d = 0.7531;
 S_wet = 10^(c+d*log10(W_TO));
-AR = 10;%
+
+%
+
 
 % From Table 3.4 Correlation Coefficients For Parasite Area Versus Wetted Area
 cf_2 = 0.003; a_2 = -2.5229; b_2 = 1;
@@ -68,7 +72,15 @@ C_D0 = 0.0184; % p.145&182 low speed,clean drag polar
 delta_C_D0 = 0.0001*2.5; % p.166 figure 3.32
 C_D0_modification = C_D0 + delta_C_D0;
 
+%
+W_TO_wiki = 182200; % unit: lbs
+S_wiki = 1370; % unit: ft^2
+StaticThrust_TO = 29317; % unit: lbs
+WoverS_TO_wiki = W_TO_wiki/S_wiki % unit: lbs/ft^2
+ToverW_TO_wiki = StaticThrust_TO*2/W_TO_wiki % unit: lbs/lbs
+
 %%
+AR = 10;
 figure()
 hold on
 for CL_max_TO = 1.6:0.2:2.2
@@ -127,6 +139,7 @@ yline(ToverW_TO4)
 yline(ToverW_TO5)
 yline(ToverW_TO6)
 
+plot(WoverS_TO_wiki,ToverW_TO_wiki,'rx')
 xlabel('W/S');
 ylabel('T/W');
 hold off
