@@ -45,7 +45,7 @@ rho_FieldAltitude = rho;
 WoverS = 0:10:200;
 c = 0.0199;
 d = 0.7531;
-S_wet = 10^(c+d*log10(W_TO));
+S_wet = 10^(c+d*log10(127000))
 
 %
 
@@ -74,7 +74,8 @@ C_D0_modification = C_D0 + delta_C_D0;
 
 %
 W_TO_wiki = 182200; % unit: lbs
-S_wiki = 1370; % unit: ft^2
+S_wiki = 1370*1.3; % unit: ft^2
+S_wet_wiki = 10^(c+d*log10(W_TO_wiki))
 StaticThrust_TO = 29317; % unit: lbs
 WoverS_TO_wiki = W_TO_wiki/S_wiki % unit: lbs/ft^2
 ToverW_TO_wiki = StaticThrust_TO*2/W_TO_wiki % unit: lbs/lbs
@@ -85,6 +86,11 @@ figure()
 hold on
 for CL_max_TO = 1.6:0.2:2.2
     ToverW = (0.009640.*WoverS)/CL_max_TO;
+    plot(WoverS,ToverW,"r");
+end
+
+for CL_max_TO = 2.8:0.2:4
+    ToverW = (0.009640.*WoverS)/CL_max_TO;
     plot(WoverS,ToverW,"b");
 end
 
@@ -92,9 +98,13 @@ for CL_max_L = 1.8:0.2:2.8
     xline(FieldAltitude/0.3/1.69/2*rho_FieldAltitude*CL_max_L/(ft_s_to_kt^2)/0.85,'r');
 end
 
-for e_clean = 0.80:0.05:0.85              % From p.127, Table 3.6
-    ToverW_cruise_reqd = C_D0_modification*q_overline./WoverS + WoverS./(q_overline*pi*AR*e_clean);
-    ToverW_TO = ToverW_cruise_reqd./0.23;
+for CL_max_L = 3:0.2:4
+    xline(FieldAltitude/0.3/1.69/2*rho_FieldAltitude*CL_max_L/(ft_s_to_kt^2)/0.85,'b');
+end
+
+for e_clean =0.85              % From p.127, Table 3.6
+ToverW_cruise_reqd = C_D0_modification*q_overline./WoverS + WoverS./(q_overline*pi*AR*e_clean);
+    ToverW_TO = ToverW_cruise_reqd./0.191;
     plot(WoverS,ToverW_TO,"g")
 end
 % FAR25.111 OEI (P.145)

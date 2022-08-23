@@ -79,7 +79,7 @@ parfor row = 1:W_TO_Apporx_row
 end
 
 save(Boeing737MAX8_WTO_WorkspaceSavedDirectory);
-time = now;
+time = now; 
 date = datetime(time,'ConvertFrom','datenum');
 string_RecordTime=[' RecordTime: ',datestr(date)];
 string_Workspace_saved=[' Workspace is saved'];

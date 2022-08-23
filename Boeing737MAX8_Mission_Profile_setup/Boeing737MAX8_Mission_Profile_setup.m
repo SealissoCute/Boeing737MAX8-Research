@@ -116,7 +116,7 @@ W9_W8_ratio = 0.992;                                                   % Landing
 % InputParametersMatrix sizing
 InputParametersMatrix_row = width(CruiseAltitudeMatrix)*width(RangeMatrix)*width(LoverD_CruiseMatrix)...
     *width(LoverD_LoiterMatrix)*width(c_j_cruiseMatrix)*width(c_j_loiterMatrix);
-InputParametersMatrix_column = 14;
+InputParametersMatrix_column = 15;
 InputParametersMatrixTemp = zeros(InputParametersMatrix_row,InputParametersMatrix_column);
 InputParametersMatrix = zeros(InputParametersMatrix_row,InputParametersMatrix_column);
 
@@ -185,9 +185,9 @@ parfor row = 1:InputParametersMatrix_row
     temp(10) = ClimbRange;
     temp(11) = CruiseRange;
     temp(12) = W5_W4_ratio;
-    temp(12) = W6_W5_ratio;
-    temp(13) = M_ff;
-    temp(14) = C;
+    temp(13) = W6_W5_ratio;
+    temp(14) = M_ff;
+    temp(15) = C;
 
     % Output calculate result into InputParametersMatrix
     InputParametersMatrix(row, :) = temp;
