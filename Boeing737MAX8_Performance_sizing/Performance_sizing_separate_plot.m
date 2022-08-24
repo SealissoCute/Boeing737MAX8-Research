@@ -154,12 +154,20 @@ LoverD = CL/((CD_0_clean+delta_CD0_TOflaps+CD_0_clean+delta_CDO_Lflaps)/2+delta_
 ToverW_L = 2*(1/LoverD+0.021); % CGR>0.021
 ToverW_TO6 = ToverW_L*(W_L/W_TO)/0.8; 
 
-yline(ToverW_TO1,'color',[0 0.4470 0.7410]) 
-yline(ToverW_TO2,'color',[0.8500 0.3250 0.0980]) 
-yline(ToverW_TO3,'color',[0.9290 0.6940 0.1250]) 
-yline(ToverW_TO4,'color',[0.4940 0.1840 0.5560])
-yline(ToverW_TO5,'color',[0.4660 0.6740 0.1880]) 
-yline(ToverW_TO6,'color',[0.3010 0.7450 0.9330]) 
+WoverS_TO = [0 200];
+ToverW_TO1 = [ToverW_TO1 ToverW_TO1];
+ToverW_TO2 = [ToverW_TO2 ToverW_TO2];
+ToverW_TO3 = [ToverW_TO3 ToverW_TO3];
+ToverW_TO4 = [ToverW_TO4 ToverW_TO4];
+ToverW_TO5 = [ToverW_TO5 ToverW_TO5];
+ToverW_TO6 = [ToverW_TO6 ToverW_TO6];
+
+plot(WoverS_TO,ToverW_TO1) 
+plot(WoverS_TO,ToverW_TO2) 
+plot(WoverS_TO,ToverW_TO3) 
+plot(WoverS_TO,ToverW_TO4)
+plot(WoverS_TO,ToverW_TO5)
+plot(WoverS_TO,ToverW_TO6)
 
 legend('FAR25.111 OEI','FAR25.121 OEI','FAR25.121 OEI','FAR25.121 OEI','FAR25.119 AEO','FAR25.121 OEI','Location','northwest')
 

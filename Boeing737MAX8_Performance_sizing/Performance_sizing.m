@@ -49,7 +49,7 @@ delta_CD0_LG = 0.02;        % From p.127, Table 3.6CD_0_clean
 e_TOflaps = 0.8;            % From p.127, Table 3.6
 e_Lflaps = 0.75;            % From p.127, Table 3.6
 W_L = W_TO*0.84;            % 0.84 is from p.107, Table 3.3
-S = W_TO/100;               % W/S = 100
+S = W_TO/100;               % Take W/S = 100
 CD_0_clean = f_2/S;         % Take cf = 0.003
 
 %
@@ -132,12 +132,20 @@ LoverD = CL/((CD_0_clean+delta_CD0_TOflaps+CD_0_clean+delta_CDO_Lflaps)/2+delta_
 ToverW_L = 2*(1/LoverD+0.021); % CGR>0.021
 ToverW_TO6 = ToverW_L*(W_L/W_TO)/0.8; 
 
-yline(ToverW_TO1,'color',[0.4940 0.1840 0.5560]) % purple
-yline(ToverW_TO2,'color',[0.4940 0.1840 0.5560]) % purple
-yline(ToverW_TO3,'color',[0.4940 0.1840 0.5560]) % purple
-yline(ToverW_TO4,'color',[0.4940 0.1840 0.5560]) % purple
-yline(ToverW_TO5,'color',[0.4940 0.1840 0.5560]) % purple
-yline(ToverW_TO6,'color',[0.4940 0.1840 0.5560]) % purple
+WoverS_TO = [0 200];
+ToverW_TO1 = [ToverW_TO1 ToverW_TO1];
+ToverW_TO2 = [ToverW_TO2 ToverW_TO2];
+ToverW_TO3 = [ToverW_TO3 ToverW_TO3];
+ToverW_TO4 = [ToverW_TO4 ToverW_TO4];
+ToverW_TO5 = [ToverW_TO5 ToverW_TO5];
+ToverW_TO6 = [ToverW_TO6 ToverW_TO6];
+
+plot(WoverS_TO,ToverW_TO1,'color',[0.4940 0.1840 0.5560]) % purple
+plot(WoverS_TO,ToverW_TO2,'color',[0.4940 0.1840 0.5560]) % purple
+plot(WoverS_TO,ToverW_TO3,'color',[0.4940 0.1840 0.5560]) % purple
+plot(WoverS_TO,ToverW_TO4,'color',[0.4940 0.1840 0.5560]) % purple
+plot(WoverS_TO,ToverW_TO5,'color',[0.4940 0.1840 0.5560]) % purple
+plot(WoverS_TO,ToverW_TO6,'color',[0.4940 0.1840 0.5560]) % purple
 
 plot(WoverS_TO_wiki,ToverW_TO_wiki,'rx')
 
