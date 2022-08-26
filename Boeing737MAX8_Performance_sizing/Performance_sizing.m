@@ -72,8 +72,8 @@ C_D0_modification = C_D0 + delta_C_D0;
 
 %
 W_TO_wiki = 182200; % unit: lb
-b = 117.833; % unit: ft^2
-S_wiki = 1370; % unit: ft
+b = 117.833; % unit: ft
+S_wiki = 1370; % unit: ft^2
 AR = b^2/S_wiki; % unit: ft
 S_wiki_TO = 1370; % unit: ft^2
 S_wet_wiki = 10^(c+d*log10(W_TO_wiki));
