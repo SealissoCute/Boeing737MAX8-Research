@@ -27,9 +27,20 @@ CruiseSpeed = CruiseSpeed_Mach*a_CruiseAltitude;
 q_overline = 0.5*rho_CruiseAltitude*CruiseSpeed^2;
 
 % Parameters at FieldAltitude
-FieldAltitude = 5000; % unit: ft
-[a,rho]=Standard_Atmosphere(FieldAltitude);
+FieldAltitude = 8000; % unit: ft
+[a,rho,P]=Standard_Atmosphere(FieldAltitude);
 rho_FieldAltitude = rho;
+P_FieldAltitude = P;
+
+% Parameters at sea level
+[a,rho,P,Rankine]=Standard_Atmosphere(0);
+P_SeaLevel = P;
+T_SeaLevel = Rankine;
+
+% Ratio
+P_FieldAltitude_over_P_SeaLevel = P_FieldAltitude/P_SeaLevel;
+T_95F_over_T_SeaLevel = (95+459.7)/T_SeaLevel;
+Density_ratio_TO = P_FieldAltitude_over_P_SeaLevel/T_95F_over_T_SeaLevel;
 
 %
 WoverS = 0:10:200;
@@ -70,10 +81,11 @@ WoverS_TO_wiki = W_TO_wiki/S_wiki_TO; % unit: lb/ft^2
 ToverW_TO_wiki = StaticThrust_TO*2/W_TO_wiki; % unit: lb/lb
 
 %% FAR25 TAKEOFF DISTANCE SIZING
+FieldLenght_TO = 5000; % unit: ft
 figure()
 hold on
 for CL_max_TO = 1.6:0.2:3
-    ToverW = (0.009640.*WoverS)/CL_max_TO;
+    ToverW = (37.5.*WoverS)/(Density_ratio_TO*CL_max_TO*FieldLenght_TO);
     plot(WoverS,ToverW);
 end
 legend('1.6','1.8','2.0','2.2','2.4','2.6','2.8','3','Location','northwest')
@@ -186,7 +198,7 @@ hold off
 % Landing Gear      0.015 - 0.025   no effect
 
 %%
-function [a,rho]=Standard_Atmosphere(h)
+function [a,rho,P,Rankine]=Standard_Atmosphere(h)
 % Standard Atmosphere (SI Units)
 % [C,a,P,rho,g,mu]=Standard_Atmosphere(h)
 %
