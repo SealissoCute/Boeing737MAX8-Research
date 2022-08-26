@@ -25,10 +25,23 @@ CruiseSpeed_Mach = 0.79;
 CruiseSpeed = CruiseSpeed_Mach*a_CruiseAltitude;
 q_overline = 0.5*rho_CruiseAltitude*CruiseSpeed^2;
 
-% Parameters at FieldAltitude
-FieldAltitude = 5000; % unit: ft
-[a,rho]=Standard_Atmosphere(FieldAltitude);
+% Parameters at FieldAltitude RCTP FieldLength:12467ft/FieldAltitude:106ft
+FieldLength = 10000; % unit: ft
+FieldAltitude = 106; % unit: ft
+[a,rho,P]=Standard_Atmosphere(FieldAltitude);
 rho_FieldAltitude = rho;
+P_FieldAltitude = P;
+
+% Parameters at sea level
+[a,rho,P,Rankine]=Standard_Atmosphere(0);
+rho_SeaLevel = rho;
+P_SeaLevel = P;
+T_SeaLevel = Rankine;
+
+% Ratio
+P_FieldAltitude_over_P_SeaLevel = P_FieldAltitude/P_SeaLevel;
+T_95F_over_T_SeaLevel = (95+459.7)/T_SeaLevel;
+Density_ratio_TO = P_FieldAltitude_over_P_SeaLevel/T_95F_over_T_SeaLevel;
 
 %
 WoverS = 0:10:200;
@@ -59,29 +72,30 @@ C_D0_modification = C_D0 + delta_C_D0;
 
 %
 W_TO_wiki = 182200; % unit: lb
-b = 117.833; % unit: ft^2
-S_wiki = 1370; % unit: ft
+b = 117.833; % unit: ft
+S_wiki = 1370; % unit: ft^2
 AR = b^2/S_wiki; % unit: ft
-S_wiki_TO = 1370*1.3; % unit: ft^2
+S_wiki_TO = 1370; % unit: ft^2
 S_wet_wiki = 10^(c+d*log10(W_TO_wiki));
 StaticThrust_TO = 29317; % unit: lbs
 WoverS_TO_wiki = W_TO_wiki/S_wiki_TO; % unit: lb/ft^2
 ToverW_TO_wiki = StaticThrust_TO*2/W_TO_wiki; % unit: lb/lb
-
 %%
 hold on
 % FAR25 TAKEOFF DISTANCE SIZING
-for CL_max_TO = 1.6:0.2:3
-    ToverW = (0.009640.*WoverS)/CL_max_TO;
+for CL_max_TO = 1.6:0.2:2.2
+    ToverW = 37.5/(Density_ratio_TO*CL_max_TO*FieldLength).*WoverS;
     plot(WoverS,ToverW,'color',[0 0.4470 0.7410]); % blue
 end
 
 % FAR25 LANDING DISTANCE SIZING
-for CL_max_L = 1.8:0.2:3
-    WoverS_landing = FieldAltitude/0.3/1.69/2*rho_FieldAltitude*CL_max_L/(ft_s_to_kt^2)/0.85;
+for CL_max_L = 1.8:0.2:2.4
+    V_stall_sqrt = FieldLength/(0.3*1.3^2)/ft_s_to_kt^2;
+    WoverS_landing = V_stall_sqrt/2*rho_FieldAltitude*CL_max_L;
+    WoverS_takeoff = WoverS_landing/0.85;
     ToverW_landing = [0 1.6];
-    WoverS_landing = [WoverS_landing WoverS_landing];
-    plot(WoverS_landing,ToverW_landing,'color',[0.4660 0.6740 0.1880]); % green
+    WoverS_takeoff = [WoverS_takeoff WoverS_takeoff];
+    plot(WoverS_takeoff,ToverW_landing,'color',[0.4660 0.6740 0.1880]); % green
 end
 
 % CRUISE SPEED SIZING
@@ -132,12 +146,20 @@ LoverD = CL/((CD_0_clean+delta_CD0_TOflaps+CD_0_clean+delta_CDO_Lflaps)/2+delta_
 ToverW_L = 2*(1/LoverD+0.021); % CGR>0.021
 ToverW_TO6 = ToverW_L*(W_L/W_TO)/0.8; 
 
-yline(ToverW_TO1,'color',[0.4940 0.1840 0.5560]) % purple
-yline(ToverW_TO2,'color',[0.4940 0.1840 0.5560]) % purple
-yline(ToverW_TO3,'color',[0.4940 0.1840 0.5560]) % purple
-yline(ToverW_TO4,'color',[0.4940 0.1840 0.5560]) % purple
-yline(ToverW_TO5,'color',[0.4940 0.1840 0.5560]) % purple
-yline(ToverW_TO6,'color',[0.4940 0.1840 0.5560]) % purple
+WoverS_TO = [0 200];
+ToverW_TO1 = [ToverW_TO1 ToverW_TO1];
+ToverW_TO2 = [ToverW_TO2 ToverW_TO2];
+ToverW_TO3 = [ToverW_TO3 ToverW_TO3];
+ToverW_TO4 = [ToverW_TO4 ToverW_TO4];
+ToverW_TO5 = [ToverW_TO5 ToverW_TO5];
+ToverW_TO6 = [ToverW_TO6 ToverW_TO6];
+
+plot(WoverS_TO,ToverW_TO1,'color',[0.4940 0.1840 0.5560]) % purple
+plot(WoverS_TO,ToverW_TO2,'color',[0.4940 0.1840 0.5560]) % purple
+plot(WoverS_TO,ToverW_TO3,'color',[0.4940 0.1840 0.5560]) % purple
+plot(WoverS_TO,ToverW_TO4,'color',[0.4940 0.1840 0.5560]) % purple
+plot(WoverS_TO,ToverW_TO5,'color',[0.4940 0.1840 0.5560]) % purple
+plot(WoverS_TO,ToverW_TO6,'color',[0.4940 0.1840 0.5560]) % purple
 
 plot(WoverS_TO_wiki,ToverW_TO_wiki,'rx')
 
@@ -155,7 +177,7 @@ hold off
 % Landing flaps     0.055 - 0.075   0.70 - 0.75
 % Landing Gear      0.015 - 0.025   no effect
 %%
-function [a,rho]=Standard_Atmosphere(h)
+function [a,rho,P,Rankine]=Standard_Atmosphere(h)
 % Standard Atmosphere (SI Units)
 % [C,a,P,rho,g,mu]=Standard_Atmosphere(h)
 %
