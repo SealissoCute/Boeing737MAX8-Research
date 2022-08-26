@@ -100,7 +100,7 @@ hold off
 %% FAR25 LANDING DISTANCE SIZING
 figure()
 hold on
-for CL_max_L = 1.8:0.2:2.8
+for CL_max_L = 1.8:0.2:2.4
     V_stall_sqrt = FieldLength/(0.3*1.3^2)/ft_s_to_kt^2;
     WoverS_landing = V_stall_sqrt/2*rho_FieldAltitude*CL_max_L;
     WoverS_takeoff = WoverS_landing/0.85;
@@ -109,7 +109,7 @@ for CL_max_L = 1.8:0.2:2.8
     plot(WoverS_takeoff,ToverW_landing);
 end
 plot(WoverS_TO_wiki,ToverW_TO_wiki,'rx')
-legend('1.8','2.0','2.2','2.4','2.6','2.8','Location','northwest')
+legend('1.8','2.0','2.2','2.4','Location','northwest')
 title('FAR25 LANDING DISTANCE SIZING')
 xlabel('(W/S)_{TO}');
 ylabel('(T/W)_{TO}');
