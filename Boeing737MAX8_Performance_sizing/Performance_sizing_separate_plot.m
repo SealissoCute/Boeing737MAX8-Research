@@ -26,14 +26,16 @@ CruiseSpeed_Mach = 0.79;
 CruiseSpeed = CruiseSpeed_Mach*a_CruiseAltitude;
 q_overline = 0.5*rho_CruiseAltitude*CruiseSpeed^2;
 
-% Parameters at FieldAltitude
-FieldAltitude = 8000; % unit: ft
+% Parameters at FieldAltitude RCTP FieldLength:12467ft/FieldAltitude:106ft
+FieldLength = 10000; % unit: ft
+FieldAltitude = 106; % unit: ft
 [a,rho,P]=Standard_Atmosphere(FieldAltitude);
 rho_FieldAltitude = rho;
 P_FieldAltitude = P;
 
 % Parameters at sea level
 [a,rho,P,Rankine]=Standard_Atmosphere(0);
+rho_SeaLevel = rho;
 P_SeaLevel = P;
 T_SeaLevel = Rankine;
 
@@ -74,7 +76,7 @@ W_TO_wiki = 182200; % unit: lb
 b = 117.833; % unit: ft^2
 S_wiki = 1370; % unit: ft
 AR = b^2/S_wiki; % unit: ft
-S_wiki_TO = 1370*1.3; % unit: ft^2
+S_wiki_TO = 1370; % unit: ft^2
 S_wet_wiki = 10^(c+d*log10(W_TO_wiki));
 StaticThrust_TO = 29317; % unit: lbs
 WoverS_TO_wiki = W_TO_wiki/S_wiki_TO; % unit: lb/ft^2
@@ -84,12 +86,12 @@ ToverW_TO_wiki = StaticThrust_TO*2/W_TO_wiki; % unit: lb/lb
 FieldLenght_TO = 5000; % unit: ft
 figure()
 hold on
-for CL_max_TO = 1.6:0.2:3
-    ToverW = (37.5.*WoverS)/(Density_ratio_TO*CL_max_TO*FieldLenght_TO);
+for CL_max_TO = 1.6:0.2:2.2
+    ToverW = (37.5.*WoverS)/(Density_ratio_TO*CL_max_TO*FieldLength);
     plot(WoverS,ToverW);
 end
 plot(WoverS_TO_wiki,ToverW_TO_wiki,'rx')
-legend('1.6','1.8','2.0','2.2','2.4','2.6','2.8','3','Location','northwest')
+legend('1.6','1.8','2.0','2.2','Location','northwest')
 title('FAR25 TAKEOFF DISTANCE SIZING')
 xlabel('(W/S)_{TO}');
 ylabel('(T/W)_{TO}');
@@ -98,14 +100,16 @@ hold off
 %% FAR25 LANDING DISTANCE SIZING
 figure()
 hold on
-for CL_max_L = 1.8:0.2:3
-    WoverS_landing = FieldAltitude/0.3/1.69/2*rho_FieldAltitude*CL_max_L/(ft_s_to_kt^2)/0.85;
+for CL_max_L = 1.8:0.2:2.8
+    V_stall_sqrt = FieldLength/(0.3*1.3^2)/ft_s_to_kt^2;
+    WoverS_landing = V_stall_sqrt/2*rho_FieldAltitude*CL_max_L;
+    WoverS_takeoff = WoverS_landing/0.85;
     ToverW_landing = [0 1.6];
-    WoverS_landing = [WoverS_landing WoverS_landing];
-    plot(WoverS_landing,ToverW_landing);
+    WoverS_takeoff = [WoverS_takeoff WoverS_takeoff];
+    plot(WoverS_takeoff,ToverW_landing);
 end
 plot(WoverS_TO_wiki,ToverW_TO_wiki,'rx')
-legend('1.8','2.0','2.2','2.4','2.6','2.8','3','Location','northwest')
+legend('1.8','2.0','2.2','2.4','2.6','2.8','Location','northwest')
 title('FAR25 LANDING DISTANCE SIZING')
 xlabel('(W/S)_{TO}');
 ylabel('(T/W)_{TO}');

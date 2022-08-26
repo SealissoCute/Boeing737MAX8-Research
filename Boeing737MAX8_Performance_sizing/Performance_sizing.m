@@ -85,16 +85,17 @@ hold on
 % FAR25 TAKEOFF DISTANCE SIZING
 for CL_max_TO = 1.6:0.2:2.2
     ToverW = 37.5/(Density_ratio_TO*CL_max_TO*FieldLength).*WoverS;
-    plot(WoverS,ToverW,'color',[0 0.4470 0.7410]);
+    plot(WoverS,ToverW,'color',[0 0.4470 0.7410]); % blue
 end
 
 % FAR25 LANDING DISTANCE SIZING
-for CL_max_L = 1.8:0.2:2.4
-    V_stall_sqrt = FieldLength/(0.3*1.3^2)/ft_s_to_kt^2
-    WoverS_landing = V_stall_sqrt/2*rho_FieldAltitude*CL_max_L/0.85;
+for CL_max_L = 1.8:0.2:2.2
+    V_stall_sqrt = FieldLength/(0.3*1.3^2)/ft_s_to_kt^2;
+    WoverS_landing = V_stall_sqrt/2*rho_FieldAltitude*CL_max_L;
+    WoverS_takeoff = WoverS_landing/0.85;
     ToverW_landing = [0 1.6];
-    WoverS_landing = [WoverS_landing WoverS_landing];
-    plot(WoverS_landing,ToverW_landing,'color',[0.4660 0.6740 0.1880]); % green
+    WoverS_takeoff = [WoverS_takeoff WoverS_takeoff];
+    plot(WoverS_takeoff,ToverW_landing,'color',[0.4660 0.6740 0.1880]); % green
 end
 
 % CRUISE SPEED SIZING
