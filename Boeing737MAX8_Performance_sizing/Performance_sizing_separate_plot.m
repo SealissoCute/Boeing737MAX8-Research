@@ -88,6 +88,7 @@ for CL_max_TO = 1.6:0.2:3
     ToverW = (37.5.*WoverS)/(Density_ratio_TO*CL_max_TO*FieldLenght_TO);
     plot(WoverS,ToverW);
 end
+plot(WoverS_TO_wiki,ToverW_TO_wiki,'rx')
 legend('1.6','1.8','2.0','2.2','2.4','2.6','2.8','3','Location','northwest')
 title('FAR25 TAKEOFF DISTANCE SIZING')
 xlabel('(W/S)_{TO}');
@@ -103,6 +104,7 @@ for CL_max_L = 1.8:0.2:3
     WoverS_landing = [WoverS_landing WoverS_landing];
     plot(WoverS_landing,ToverW_landing);
 end
+plot(WoverS_TO_wiki,ToverW_TO_wiki,'rx')
 legend('1.8','2.0','2.2','2.4','2.6','2.8','3','Location','northwest')
 title('FAR25 LANDING DISTANCE SIZING')
 xlabel('(W/S)_{TO}');
@@ -117,6 +119,7 @@ for e_clean = 0.8:0.05:0.85              % From p.127, Table 3.6
     ToverW_TO = ToverW_cruise_reqd./0.191;
     plot(WoverS,ToverW_TO);
 end
+plot(WoverS_TO_wiki,ToverW_TO_wiki,'rx')
 legend('0.8','0.85','Location','northwest')
 title('CRUISE SPEED SIZING')
 xlabel('(W/S)_{TO}');
@@ -181,6 +184,7 @@ plot(WoverS_TO,ToverW_TO4)
 plot(WoverS_TO,ToverW_TO5)
 plot(WoverS_TO,ToverW_TO6)
 
+plot(WoverS_TO_wiki,ToverW_TO_wiki,'rx')
 legend('FAR25.111 OEI','FAR25.121 OEI','FAR25.121 OEI','FAR25.121 OEI','FAR25.119 AEO','FAR25.121 OEI','Location','northwest')
 
 title('FAR25 CLIMB RATE SIZING')
