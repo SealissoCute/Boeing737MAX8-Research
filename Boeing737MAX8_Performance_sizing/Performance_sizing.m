@@ -96,7 +96,7 @@ for n = 1:12
     for CL_max_L = 1.8:0.2:2.4
         V_stall_sqrt = FieldLength/(0.3*1.3^2)/ft_s_to_kt^2;
         WoverS_landing = V_stall_sqrt/2*rho_FieldAltitude*CL_max_L;
-        WoverS_takeoff = WoverS_landing/0.85;
+        WoverS_takeoff = WoverS_landing/0.84;
         ToverW_landing = [0 1.6];
         WoverS_takeoff = [WoverS_takeoff WoverS_takeoff];
         plot(WoverS_takeoff,ToverW_landing,'color',[0.4660 0.6740 0.1880]); % green
