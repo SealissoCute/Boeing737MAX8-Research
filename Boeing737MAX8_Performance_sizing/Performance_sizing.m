@@ -63,12 +63,12 @@ e_TOflaps = 0.8;            % From p.127, Table 3.6
 e_Lflaps = 0.75;            % From p.127, Table 3.6
 W_L = W_TO*0.84;            % 0.84 is from p.107, Table 3.3
 S = W_TO/100;               % W/S = 100
-CD_0_clean = f_2/S;         % Take cf = 0.003
+CD_0_clean = f_2/S         % Take cf = 0.003
 
 %
-C_D0 = 0.0184; % p.145&182 low speed,clean drag polar
+% C_D0 = 0.0184; % p.145&182 low speed,clean drag polar
 delta_C_D0 = 0.0001*2.5; % p.166 figure 3.32
-C_D0_modification = C_D0 + delta_C_D0;
+C_D0_modification = CD_0_clean + delta_C_D0;
 
 %
 W_TO_wiki = 182200; % unit: lb
