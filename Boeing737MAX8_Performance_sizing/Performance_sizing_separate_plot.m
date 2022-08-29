@@ -83,7 +83,6 @@ WoverS_TO_wiki = W_TO_wiki/S_wiki_TO; % unit: lb/ft^2
 ToverW_TO_wiki = StaticThrust_TO*2/W_TO_wiki; % unit: lb/lb
 
 %% FAR25 TAKEOFF DISTANCE SIZING
-FieldLenght_TO = 5000; % unit: ft
 figure()
 hold on
 for CL_max_TO = 1.6:0.2:2.2
