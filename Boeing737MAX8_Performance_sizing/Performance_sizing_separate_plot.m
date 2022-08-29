@@ -136,7 +136,7 @@ hold on
 % FAR25.111 OEI (P.145)
 CL_TO_max = 2;                     % From Table 3.1
 CL = CL_TO_max/1.2^2;              % at 1.2 V_stall_TO
-LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps)); % CL/CD_TO_GearDown
+LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+CL^2/(pi*AR*e_TOflaps)); % CL/CD_TO_GearDown
 ToverW_TO = 2*(1/LoverD+0.012);    % CGR>0.012
 ToverW_TO1 = ToverW_TO/0.8; % 50°F效應(除以0.8)
 
