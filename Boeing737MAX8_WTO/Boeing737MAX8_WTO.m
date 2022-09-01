@@ -111,7 +111,7 @@ W_TO_solutions_row = height(W_TO_ApproxSolutions);
 W_TO_sloutions_column = width(W_TO_ApproxSolutions) ;
 W_TO_solutions = zeros(W_TO_solutions_row,W_TO_sloutions_column);
 
-x = sym('x', [1,W_TO_solutions_row]);
+x = sym('x', [1 W_TO_solutions_row]);
 parfor row = 1: W_TO_solutions_row
     % Temporary matrix for parallel computing
     temp = zeros(1,W_TO_sloutions_column);

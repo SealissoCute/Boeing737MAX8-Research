@@ -4,16 +4,14 @@ format long
 clc
 clear
 
-%% 
-% Unit exchange
+%% Unit exchange
 ft_to_m = 0.3048;       % ft to m
 m_s_to_mph = 2.236936;  % m/s to mph
 m_s_to_kt = 1.943844;   % m/s to kt
 m_s_to_ft_s = 3.280840; % m/s to ft/s
 ft_s_to_kt = 0.592484;  % ft/s to kt
 
-%% 
-% Mission profile parameters
+%% Mission profile parameters
 
 % Payload weight (unit: lbs)
 % 180 Passengers at 175 lbs each and 30 lbs of baggage each
@@ -23,7 +21,6 @@ W_PL = (175+30)*180;
 % 2 Pilots and 6 flight attendents at 175 lbs each and 30 lbs of baggage each
 W_crew = (175+30)*8;        
 
-%
 D = W_crew + W_PL;
 
 % CruiseAltitude (unit: ft)
@@ -83,8 +80,7 @@ W_E_wiki2W_TO_guess = 10^(A+B*log10(W_E_wiki));
 W_E_real_wiki = 10^((log10(W_TO_wiki)-A)/B);
 error_wiki = abs(W_E_real_wiki-W_E_wiki)/W_E_real_wiki;
 
-%% 
-% Fuel Fraction parameters
+%% Fuel Fraction parameters
 
 % Engine start and warm up, from Table 2.1
 W1_W_TO_guess_ratio = 0.990;
@@ -101,8 +97,7 @@ W8_W7_ratio = 1/(exp(AlternateRange/(AlternateCruiseSpeed/0.9*10)));
 % Landing, Taxi and Shutdown, From Table 2.1
 W9_W8_ratio = 0.992;                                                   
  
-%% 
-% InputParametersMatrix setup section
+%% InputParametersMatrix setup section
 
 % InputParametersMatrix sizing
 InputParametersMatrix_row = width(CruiseAltitudeMatrix)*width(RangeMatrix)*width(LoverD_CruiseMatrix)...
@@ -133,8 +128,7 @@ for CruiseAltitude = CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax
     end
 end
  
-%% 
-% Parallel computing CruiseSpeed/AverageClimbSpeed/ClimbTime/CruiseRange/W5_W4_ratio/W6_W5_ratio/M_ff/C
+%% Parallel computing CruiseSpeed/AverageClimbSpeed/ClimbTime/CruiseRange/W5_W4_ratio/W6_W5_ratio/M_ff/C
 parfor row = 1:InputParametersMatrix_row
     % Temporary matrix for parallel computing
     temp = zeros(1,InputParametersMatrix_column);
@@ -182,8 +176,7 @@ parfor row = 1:InputParametersMatrix_row
 
 end
 
-%% 
-% Find W_TO_guess_min & W_TO_guess_max
+%% Find W_TO_guess_min & W_TO_guess_max
 
 % Read data
 C_min = min(InputParametersMatrix(:,14));
@@ -196,8 +189,7 @@ W_TO_guess_max = vpasolve( A + B*log10(C_min*x - D) - log10(x) == 0 );
 W_TO_guess_LowerBound = floor(W_TO_guess_min);
 W_to_guess_UpperBound = ceil(W_TO_guess_max);
 
-%% 
-% Numerical approximation of W_TO_guess
+%% Numerical approximation of W_TO_guess
 
 % ResultMatrixApporx sizing
 W_TO_Apporx_row = InputParametersMatrix_row;
@@ -248,13 +240,12 @@ parfor row = 1:W_TO_Apporx_row
     end
 end
 
-%% 
-% W_TO_solutions sizing
+%% W_TO_solutions sizing
 W_TO_solutions_row = height(W_TO_ApproxSolutions);
 W_TO_sloutions_column = width(W_TO_ApproxSolutions) ;
 W_TO_solutions = zeros(W_TO_solutions_row,W_TO_sloutions_column);
 
-x = sym('x',[1,W_TO_solutions_row]);
+x = sym('x',[1 W_TO_solutions_row]);
 parfor row = 1: W_TO_solutions_row
 % Temporary matrix for parallel computing
 temp = zeros(1,W_TO_sloutions_column);
@@ -272,7 +263,7 @@ temp = zeros(1,W_TO_sloutions_column);
 
         % vpasolve
         W_TO_guess = vpasolve( A + B*log10(C*x(row) - D) - log10(x(row)) == 0 );
-        
+
         % Computing
         W_E_real = 10^((log10(W_TO_guess)-A)/B);
         W_E_tent = C*W_TO_guess-D;
@@ -297,9 +288,7 @@ temp = zeros(1,W_TO_sloutions_column);
         W_TO_solutions(row, :) = temp;
 end
 
-
-%% 
-% Sensitivity section
+%% Sensitivity section
 
 % W_TO_Senitivity sizing
 W_TO_Senitivity = zeros();
@@ -368,8 +357,7 @@ for row = 1:W_TO_solutions_row
     end
 end
 
-%% 
-% Parameters
+%% Parameters
 
 % Take-off weight (unit: lbs)
 W_TO = 182043.622463998;
@@ -402,7 +390,6 @@ P_FieldAltitude_over_P_SeaLevel = P_FieldAltitude/P_SeaLevel;
 T_95F_over_T_SeaLevel = (95+459.7)/T_SeaLevel;
 Density_ratio_TO = P_FieldAltitude_over_P_SeaLevel/T_95F_over_T_SeaLevel;
 
-%
 WoverS = 0:10:200;
 c = 0.0199;
 d = 0.7531;
@@ -425,12 +412,12 @@ W_L = W_TO*0.84;            % 0.84 is from p.107, Table 3.3
 S = W_TO/100;               % W/S = 100
 CD_0_clean = f_2/S;         % Take cf = 0.003
 
-%
+
 % C_D0 = 0.0184; % p.145&182 low speed,clean drag polar
 delta_C_D0 = 0.0001*2.5; % p.166 figure 3.32
 C_D0_modification = CD_0_clean + delta_C_D0;
 
-%
+
 W_TO_wiki = 182200; % unit: lb
 b = 117.833; % unit: ft
 S_wiki = 1370; % unit: ft^2
@@ -541,7 +528,7 @@ kg_to_slug = 0.068522;  % kg to slug
 % unit:m
 h = h*ft_to_m; 
 
-%
+
 [T,a,P,rho] = atmosisa(h);
 
 % unit:Rankine
