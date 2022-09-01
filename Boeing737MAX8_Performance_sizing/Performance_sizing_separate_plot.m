@@ -99,6 +99,10 @@ xlabel('(W/S)_{TO}');
 ylabel('(T/W)_{TO}');
 hold off
 
+syms x
+% Find CL_max_TO at point P
+CL_max_TO = vpasolve(ToverW_TO_wiki == (37.5.*WoverS_TO_wiki)/(Density_ratio_TO*x*FieldLength_TO));
+
 %% FAR25 LANDING DISTANCE SIZING
 figure()
 hold on
@@ -117,6 +121,8 @@ xlabel('(W/S)_{TO}');
 ylabel('(T/W)_{TO}');
 hold off
 
+% Find CL_max_L at point P
+CL_max_L = vpasolve(WoverS_TO_wiki == ((FieldLength_L/(0.3*1.3^2)/ft_s_to_kt^2)/2*rho_FieldAltitude*x)/0.84);
 %% CRUISE SPEED SIZING
 figure()
 hold on

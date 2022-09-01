@@ -27,7 +27,7 @@ q_overline = 0.5*rho_CruiseAltitude*CruiseSpeed^2;
 
 % Parameters at FieldAltitude RCTP FieldLength:12467ft/FieldAltitude:106ft
 FieldLength_TO = 11000; % unit: ft
-FieldLength_L = 7400; % unit: ft
+FieldLength_L = 8000; % unit: ft
 FieldAltitude = 2000; % unit: ft
 [a,rho,P]=Standard_Atmosphere(FieldAltitude);
 rho_FieldAltitude = rho;
