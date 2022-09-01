@@ -123,6 +123,7 @@ hold off
 
 % Find CL_max_L at point P
 CL_max_L = vpasolve(WoverS_TO_wiki == ((FieldLength_L/(0.3*1.3^2)/ft_s_to_kt^2)/2*rho_FieldAltitude*x)/0.84);
+
 %% CRUISE SPEED SIZING
 figure()
 hold on
