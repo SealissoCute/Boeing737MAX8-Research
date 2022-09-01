@@ -25,13 +25,15 @@ rho_CruiseAltitude = rho;
 CruiseSpeed_Mach = 0.79;
 CruiseSpeed = CruiseSpeed_Mach*a_CruiseAltitude;
 q_overline = 0.5*rho_CruiseAltitude*CruiseSpeed^2;
-
+ 
 % Parameters at FieldAltitude RCTP FieldLength:12467ft/FieldAltitude:106ft
-FieldLength = 10000; % unit: ft
-FieldAltitude = 106; % unit: ft
+FieldLength_TO = 11000; % unit: ft
+FieldLength_L = 8000; % unit: ft
+FieldAltitude = 2000; % unit: ft
 [a,rho,P]=Standard_Atmosphere(FieldAltitude);
 rho_FieldAltitude = rho;
 P_FieldAltitude = P;
+
 
 % Parameters at sea level
 [a,rho,P,Rankine]=Standard_Atmosphere(0);
@@ -41,8 +43,8 @@ T_SeaLevel = Rankine;
 
 % Ratio
 P_FieldAltitude_over_P_SeaLevel = P_FieldAltitude/P_SeaLevel;
-T_95F_over_T_SeaLevel = (95+459.7)/T_SeaLevel;
-Density_ratio_TO = P_FieldAltitude_over_P_SeaLevel/T_95F_over_T_SeaLevel;
+T_95F_over_T_SeaLevel = (59+459.7)/T_SeaLevel;
+Density_ratio_TO = rho_FieldAltitude/rho_SeaLevel; 
 
 %
 WoverS = 0:10:200;
@@ -62,6 +64,7 @@ delta_CDO_Lflaps = 0.065;   % From p.127, Table 3.6
 delta_CD0_LG = 0.02;        % From p.127, Table 3.6CD_0_clean
 e_TOflaps = 0.8;            % From p.127, Table 3.6
 e_Lflaps = 0.75;            % From p.127, Table 3.6
+e_clean = 0.8;
 W_L = W_TO*0.84;            % 0.84 is from p.107, Table 3.3
 S = W_TO/100;               % W/S = 100
 CD_0_clean = f_2/S;         % Take cf = 0.003
@@ -78,7 +81,7 @@ S_wiki = 1370; % unit: ft^2
 AR = b^2/S_wiki; % unit: ft
 S_wiki_TO = 1370; % unit: ft^2
 S_wet_wiki = 10^(c+d*log10(W_TO_wiki));
-StaticThrust_TO = 29317; % unit: lbs
+StaticThrust_TO = 26786; % unit: lbs
 WoverS_TO_wiki = W_TO_wiki/S_wiki_TO; % unit: lb/ft^2
 ToverW_TO_wiki = StaticThrust_TO*2/W_TO_wiki; % unit: lb/lb
 
@@ -86,7 +89,7 @@ ToverW_TO_wiki = StaticThrust_TO*2/W_TO_wiki; % unit: lb/lb
 figure()
 hold on
 for CL_max_TO = 1.6:0.2:2.2
-    ToverW = (37.5.*WoverS)/(Density_ratio_TO*CL_max_TO*FieldLength);
+    ToverW = (37.5.*WoverS)/(Density_ratio_TO*CL_max_TO*FieldLength_TO);
     plot(WoverS,ToverW);
 end
 plot(WoverS_TO_wiki,ToverW_TO_wiki,'rx')
@@ -100,7 +103,7 @@ hold off
 figure()
 hold on
 for CL_max_L = 1.8:0.2:2.4
-    V_stall_sqrt = FieldLength/(0.3*1.3^2)/ft_s_to_kt^2;
+    V_stall_sqrt = FieldLength_L/(0.3*1.3^2)/ft_s_to_kt^2;
     WoverS_landing = V_stall_sqrt/2*rho_FieldAltitude*CL_max_L;
     WoverS_takeoff = WoverS_landing/0.84;
     ToverW_landing = [0 1.6];
@@ -117,13 +120,13 @@ hold off
 %% CRUISE SPEED SIZING
 figure()
 hold on
-for e_clean = 0.8:0.05:0.85              % From p.127, Table 3.6
-    ToverW_cruise_reqd = C_D0_modification*q_overline./WoverS + WoverS./(q_overline*pi*AR*e_clean);
-    ToverW_TO = ToverW_cruise_reqd./0.191;
-    plot(WoverS,ToverW_TO);
-end
+
+ToverW_cruise_reqd = C_D0_modification*q_overline./WoverS + WoverS./(q_overline*pi*AR*e_clean);
+ToverW_TO = ToverW_cruise_reqd./0.191;
+plot(WoverS,ToverW_TO);
+
 plot(WoverS_TO_wiki,ToverW_TO_wiki,'rx')
-legend('0.8','0.85','Location','northwest')
+legend('0.8','Location','northwest')
 title('CRUISE SPEED SIZING')
 xlabel('(W/S)_{TO}');
 ylabel('(T/W)_{TO}');
@@ -154,7 +157,7 @@ ToverW_TO3 = ToverW_TO/0.8;
 % FAR25.121 OEI
 CL_max = 1.4; % From Table 3.1
 CL = CL_max/1.25^2; % at 1.25 V_stall
-LoverD = CL/(CD_0_clean + CL^2/(pi*AR*0.85));
+LoverD = CL/(CD_0_clean + CL^2/(pi*AR*e_clean));
 ToverW_TO = 2*(1/LoverD+0.012); % CGR>0.012
 ToverW_TO4 = ToverW_TO/0.94/0.8; % 最大推力校正(除以0.94), 50°F效應(除以0.8)
 
