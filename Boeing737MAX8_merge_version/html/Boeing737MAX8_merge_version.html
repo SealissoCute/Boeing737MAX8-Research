@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Boeing 737 MAX 8 Preliminary Sizing</title><meta name="generator" content="MATLAB 9.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-09-01"><meta name="DC.source" content="Boeing737MAX8_merge_version.m"><style type="text/css">
+      --><title>Boeing 737 MAX 8 Preliminary Sizing</title><meta name="generator" content="MATLAB 9.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-09-02"><meta name="DC.source" content="Boeing737MAX8_merge_version.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -67,8 +67,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Boeing 737 MAX 8 Preliminary Sizing</h1><pre class="codeinput"><span class="comment">% Clear previous data</span>
-format <span class="string">long</span>
+  </style></head><body><div class="content"><h1>Boeing 737 MAX 8 Preliminary Sizing</h1><p>Clear previous data</p><pre class="codeinput">format <span class="string">long</span>
 clc
 clear
 </pre><p>Unit exchange</p><pre class="codeinput">ft_to_m = 0.3048;       <span class="comment">% ft to m</span>
@@ -76,683 +75,508 @@ m_s_to_mph = 2.236936;  <span class="comment">% m/s to mph</span>
 m_s_to_kt = 1.943844;   <span class="comment">% m/s to kt</span>
 m_s_to_ft_s = 3.280840; <span class="comment">% m/s to ft/s</span>
 ft_s_to_kt = 0.592484;  <span class="comment">% ft/s to kt</span>
+</pre><p>Mission profile parameters</p><pre class="codeinput"><span class="comment">% Payload weight</span>
+<span class="comment">% 180 Passengers at 175 lbs each and 30 lbs of baggage each</span>
+W_PL = (175+30)*180; <span class="comment">% unit: lbs</span>
 
-<span class="comment">% %% Mission profile parameters</span>
-<span class="comment">%</span>
-<span class="comment">% % Payload weight (unit: lbs)</span>
-<span class="comment">% % 180 Passengers at 175 lbs each and 30 lbs of baggage each</span>
-<span class="comment">% W_PL = (175+30)*180;</span>
-<span class="comment">%</span>
-<span class="comment">% % Crew weight (unit: lbs)</span>
-<span class="comment">% % 2 Pilots and 6 flight attendents at 175 lbs each and 30 lbs of baggage each</span>
-<span class="comment">% W_crew = (175+30)*8;</span>
-<span class="comment">%</span>
-<span class="comment">% %</span>
-<span class="comment">% D = W_crew + W_PL;</span>
-<span class="comment">%</span>
-<span class="comment">% % CruiseAltitude (unit: ft)</span>
-<span class="comment">% CruiseAltitudeMin = 35000;</span>
-<span class="comment">% CruiseAltitudeMax = 41000;</span>
-<span class="comment">% CruiseAltitudeInterval = 1000;</span>
-<span class="comment">% CruiseAltitudeMatrix = [CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax];</span>
-<span class="comment">%</span>
-<span class="comment">% % Range (unit: nm)</span>
-<span class="comment">% RangeMin = 2000;</span>
-<span class="comment">% RangeMax = 3500;</span>
-<span class="comment">% RangeInterval = 100;</span>
-<span class="comment">% RangeMatrix = [RangeMin:RangeInterval:RangeMax]; %</span>
-<span class="comment">%</span>
-<span class="comment">% % LoverD_Cruise</span>
-<span class="comment">% LoverD_CruiseMin = 13;</span>
-<span class="comment">% LoverD_CruiseMax = 14;</span>
-<span class="comment">% LoverD_CruiseInterval = 0.1;</span>
-<span class="comment">% LoverD_CruiseMatrix = [LoverD_CruiseMin:LoverD_CruiseInterval:LoverD_CruiseMax];</span>
-<span class="comment">%</span>
-<span class="comment">% % LoverD_Loiter</span>
-<span class="comment">% LoverD_LoiterMin = 17;</span>
-<span class="comment">% LoverD_LoiterMax = 18;</span>
-<span class="comment">% LoverD_LoiterInterval = 0.1;</span>
-<span class="comment">% LoverD_LoiterMatrix = [LoverD_LoiterMin:LoverD_LoiterInterval:LoverD_LoiterMax];</span>
-<span class="comment">%</span>
-<span class="comment">% % c_j_cruise</span>
-<span class="comment">% c_j_cruiseMin = 0.5;</span>
-<span class="comment">% c_j_cruiseMax = 0.55;</span>
-<span class="comment">% c_j_cruiseInterval = 0.01;</span>
-<span class="comment">% c_j_cruiseMatrix = [c_j_cruiseMin:c_j_cruiseInterval:c_j_cruiseMax];</span>
-<span class="comment">%</span>
-<span class="comment">% % c_j_loiter</span>
-<span class="comment">% c_j_loiterMin = 0.55;</span>
-<span class="comment">% c_j_loiterMax = 0.6;</span>
-<span class="comment">% c_j_loiterInterval =0.01;</span>
-<span class="comment">% c_j_loiterMatrix = [c_j_loiterMin:c_j_loiterInterval:c_j_loiterMax];</span>
-<span class="comment">%</span>
-<span class="comment">% %</span>
-<span class="comment">% Endurance = 0.5;            % Loiter, unit: hr</span>
-<span class="comment">% AverageClimbRate = 2500;    % unit: fpm</span>
-<span class="comment">% CruiseSpeed_Mach = 0.79;    % unit: Mach</span>
-<span class="comment">% AlternateCruiseSpeed = 250; % unit: kts</span>
-<span class="comment">% AlternateRange = 100;       % unit: nm</span>
-<span class="comment">%</span>
-<span class="comment">%</span>
-<span class="comment">% % Regression Line Constants A and B of Equation</span>
-<span class="comment">% % Airplane type: Transport jet</span>
-<span class="comment">% A = 0.0833;</span>
-<span class="comment">% B = 1.0383;</span>
-<span class="comment">%</span>
-<span class="comment">% % W_TO &amp; W_OE from wikipedia (unit: lbs)</span>
-<span class="comment">% W_OE_wiki = 99360;</span>
-<span class="comment">% W_TO_wiki = 182200;</span>
-<span class="comment">% W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew;</span>
-<span class="comment">% W_E_wiki2W_TO_guess = 10^(A+B*log10(W_E_wiki));</span>
-<span class="comment">% W_E_real_wiki = 10^((log10(W_TO_wiki)-A)/B);</span>
-<span class="comment">% error_wiki = abs(W_E_real_wiki-W_E_wiki)/W_E_real_wiki;</span>
-<span class="comment">%</span>
-<span class="comment">% %% Fuel Fraction parameters</span>
-<span class="comment">%</span>
-<span class="comment">% % Engine start and warm up, from Table 2.1</span>
-<span class="comment">% W1_W_TO_guess_ratio = 0.990;</span>
-<span class="comment">% % Taxi, from Table 2.1</span>
-<span class="comment">% W2_W1_ratio = 0.990;</span>
-<span class="comment">% % Take-off, from Table 2.1</span>
-<span class="comment">% W3_W2_ratio = 0.995;</span>
-<span class="comment">% % Climb, from Table 2.1</span>
-<span class="comment">% W4_W3_ratio = 0.980;</span>
-<span class="comment">% % Decent,from Table 2.1</span>
-<span class="comment">% W7_W6_ratio = 0.990;</span>
-<span class="comment">% % Fly to alternate and descend, from Brequet's range equation, L/D = 10, c_j = 0.9</span>
-<span class="comment">% W8_W7_ratio = 1/(exp(AlternateRange/(AlternateCruiseSpeed/0.9*10)));</span>
-<span class="comment">% % Landing, Taxi and Shutdown, From Table 2.1</span>
-<span class="comment">% W9_W8_ratio = 0.992;</span>
-<span class="comment">%</span>
-<span class="comment">% %% InputParametersMatrix setup section</span>
-<span class="comment">%</span>
-<span class="comment">% % InputParametersMatrix sizing</span>
-<span class="comment">% InputParametersMatrix_row = width(CruiseAltitudeMatrix)*width(RangeMatrix)*width(LoverD_CruiseMatrix)...</span>
-<span class="comment">%     *width(LoverD_LoiterMatrix)*width(c_j_cruiseMatrix)*width(c_j_loiterMatrix);</span>
-<span class="comment">% InputParametersMatrix_column = 15;</span>
-<span class="comment">% InputParametersMatrixTemp = zeros(InputParametersMatrix_row,InputParametersMatrix_column);</span>
-<span class="comment">% InputParametersMatrix = zeros(InputParametersMatrix_row,InputParametersMatrix_column);</span>
-<span class="comment">%</span>
-<span class="comment">% % Create InputParametersMatrix</span>
-<span class="comment">% n=1;</span>
-<span class="comment">% for CruiseAltitude = CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax</span>
-<span class="comment">%     for Range = RangeMin:RangeInterval:RangeMax</span>
-<span class="comment">%         for LoverD_Cruise = LoverD_CruiseMin:LoverD_CruiseInterval:LoverD_CruiseMax</span>
-<span class="comment">%             for LoverD_Loiter = LoverD_LoiterMin:LoverD_LoiterInterval:LoverD_LoiterMax</span>
-<span class="comment">%                 for c_j_cruise = c_j_cruiseMin:c_j_cruiseInterval:c_j_cruiseMax</span>
-<span class="comment">%                     for c_j_loiter = c_j_loiterMin:c_j_loiterInterval:c_j_loiterMax</span>
-<span class="comment">%                         InputParametersMatrixTemp(n,1) = CruiseAltitude;</span>
-<span class="comment">%                         InputParametersMatrixTemp(n,2) = Range;</span>
-<span class="comment">%                         InputParametersMatrixTemp(n,3) = LoverD_Cruise;</span>
-<span class="comment">%                         InputParametersMatrixTemp(n,4) = LoverD_Loiter;</span>
-<span class="comment">%                         InputParametersMatrixTemp(n,5) = c_j_cruise;</span>
-<span class="comment">%                         InputParametersMatrixTemp(n,6) = c_j_loiter;</span>
-<span class="comment">%                         n=n+1;</span>
-<span class="comment">%                     end</span>
-<span class="comment">%                 end</span>
-<span class="comment">%             end</span>
-<span class="comment">%         end</span>
-<span class="comment">%     end</span>
-<span class="comment">% end</span>
-<span class="comment">%</span>
-<span class="comment">% %% Parallel computing CruiseSpeed/AverageClimbSpeed/ClimbTime/CruiseRange/W5_W4_ratio/W6_W5_ratio/M_ff/C</span>
-<span class="comment">% parfor row = 1:InputParametersMatrix_row</span>
-<span class="comment">%     % Temporary matrix for parallel computing</span>
-<span class="comment">%     temp = zeros(1,InputParametersMatrix_column);</span>
-<span class="comment">%</span>
-<span class="comment">%     % Read data form InputParametersMatrixtemp</span>
-<span class="comment">%     CruiseAltitude = InputParametersMatrixTemp(row,1);</span>
-<span class="comment">%     Range = InputParametersMatrixTemp(row,2);</span>
-<span class="comment">%     LoverD_Cruise = InputParametersMatrixTemp(row,3);</span>
-<span class="comment">%     LoverD_Loiter = InputParametersMatrixTemp(row,4);</span>
-<span class="comment">%     c_j_cruise  = InputParametersMatrixTemp(row,5);</span>
-<span class="comment">%     c_j_loiter = InputParametersMatrixTemp(row,6);</span>
-<span class="comment">%</span>
-<span class="comment">%     % Calculate parameters</span>
-<span class="comment">%     [a]=Standard_Atmosphere(CruiseAltitude);                                     % unit:Imperial system</span>
-<span class="comment">%     CruiseSpeed = CruiseSpeed_Mach*a*ft_s_to_kt;                                 % unit: kts</span>
-<span class="comment">%     AverageClimbSpeed = CruiseSpeed*0.6;                                         % unit: kts</span>
-<span class="comment">%     ClimbTime = CruiseAltitude/AverageClimbRate;                                 % Climb time, unit: minute</span>
-<span class="comment">%     ClimbRange = AverageClimbSpeed*(ClimbTime/60);                               % Climb range, unit: nm</span>
-<span class="comment">%     CruiseRange = Range - ClimbRange;                                            % Cruise range, unit: nm</span>
-<span class="comment">%     W5_W4_ratio = 1/(exp(CruiseRange/(CruiseSpeed/c_j_cruise*LoverD_Cruise)));   % Cruise, from Breguet's range equation</span>
-<span class="comment">%     W6_W5_ratio = 1/(exp(0.5/(1/c_j_loiter*LoverD_Loiter)));                     % Loiter, from Breguet's endurance equation</span>
-<span class="comment">%     M_ff = W1_W_TO_guess_ratio*W2_W1_ratio*W3_W2_ratio*W4_W3_ratio*...</span>
-<span class="comment">%         W5_W4_ratio*W6_W5_ratio*W7_W6_ratio*W8_W7_ratio*W9_W8_ratio</span>
-<span class="comment">%     C = 1-(1-M_ff)-0.005;</span>
-<span class="comment">%</span>
-<span class="comment">%     % Output data</span>
-<span class="comment">%     temp(1) = CruiseAltitude;</span>
-<span class="comment">%     temp(2) = Range;</span>
-<span class="comment">%     temp(3) = LoverD_Cruise;</span>
-<span class="comment">%     temp(4) = LoverD_Loiter;</span>
-<span class="comment">%     temp(5) = c_j_cruise;</span>
-<span class="comment">%     temp(6) = c_j_loiter;</span>
-<span class="comment">%     temp(7) = CruiseSpeed;</span>
-<span class="comment">%     temp(8) = AverageClimbSpeed;</span>
-<span class="comment">%     temp(9) = ClimbTime;</span>
-<span class="comment">%     temp(10) = ClimbRange;</span>
-<span class="comment">%     temp(11) = CruiseRange;</span>
-<span class="comment">%     temp(12) = W5_W4_ratio;</span>
-<span class="comment">%     temp(13) = W6_W5_ratio;</span>
-<span class="comment">%     temp(14) = M_ff;</span>
-<span class="comment">%     temp(15) = C;</span>
-<span class="comment">%</span>
-<span class="comment">%     % Output calculate result into InputParametersMatrix</span>
-<span class="comment">%     InputParametersMatrix(row, :) = temp;</span>
-<span class="comment">%</span>
-<span class="comment">% end</span>
-<span class="comment">%</span>
-<span class="comment">% %% Find W_TO_guess_min &amp; W_TO_guess_max</span>
-<span class="comment">%</span>
-<span class="comment">% % Read data</span>
-<span class="comment">% C_min = min(InputParametersMatrix(:,14));</span>
-<span class="comment">% C_max = max(InputParametersMatrix(:,14));</span>
-<span class="comment">%</span>
-<span class="comment">% % Find the lower and upper bound of W_To_guess</span>
-<span class="comment">% syms x</span>
-<span class="comment">% W_TO_guess_min = vpasolve( A + B*log10(C_max*x - D) - log10(x) == 0 );</span>
-<span class="comment">% W_TO_guess_max = vpasolve( A + B*log10(C_min*x - D) - log10(x) == 0 );</span>
-<span class="comment">% W_TO_guess_LowerBound = floor(W_TO_guess_min);</span>
-<span class="comment">% W_to_guess_UpperBound = ceil(W_TO_guess_max);</span>
-<span class="comment">%</span>
-<span class="comment">% %% Numerical approximation of W_TO_guess</span>
-<span class="comment">%</span>
-<span class="comment">% % ResultMatrixApporx sizing</span>
-<span class="comment">% W_TO_Apporx_row = InputParametersMatrix_row;</span>
-<span class="comment">% W_TO_Approx_column = 13;</span>
-<span class="comment">% W_TO_Approx = zeros(W_TO_Apporx_row,W_TO_Approx_column);</span>
-<span class="comment">%</span>
-<span class="comment">% parfor row = 1:W_TO_Apporx_row</span>
-<span class="comment">%     % Temporary matrix for parallel computing</span>
-<span class="comment">%     temp = zeros(1,W_TO_Approx_column);</span>
-<span class="comment">%</span>
-<span class="comment">%     % Read data</span>
-<span class="comment">%     CruiseAltitude = InputParametersMatrix(row,1);</span>
-<span class="comment">%     Range = InputParametersMatrix(row,2);</span>
-<span class="comment">%     LoverD_Cruise = InputParametersMatrix(row,3);</span>
-<span class="comment">%     LoverD_Loiter = InputParametersMatrix(row,4);</span>
-<span class="comment">%     c_j_cruise  = InputParametersMatrix(row,5);</span>
-<span class="comment">%     c_j_loiter = InputParametersMatrix(row,6);</span>
-<span class="comment">%     CruiseSpeed = InputParametersMatrix(row,7);</span>
-<span class="comment">%     M_ff = InputParametersMatrix(row,13);</span>
-<span class="comment">%     C = InputParametersMatrix(row,14);</span>
-<span class="comment">%</span>
-<span class="comment">%     for W_TO_guess = 165991:182200 % W_TO_guess_LowerBound:W_TO_wiki</span>
-<span class="comment">%         W_E_real = 10^((log10(W_TO_guess)-A)/B);</span>
-<span class="comment">%         W_E_tent = C*W_TO_guess - D;</span>
-<span class="comment">%         error = abs(W_E_tent - W_E_real)/ W_E_real;</span>
-<span class="comment">%         if error &lt; 0.005</span>
-<span class="comment">%             W_E_error =  abs(W_E_real - W_E_wiki)/W_E_real;</span>
-<span class="comment">%</span>
-<span class="comment">%             % Output data</span>
-<span class="comment">%             temp(1) = CruiseAltitude;</span>
-<span class="comment">%             temp(2) = Range;</span>
-<span class="comment">%             temp(3) = LoverD_Cruise;</span>
-<span class="comment">%             temp(4) = LoverD_Loiter;</span>
-<span class="comment">%             temp(5) = c_j_cruise;</span>
-<span class="comment">%             temp(6) = c_j_loiter;</span>
-<span class="comment">%             temp(7) = CruiseSpeed;</span>
-<span class="comment">%             temp(8) = M_ff;</span>
-<span class="comment">%             temp(9) = C;</span>
-<span class="comment">%             temp(10) = W_TO_guess;</span>
-<span class="comment">%             temp(11) = W_E_tent;</span>
-<span class="comment">%             temp(12) = W_E_real;</span>
-<span class="comment">%             temp(13) = W_E_error;</span>
-<span class="comment">%</span>
-<span class="comment">%             % Output calculate result into Result matrix</span>
-<span class="comment">%             W_TO_Approx(row, :) = temp;</span>
-<span class="comment">%             break</span>
-<span class="comment">%         end</span>
-<span class="comment">%     end</span>
-<span class="comment">% end</span>
-<span class="comment">%</span>
-<span class="comment">% %% Numerical solution of W_TO_guess</span>
-<span class="comment">%</span>
-<span class="comment">% % W_TO_solutions sizing</span>
-<span class="comment">% W_TO_solutions_row = height(W_TO_ApproxSolutions);</span>
-<span class="comment">% W_TO_sloutions_column = width(W_TO_ApproxSolutions) ;</span>
-<span class="comment">% W_TO_solutions = zeros(W_TO_solutions_row,W_TO_sloutions_column);</span>
-<span class="comment">%</span>
-<span class="comment">% x = sym('x', [1,W_TO_solutions_row]);</span>
-<span class="comment">% parfor row = 1: W_TO_solutions_row</span>
-<span class="comment">%     % Temporary matrix for parallel computing</span>
-<span class="comment">%     temp = zeros(1,W_TO_sloutions_column);</span>
-<span class="comment">%</span>
-<span class="comment">%             % Read data</span>
-<span class="comment">%             CruiseAltitude = W_TO_ApproxSolutions(row,1);</span>
-<span class="comment">%             Range = W_TO_ApproxSolutions(row,2);</span>
-<span class="comment">%             LoverD_Cruise = W_TO_ApproxSolutions(row,3);</span>
-<span class="comment">%             LoverD_Loiter = W_TO_ApproxSolutions(row,4);</span>
-<span class="comment">%             c_j_cruise  = W_TO_ApproxSolutions(row,5);</span>
-<span class="comment">%             c_j_loiter = W_TO_ApproxSolutions(row,6);</span>
-<span class="comment">%             CruiseSpeed = W_TO_ApproxSolutions(row,7);</span>
-<span class="comment">%             M_ff = W_TO_ApproxSolutions(row,8);</span>
-<span class="comment">%             C = W_TO_ApproxSolutions(row,9);</span>
-<span class="comment">%</span>
-<span class="comment">%             % vpasolve</span>
-<span class="comment">%             W_TO_guess = vpasolve( A + B*log10(C*x(row) - D) - log10(x(row)) == 0 );</span>
-<span class="comment">%</span>
-<span class="comment">%             % Computing</span>
-<span class="comment">%             W_E_real = 10^((log10(W_TO_guess)-A)/B);</span>
-<span class="comment">%             W_E_tent = C*W_TO_guess-D;</span>
-<span class="comment">%             W_E_error = abs(W_E_real - W_E_wiki)/W_E_real;</span>
-<span class="comment">%</span>
-<span class="comment">%             % Output data</span>
-<span class="comment">%             temp(1) = CruiseAltitude;</span>
-<span class="comment">%             temp(2) = Range;</span>
-<span class="comment">%             temp(3) = LoverD_Cruise;</span>
-<span class="comment">%             temp(4) = LoverD_Loiter;</span>
-<span class="comment">%             temp(5) = c_j_cruise;</span>
-<span class="comment">%             temp(6) = c_j_loiter;</span>
-<span class="comment">%             temp(7) = CruiseSpeed;</span>
-<span class="comment">%             temp(8) = M_ff;</span>
-<span class="comment">%             temp(9) = C;</span>
-<span class="comment">%             temp(10) = W_TO_guess;</span>
-<span class="comment">%             temp(11) = W_E_tent;</span>
-<span class="comment">%             temp(12) = W_E_real;</span>
-<span class="comment">%             temp(13) = W_E_error;</span>
-<span class="comment">%</span>
-<span class="comment">%             % Output calculate result into Result matrix</span>
-<span class="comment">%             W_TO_solutions(row, :) = temp;</span>
-<span class="comment">% end</span>
-<span class="comment">% %</span>
-<span class="comment">% % %% Sensitivity section</span>
-<span class="comment">% % % W_TO_Senitivity sizing</span>
-<span class="comment">% % W_TO_Senitivity = zeros();</span>
-<span class="comment">% %</span>
-<span class="comment">% % %</span>
-<span class="comment">% % n = 0;</span>
-<span class="comment">% %</span>
-<span class="comment">% % % Open TransportJet_WTO_CheatingVersion_result.txt</span>
-<span class="comment">% % fid = fopen(Boeing737MAX8_W_TO_Senitivity_OutputDirectory,'wt');</span>
-<span class="comment">% %</span>
-<span class="comment">% % for row = 1:W_TO_solutions_row</span>
-<span class="comment">% %     if  W_TO_solutions(row,13) &lt; error_wiki/250</span>
-<span class="comment">% %         n = n+1;</span>
-<span class="comment">% %         % Read data</span>
-<span class="comment">% %         CruiseAltitude = W_TO_solutions(row,1);</span>
-<span class="comment">% %         Range = W_TO_solutions(row,2);</span>
-<span class="comment">% %         LoverD_Cruise = W_TO_solutions(row,3);</span>
-<span class="comment">% %         LoverD_Loiter = W_TO_solutions(row,4);</span>
-<span class="comment">% %         c_j_cruise  = W_TO_solutions(row,5);</span>
-<span class="comment">% %         c_j_loiter = W_TO_solutions(row,6);</span>
-<span class="comment">% %         CruiseSpeed = W_TO_solutions(row,7);</span>
-<span class="comment">% %         M_ff = W_TO_solutions(row,8);</span>
-<span class="comment">% %         C = W_TO_solutions(row,9);</span>
-<span class="comment">% %         W_TO = W_TO_solutions(row,10);</span>
-<span class="comment">% %         W_E_tent = W_TO_solutions(row,11);</span>
-<span class="comment">% %         W_E_real = W_TO_solutions(row,12);</span>
-<span class="comment">% %         W_E_error = W_TO_solutions(row,13);</span>
-<span class="comment">% %</span>
-<span class="comment">% %         % Sensitivity calculate</span>
-<span class="comment">% %         F=-B*(W_TO^2)*((C*W_TO*(1-B)-D)^-1)*(1+0)*M_ff;</span>
-<span class="comment">% %         % W_TO over W_PL</span>
-<span class="comment">% %         W_TO_over_W_PL = B*W_TO*(D-C*(1-B)*W_TO)^-1;</span>
-<span class="comment">% %         % W_TO over W_E</span>
-<span class="comment">% %         W_TO_over_W_E = B*W_TO*(10^((log10(W_TO)-A)/B))^-1;</span>
-<span class="comment">% %         % W_TO over Range</span>
-<span class="comment">% %         W_TO_over_Range = F*c_j_cruise*(CruiseSpeed*LoverD_Cruise)^-1;</span>
-<span class="comment">% %         % W_TO over Endurance</span>
-<span class="comment">% %         W_TO_over_Endurance = F*c_j_loiter*LoverD_Loiter^-1;</span>
-<span class="comment">% %         % W_TO over Cruise speed</span>
-<span class="comment">% %         W_TO_over_CriuseSpeed = -F*Range*c_j_cruise*(CruiseSpeed^2*LoverD_Cruise)^-1;</span>
-<span class="comment">% %         % W_TO over c_j_Range</span>
-<span class="comment">% %         W_TO_over_c_j_Range = F*Range*(CruiseSpeed*LoverD_Cruise)^-1;</span>
-<span class="comment">% %         % W_TO over L/D_Range</span>
-<span class="comment">% %         W_TO_over_LoverD_Range = -F*Range*c_j_cruise*(CruiseSpeed*LoverD_Cruise^2)^-1;</span>
-<span class="comment">% %         % W_TO over c_j_Loiter</span>
-<span class="comment">% %         W_TO_over_c_j_Loiter = F*Endurance*LoverD_Loiter^-1;</span>
-<span class="comment">% %         % W_TO over L/D_Loiter</span>
-<span class="comment">% %         W_TO_over_LoverD_Loiter = -F*Endurance*c_j_loiter*LoverD_Loiter^-2;</span>
-<span class="comment">% %</span>
-<span class="comment">% %         % Output result</span>
-<span class="comment">% %         W_TO_Senitivity(n,1) = CruiseAltitude;</span>
-<span class="comment">% %         W_TO_Senitivity(n,2) = Range;</span>
-<span class="comment">% %         W_TO_Senitivity(n,3) = LoverD_Cruise;</span>
-<span class="comment">% %         W_TO_Senitivity(n,4) = LoverD_Loiter;</span>
-<span class="comment">% %         W_TO_Senitivity(n,5) = c_j_cruise;</span>
-<span class="comment">% %         W_TO_Senitivity(n,6) = c_j_loiter;</span>
-<span class="comment">% %         W_TO_Senitivity(n,7) = CruiseSpeed;</span>
-<span class="comment">% %         W_TO_Senitivity(n,8) = M_ff;</span>
-<span class="comment">% %         W_TO_Senitivity(n,9) = W_TO;</span>
-<span class="comment">% %         W_TO_Senitivity(n,10) = W_E_tent;</span>
-<span class="comment">% %         W_TO_Senitivity(n,11) = W_E_real;</span>
-<span class="comment">% %         W_TO_Senitivity(n,12) = W_E_error;</span>
-<span class="comment">% %         W_TO_Senitivity(n,13) = W_TO_over_W_PL;</span>
-<span class="comment">% %         W_TO_Senitivity(n,14) = W_TO_over_W_E ;</span>
-<span class="comment">% %         W_TO_Senitivity(n,15) = W_TO_over_Range;</span>
-<span class="comment">% %         W_TO_Senitivity(n,16) = W_TO_over_Endurance;</span>
-<span class="comment">% %         W_TO_Senitivity(n,17) = W_TO_over_CriuseSpeed;</span>
-<span class="comment">% %         W_TO_Senitivity(n,18) = W_TO_over_c_j_Range;</span>
-<span class="comment">% %         W_TO_Senitivity(n,19) = W_TO_over_LoverD_Range;</span>
-<span class="comment">% %         W_TO_Senitivity(n,20) = W_TO_over_c_j_Loiter;</span>
-<span class="comment">% %         W_TO_Senitivity(n,21) = W_TO_over_LoverD_Loiter;</span>
-<span class="comment">% %</span>
-<span class="comment">% %     end</span>
-<span class="comment">% % end</span>
-<span class="comment">% %</span>
-<span class="comment">% % %% Parameters</span>
-<span class="comment">% % % Take-off weight (unit: lbs)</span>
-<span class="comment">% % W_TO = 182043.622463998;</span>
-<span class="comment">% %</span>
-<span class="comment">% % % Parameters at CruiseAltitude</span>
-<span class="comment">% % CruiseAltitude = 40000; % unit: ft</span>
-<span class="comment">% % [a,rho]=Standard_Atmosphere(CruiseAltitude);</span>
-<span class="comment">% % a_CruiseAltitude = a;</span>
-<span class="comment">% % rho_CruiseAltitude = rho;</span>
-<span class="comment">% % CruiseSpeed_Mach = 0.79;</span>
-<span class="comment">% % CruiseSpeed = CruiseSpeed_Mach*a_CruiseAltitude;</span>
-<span class="comment">% % q_overline = 0.5*rho_CruiseAltitude*CruiseSpeed^2;</span>
-<span class="comment">% %</span>
-<span class="comment">% % % Parameters at FieldAltitude RCTP FieldLength:12467ft/FieldAltitude:106ft</span>
-<span class="comment">% % FieldLength = 10000; % unit: ft</span>
-<span class="comment">% % FieldAltitude = 106; % unit: ft</span>
-<span class="comment">% % [a,rho,P]=Standard_Atmosphere(FieldAltitude);</span>
-<span class="comment">% % rho_FieldAltitude = rho;</span>
-<span class="comment">% % P_FieldAltitude = P;</span>
-<span class="comment">% %</span>
-<span class="comment">% % % Parameters at sea level</span>
-<span class="comment">% % [a,rho,P,Rankine]=Standard_Atmosphere(0);</span>
-<span class="comment">% % rho_SeaLevel = rho;</span>
-<span class="comment">% % P_SeaLevel = P;</span>
-<span class="comment">% % T_SeaLevel = Rankine;</span>
-<span class="comment">% %</span>
-<span class="comment">% % % Ratio</span>
-<span class="comment">% % P_FieldAltitude_over_P_SeaLevel = P_FieldAltitude/P_SeaLevel;</span>
-<span class="comment">% % T_95F_over_T_SeaLevel = (95+459.7)/T_SeaLevel;</span>
-<span class="comment">% % Density_ratio_TO = P_FieldAltitude_over_P_SeaLevel/T_95F_over_T_SeaLevel;</span>
-<span class="comment">% %</span>
-<span class="comment">% % %</span>
-<span class="comment">% % WoverS = 0:10:200;</span>
-<span class="comment">% % c = 0.0199;</span>
-<span class="comment">% % d = 0.7531;</span>
-<span class="comment">% % S_wet = 10^(c+d*log10(W_TO));</span>
-<span class="comment">% %</span>
-<span class="comment">% % % From Table 3.4 Correlation Coefficients For Parasite Area Versus Wetted Area</span>
-<span class="comment">% % cf_2 = 0.003; a_2 = -2.5229; b_2 = 1;</span>
-<span class="comment">% % cf_3 = 0.004; a_3 = -2.3979; b_3 = 1;</span>
-<span class="comment">% % f_2 = 10^(a_2+b_2*log10(S_wet));</span>
-<span class="comment">% % f_3 = 10^(a_3+b_3*log10(S_wet));</span>
-<span class="comment">% %</span>
-<span class="comment">% % %</span>
-<span class="comment">% % delta_CD0_TOflaps = 0.015;  % From p.127, Table 3.6</span>
-<span class="comment">% % delta_CDO_Lflaps = 0.065;   % From p.127, Table 3.6</span>
-<span class="comment">% % delta_CD0_LG = 0.02;        % From p.127, Table 3.6CD_0_clean</span>
-<span class="comment">% % e_TOflaps = 0.8;            % From p.127, Table 3.6</span>
-<span class="comment">% % e_Lflaps = 0.75;            % From p.127, Table 3.6</span>
-<span class="comment">% % W_L = W_TO*0.84;            % 0.84 is from p.107, Table 3.3</span>
-<span class="comment">% % S = W_TO/100;               % W/S = 100</span>
-<span class="comment">% % CD_0_clean = f_2/S         % Take cf = 0.003</span>
-<span class="comment">% %</span>
-<span class="comment">% % %</span>
-<span class="comment">% % % C_D0 = 0.0184; % p.145&amp;182 low speed,clean drag polar</span>
-<span class="comment">% % delta_C_D0 = 0.0001*2.5; % p.166 figure 3.32</span>
-<span class="comment">% % C_D0_modification = CD_0_clean + delta_C_D0;</span>
-<span class="comment">% %</span>
-<span class="comment">% % %</span>
-<span class="comment">% % W_TO_wiki = 182200; % unit: lb</span>
-<span class="comment">% % b = 117.833; % unit: ft</span>
-<span class="comment">% % S_wiki = 1370; % unit: ft^2</span>
-<span class="comment">% % AR = b^2/S_wiki; % unit: ft</span>
-<span class="comment">% % S_wiki_TO = 1370; % unit: ft^2</span>
-<span class="comment">% % S_wet_wiki = 10^(c+d*log10(W_TO_wiki));</span>
-<span class="comment">% % StaticThrust_TO = 29317; % unit: lbs</span>
-<span class="comment">% % WoverS_TO_wiki = W_TO_wiki/S_wiki_TO; % unit: lb/ft^2</span>
-<span class="comment">% % ToverW_TO_wiki = StaticThrust_TO*2/W_TO_wiki; % unit: lb/lb</span>
-<span class="comment">% % %%</span>
-<span class="comment">% % hold on</span>
-<span class="comment">% % % FAR25 TAKEOFF DISTANCE SIZING</span>
-<span class="comment">% % for CL_max_TO = 1.6:0.2:2.2</span>
-<span class="comment">% %     ToverW = 37.5/(Density_ratio_TO*CL_max_TO*FieldLength).*WoverS;</span>
-<span class="comment">% %     plot(WoverS,ToverW,'color',[0 0.4470 0.7410]); % blue</span>
-<span class="comment">% % end</span>
-<span class="comment">% %</span>
-<span class="comment">% % % FAR25 LANDING DISTANCE SIZING</span>
-<span class="comment">% % for CL_max_L = 1.8:0.2:2.4</span>
-<span class="comment">% %     V_stall_sqrt = FieldLength/(0.3*1.3^2)/ft_s_to_kt^2;</span>
-<span class="comment">% %     WoverS_landing = V_stall_sqrt/2*rho_FieldAltitude*CL_max_L;</span>
-<span class="comment">% %     WoverS_takeoff = WoverS_landing/0.84;</span>
-<span class="comment">% %     ToverW_landing = [0 1.6];</span>
-<span class="comment">% %     WoverS_takeoff = [WoverS_takeoff WoverS_takeoff];</span>
-<span class="comment">% %     plot(WoverS_takeoff,ToverW_landing,'color',[0.4660 0.6740 0.1880]); % green</span>
-<span class="comment">% % end</span>
-<span class="comment">% %</span>
-<span class="comment">% % % CRUISE SPEED SIZING</span>
-<span class="comment">% % for e_clean = 0.8:0.05:0.85              % From p.127, Table 3.6</span>
-<span class="comment">% %     ToverW_cruise_reqd = C_D0_modification*q_overline./WoverS + WoverS./(q_overline*pi*AR*e_clean);</span>
-<span class="comment">% %     ToverW_TO = ToverW_cruise_reqd./0.191;</span>
-<span class="comment">% %     plot(WoverS,ToverW_TO,'color',[0.9290 0.6940 0.1250]); % orange</span>
-<span class="comment">% % end</span>
-<span class="comment">% %</span>
-<span class="comment">% % % FAR25 CLIMB RATE SIZING</span>
-<span class="comment">% % % FAR25.111 OEI (P.145)</span>
-<span class="comment">% % CL_TO_max = 2;                     % From Table 3.1</span>
-<span class="comment">% % CL = CL_TO_max/1.2^2;              % at 1.2 V_stall_TO</span>
-<span class="comment">% % LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps)); % CL/CD_TO_GearDown</span>
-<span class="comment">% % ToverW_TO = 2*(1/LoverD+0.012);    % CGR&gt;0.012</span>
-<span class="comment">% % ToverW_TO1 = ToverW_TO/0.8; % 50&deg;F&#25928;&#25033;(&#38500;&#20197;0.8)</span>
-<span class="comment">% %</span>
-<span class="comment">% % % FAR25.121 OEI</span>
-<span class="comment">% % CL = CL_TO_max/1.1^2; % V_LOF = 1.1 V_stall_TO</span>
-<span class="comment">% % LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps));</span>
-<span class="comment">% % ToverW_TO = 2*(1/LoverD); % CGR&gt;0</span>
-<span class="comment">% % ToverW_TO2 = ToverW_TO/0.8; % 50&deg;F&#25928;&#25033;(&#38500;&#20197;0.8)</span>
-<span class="comment">% %</span>
-<span class="comment">% % % FAR25.121 OEI</span>
-<span class="comment">% % CL = CL_TO_max/1.2^2; % at 1.2 V_stall_TO</span>
-<span class="comment">% % LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+CL^2/(pi*AR*e_TOflaps));</span>
-<span class="comment">% % ToverW_TO = 2*(1/LoverD+0.024); % CGR&gt;0.024</span>
-<span class="comment">% % ToverW_TO3 = ToverW_TO/0.8;</span>
-<span class="comment">% %</span>
-<span class="comment">% % % FAR25.121 OEI</span>
-<span class="comment">% % CL_max = 1.4; % From Table 3.1</span>
-<span class="comment">% % CL = CL_max/1.25^2; % at 1.25 V_stall</span>
-<span class="comment">% % LoverD = CL/(CD_0_clean + CL^2/(pi*AR*0.85));</span>
-<span class="comment">% % ToverW_TO = 2*(1/LoverD+0.012); % CGR&gt;0.012</span>
-<span class="comment">% % ToverW_TO4 = ToverW_TO/0.94/0.8; % &#26368;&#22823;&#25512;&#21147;&#26657;&#27491;(&#38500;&#20197;0.94), 50&deg;F&#25928;&#25033;(&#38500;&#20197;0.8)</span>
-<span class="comment">% %</span>
-<span class="comment">% % % FAR25.119 AEO</span>
-<span class="comment">% % CL_max_L = 2.8; % From Table 3.1</span>
-<span class="comment">% % CL = CL_max_L/1.3^2; % at 1.3 V_stall_L</span>
-<span class="comment">% % LoverD = CL/(CD_0_clean+delta_CDO_Lflaps+delta_CD0_LG+CL^2/(pi*AR*e_Lflaps));</span>
-<span class="comment">% % ToverW_L = 1/LoverD+0.032; % CGR&gt;0.032</span>
-<span class="comment">% % ToverW_TO5 = ToverW_L*(W_L/W_TO)/0.8;</span>
-<span class="comment">% %</span>
-<span class="comment">% % % FAR25.121 OEI</span>
-<span class="comment">% % CL_max_A = 2.4; % From Table 3.1</span>
-<span class="comment">% % CL = CL_max_A/1.5^2; % at 1.5 V_stall_A</span>
-<span class="comment">% % LoverD = CL/((CD_0_clean+delta_CD0_TOflaps+CD_0_clean+delta_CDO_Lflaps)/2+delta_CD0_LG+CL^2/(pi*AR*e_Lflaps));</span>
-<span class="comment">% % ToverW_L = 2*(1/LoverD+0.021); % CGR&gt;0.021</span>
-<span class="comment">% % ToverW_TO6 = ToverW_L*(W_L/W_TO)/0.8;</span>
-<span class="comment">% %</span>
-<span class="comment">% % WoverS_TO = [0 200];</span>
-<span class="comment">% % ToverW_TO1 = [ToverW_TO1 ToverW_TO1];</span>
-<span class="comment">% % ToverW_TO2 = [ToverW_TO2 ToverW_TO2];</span>
-<span class="comment">% % ToverW_TO3 = [ToverW_TO3 ToverW_TO3];</span>
-<span class="comment">% % ToverW_TO4 = [ToverW_TO4 ToverW_TO4];</span>
-<span class="comment">% % ToverW_TO5 = [ToverW_TO5 ToverW_TO5];</span>
-<span class="comment">% % ToverW_TO6 = [ToverW_TO6 ToverW_TO6];</span>
-<span class="comment">% %</span>
-<span class="comment">% % plot(WoverS_TO,ToverW_TO1,'color',[0.4940 0.1840 0.5560]) % purple</span>
-<span class="comment">% % plot(WoverS_TO,ToverW_TO2,'color',[0.4940 0.1840 0.5560]) % purple</span>
-<span class="comment">% % plot(WoverS_TO,ToverW_TO3,'color',[0.4940 0.1840 0.5560]) % purple</span>
-<span class="comment">% % plot(WoverS_TO,ToverW_TO4,'color',[0.4940 0.1840 0.5560]) % purple</span>
-<span class="comment">% % plot(WoverS_TO,ToverW_TO5,'color',[0.4940 0.1840 0.5560]) % purple</span>
-<span class="comment">% % plot(WoverS_TO,ToverW_TO6,'color',[0.4940 0.1840 0.5560]) % purple</span>
-<span class="comment">% %</span>
-<span class="comment">% % plot(WoverS_TO_wiki,ToverW_TO_wiki,'rx')</span>
-<span class="comment">% %</span>
-<span class="comment">% % title('MATCHING RESULT FOR SIZING OF BOEING 737MAX8')</span>
-<span class="comment">% % xlabel('(W/S)_{TO}');</span>
-<span class="comment">% % ylabel('(T/W)_{TO}');</span>
-<span class="comment">% %</span>
-<span class="comment">% % hold off</span>
-<span class="comment">% %%</span>
-<span class="comment">% function [a,rho,P,Rankine]=Standard_Atmosphere(h)</span>
-<span class="comment">% Standard Atmosphere (SI Units)</span>
-<span class="comment">% [C,a,P,rho,g,mu]=Standard_Atmosphere(h)</span>
-<span class="comment">%</span>
-<span class="comment">% bibliography :</span>
-<span class="comment">% [1] Yunus A. Cengel &amp; John M.Cimbala&deg;&szlig;FLUID MECHANICS ...</span>
-<span class="comment">% Fundamentals and  Applications&deg;&reg;, McGraw-Hill., p897.</span>
-<span class="comment">% [2] John J. Bertin &amp; Russell M. Cummings&deg;&szlig;AERODYNAMICS FOR ENGINEERS&deg;&reg;,</span>
-<span class="comment">% 5th Edition, Pearson Education International., p21-p43.</span>
-<span class="comment">% [3] WARREN F.PHILLIPS,&deg;&szlig;MECHANICS of FLIGHT&deg;&reg;, 2nd Edition, John Wiley.</span>
-<span class="comment">% p10-p14.</span>
-<span class="comment">% [4] John D.Anderson,"Modern Compressibe Flow", third Edition, McGraw-Hill</span>
-<span class="comment">% ., p585-p613.</span>
-<span class="comment">%</span>
-<span class="comment">% input arguments:</span>
-<span class="comment">%    h = Geometric altitude. (default : sea level)</span>
-<span class="comment">%</span>
-<span class="comment">% output arguments:</span>
-<span class="comment">%    Rankine = The temperature in Rankine scale.</span>
-<span class="comment">%    a = Speed of sound.</span>
-<span class="comment">%    P = The standard atmosphere at h.</span>
-<span class="comment">%    rho = Density.</span>
-<span class="comment">%    g = Is the gravitational acceleration at height h above sea level.</span>
-<span class="comment">%    mu = Coefficient of viscosity.</span>
-<span class="comment">%</span>
-<span class="comment">% example :</span>
-<span class="comment">%    % Plot C v.s geometrix altitude and P v.s geometrix altitude.</span>
-<span class="comment">%    &gt;&gt; [C,a,P,rho,g,mu]=Standard_Atmosphere(100:100:90000);</span>
-<span class="comment">%    &gt;&gt; figure, subplot(1,2,1);</span>
-<span class="comment">%    &gt;&gt; plot(C,100:100:90000);</span>
-<span class="comment">%    &gt;&gt; set(gca,'XTick',-100:20:20,'YTick',0:10000:100000,...</span>
-<span class="comment">%            'YTickLabel',0:10:100,'DataAspectRatio',[1 650 1]);</span>
-<span class="comment">%    &gt;&gt; title('Standard Atmosphere'); grid on;</span>
-<span class="comment">%    &gt;&gt; xlabel('Temperature (Celsius)'); ylabel('Geometrix Altitude (Km)');</span>
-<span class="comment">%    &gt;&gt; subplot(1,2,2);</span>
-<span class="comment">%    &gt;&gt; plot(P,100:100:90000);</span>
-<span class="comment">%    &gt;&gt; set(gca,'XTick',0:50000:150000,'YTick',0:10000:100000,...</span>
-<span class="comment">%            'XTickLabel',0:50:150,'YTickLabel',0:10:100,...</span>
-<span class="comment">%            'DataAspectRatio',[1 .65 1]);</span>
-<span class="comment">%    &gt;&gt; title('Standard Atmosphere'); grid on;</span>
-<span class="comment">%    &gt;&gt; xlabel('Pressure (kPa)'); ylabel('Geometrix Altitude (Km)');</span>
+<span class="comment">% Crew weight</span>
+<span class="comment">% 2 Pilots and 6 flight attendents at 175 lbs each and 30 lbs of baggage each</span>
+W_crew = (175+30)*8; <span class="comment">% unit: lbs</span>
+D = W_crew + W_PL;
 
-<span class="comment">% Last change: 2022/07/25 14:00 pm</span>
+<span class="comment">% CruiseAltitude (unit: ft)</span>
+CruiseAltitudeMin = 35000;
+CruiseAltitudeMax = 41000;
+CruiseAltitudeInterval = 1000;
+CruiseAltitudeMatrix = [CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax];
 
-<span class="comment">% % Unit exchange</span>
-<span class="comment">% ft_to_m = 0.3048;       % ft to m</span>
-<span class="comment">% m_s_to_mph = 2.236936;  % m/s to mph</span>
-<span class="comment">% m_s_to_kt = 1.943844;   % m/s to kt</span>
-<span class="comment">% m_s_to_ft_s = 3.280840; % m/s to ft/s</span>
-<span class="comment">% ft_s_to_kt = 0.592484;  % ft/s to kt</span>
-<span class="comment">% kg_to_slug = 0.068522;</span>
-<span class="comment">% %</span>
-<span class="comment">% h = h*ft_to_m; % unit:m</span>
+<span class="comment">% Range (unit: nm)</span>
+RangeMin = 2000;
+RangeMax = 3500;
+RangeInterval = 100;
+RangeMatrix = [RangeMin:RangeInterval:RangeMax];
+
+<span class="comment">% LoverD_Cruise</span>
+LoverD_CruiseMin = 13;
+LoverD_CruiseMax = 14;
+LoverD_CruiseInterval = 0.1;
+LoverD_CruiseMatrix = [LoverD_CruiseMin:LoverD_CruiseInterval:LoverD_CruiseMax];
+
+<span class="comment">% LoverD_Loiter</span>
+LoverD_LoiterMin = 17;
+LoverD_LoiterMax = 18;
+LoverD_LoiterInterval = 0.1;
+LoverD_LoiterMatrix = [LoverD_LoiterMin:LoverD_LoiterInterval:LoverD_LoiterMax];
+
+<span class="comment">% c_j_cruise</span>
+c_j_cruiseMin = 0.5;
+c_j_cruiseMax = 0.55;
+c_j_cruiseInterval = 0.01;
+c_j_cruiseMatrix = [c_j_cruiseMin:c_j_cruiseInterval:c_j_cruiseMax];
+
+<span class="comment">% c_j_loiter</span>
+c_j_loiterMin = 0.55;
+c_j_loiterMax = 0.6;
+c_j_loiterInterval =0.01;
+c_j_loiterMatrix = [c_j_loiterMin:c_j_loiterInterval:c_j_loiterMax];
+
+<span class="comment">% Loiter</span>
+Endurance = 0.5; <span class="comment">% unit: hr</span>
+
 <span class="comment">%</span>
-<span class="comment">% % default values</span>
-<span class="comment">% if ~exist('h','var'), h = 0; end;  % sea level</span>
-<span class="comment">%</span>
-<span class="comment">% % Gravitational acceleration</span>
-<span class="comment">% % go = Is the standard gravitational acceleration.</span>
-<span class="comment">% % re = Is the Earth's mean radius.</span>
-<span class="comment">% go = 9.806645;           % m/s^2</span>
-<span class="comment">% re = 6356766;            % m</span>
-<span class="comment">% g = go*(re./(re+h)).^2;  % m/s^2</span>
-<span class="comment">%</span>
-<span class="comment">% % Geopotential Altitude</span>
-<span class="comment">% % Z = Geopotential altitude.</span>
-<span class="comment">% % Zi = Is the minimum geopotential altitude in the range.</span>
-<span class="comment">% Z = (re*h)./(re+h);                                        % m</span>
-<span class="comment">% Zi = [0 11000 20000 32000 47000 52000 61000 79000 90000];  % m</span>
-<span class="comment">% [Zig Zg] = meshgrid(Zi,Z);</span>
-<span class="comment">%</span>
-<span class="comment">% % Temperature in Celsius</span>
-<span class="comment">% % B = The lapse rate (Temperature Gradient);in SI units [K/m].</span>
-<span class="comment">% % Bi = The lapse rate (Temperature Gradient) for the range;</span>
-<span class="comment">% % Ti = Inital Temperature (absolute) inthe range ; K</span>
-<span class="comment">% % To = Is the sea_level temperature (absolute).</span>
-<span class="comment">% % T = Is temperature in K.</span>
-<span class="comment">% Bi = [-0.0065,0,0.001,0.0028,0,-0.002,-0.004,0];</span>
-<span class="comment">% Ti = [288.150,216.650,216.650,228.650,270.650,270.650,252.650,180.650];</span>
-<span class="comment">% Big = meshgrid(Bi,Z);</span>
-<span class="comment">% Tig = meshgrid(Ti,Z);</span>
-<span class="comment">% B = Big(Zig(:,1:8) &lt;= Zg(:,1:8) &amp;  Zg(:,2:9) &lt; Zig(:,2:9));     % K/m</span>
-<span class="comment">% To = Tig(Zig(:,1:8) &lt;= Zg(:,1:8) &amp;  Zg(:,2:9) &lt; Zig(:,2:9));</span>
-<span class="comment">% T = To'+B'.*...</span>
-<span class="comment">%     (Z-(Zig(Zig(:,1:8) &lt;= Zg(:,1:8) &amp;  Zg(:,2:9) &lt; Zig(:,2:9)))');</span>
-<span class="comment">% Rankine = T*1.8; % unit:Rankine</span>
-<span class="comment">% % standard atmosphere pressure</span>
-<span class="comment">% % R = The gas constant for air.</span>
-<span class="comment">% % The gas constant for air in SI units [(N*m)/(kg*K)].</span>
-<span class="comment">% R = 287.0528;</span>
-<span class="comment">% [~,n] = max(...</span>
-<span class="comment">%     double(Zig(:,1:7) &lt;= Zg(:,1:7) &amp;  Zg(:,2:8) &lt; Zig(:,2:8)),[],2);</span>
-<span class="comment">% N = 0;</span>
-<span class="comment">% P = zeros(size(Z));</span>
-<span class="comment">% for n = n',</span>
-<span class="comment">%     N = N+1;</span>
-<span class="comment">%     if B(N)==0,</span>
-<span class="comment">%         P(N) = Pressure(n+1,go,R,Zi,Ti,Bi)*...</span>
-<span class="comment">%             exp((-go*(Z(N)-Zi(n)))/(R*Ti(n)));</span>
-<span class="comment">%     else</span>
-<span class="comment">%         P(N) = Pressure(n+1,go,R,Zi,Ti,Bi)*...</span>
-<span class="comment">%             ((T(N))/Ti(n))^(-go/(R*Bi(n)));</span>
-<span class="comment">%     end</span>
-<span class="comment">% end</span>
-<span class="comment">%</span>
-<span class="comment">% % Recursion function.</span>
-<span class="comment">%     function Pi = Pressure(n,go,R,Zi,Ti,Bi)</span>
-<span class="comment">%         n = n-1;</span>
-<span class="comment">%         if (n &gt; 1)</span>
-<span class="comment">%             if Bi(n-1)==0,</span>
-<span class="comment">%                 Pi = Pressure(n,go,R,Zi,Ti,Bi)*...</span>
-<span class="comment">%                     exp((-go*(Zi(n-1+1)-Zi(n-1)))/(R*Ti(n-1)));</span>
-<span class="comment">%             else</span>
-<span class="comment">%                 Pi = Pressure(n,go,R,Zi,Ti,Bi)*...</span>
-<span class="comment">%                     ((Ti(n-1)+Bi(n-1)*(Zi(n-1+1)-Zi(n-1)))/...</span>
-<span class="comment">%                     Ti(n-1))^(-go/(R*Bi(n-1)));</span>
-<span class="comment">%             end</span>
-<span class="comment">%         else</span>
-<span class="comment">%             % Standard atmosphere pressure at sea level.</span>
-<span class="comment">%             Pi = 1.01325*10^5;</span>
-<span class="comment">%         end</span>
-<span class="comment">%     end</span>
-<span class="comment">%</span>
-<span class="comment">% % Density</span>
-<span class="comment">% rho = P./(R.*T);</span>
-<span class="comment">% rho = rho*kg_to_slug*ft_to_m^3;</span>
-<span class="comment">% % Coefficient of viscosity</span>
-<span class="comment">% if nargout &gt; 5</span>
-<span class="comment">%     % Viscosity in SI units [kg/(s*m)].</span>
-<span class="comment">%     mu = 1.458*(10^-6)*((T.^1.5)./(T+110.4));</span>
-<span class="comment">% end</span>
-<span class="comment">%</span>
-<span class="comment">% % molecular energy.</span>
-<span class="comment">% % Cv = Constant volime ; Cv = e(internal energy)/T.</span>
-<span class="comment">% % Cp = Constant pressure ; Cp = h(enthalpy)/T.</span>
-<span class="comment">% % e = Internal energy.</span>
-<span class="comment">% % e_tr = Translational energy.</span>
-<span class="comment">% % e_rot = Rotational energy.</span>
-<span class="comment">% % e_vib = Vibrational energy.</span>
-<span class="comment">% e_tr = (3/2).*R.*T;</span>
-<span class="comment">% e_rot = R.*T;</span>
-<span class="comment">% e_vib = (1/2).*R.*T;</span>
-<span class="comment">% if ( T &gt;= 600 ) % when the air temperature reaches 600K or higher .</span>
-<span class="comment">%     e = e_tr+e_rot+e_vib;</span>
-<span class="comment">%     Cv = e./T;</span>
-<span class="comment">%     Cp = (e+R.*T)./T;</span>
-<span class="comment">% else</span>
-<span class="comment">%     e = e_tr+e_rot;</span>
-<span class="comment">%     Cv = e./T;</span>
-<span class="comment">%     Cp = (e+R.*T)./T;</span>
-<span class="comment">% end</span>
-<span class="comment">%</span>
-<span class="comment">% % gamma = Define Cp(constant pressure)/Cv(constant volime).</span>
-<span class="comment">% gamma = Cp./Cv;</span>
-<span class="comment">%</span>
-<span class="comment">% % Speed of sound .</span>
-<span class="comment">% a = sqrt(gamma.*R.*T);</span>
-<span class="comment">% a = a*m_s_to_ft_s; % unit:ft/s</span>
-<span class="comment">% end</span>
+AverageClimbRate = 2500; <span class="comment">% unit: fpm</span>
+CruiseSpeed_Mach = 0.79; <span class="comment">% unit: Mach</span>
+AlternateCruiseSpeed = 250; <span class="comment">% unit: kts</span>
+AlternateRange = 100;<span class="comment">% unit: nm</span>
+
+<span class="comment">% Regression Line Constants A and B of Equation</span>
+<span class="comment">% Airplane type: Transport jet</span>
+A = 0.0833;
+B = 1.0383;
+
+<span class="comment">% W_TO &amp; W_OE from wikipedia (unit: lbs)</span>
+W_OE_wiki = 99360;
+W_TO_wiki = 182200;
+W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew;
+W_E_wiki2W_TO_guess = 10^(A+B*log10(W_E_wiki));
+W_E_real_wiki = 10^((log10(W_TO_wiki)-A)/B);
+error_wiki = abs(W_E_real_wiki-W_E_wiki)/W_E_real_wiki;
+</pre><p>Fuel Fraction parameters</p><pre class="codeinput"><span class="comment">% Engine start and warm up, from Table 2.1</span>
+W1_W_TO_guess_ratio = 0.990;
+<span class="comment">% Taxi, from Table 2.1</span>
+W2_W1_ratio = 0.990;
+<span class="comment">% Take-off, from Table 2.1</span>
+W3_W2_ratio = 0.995;
+<span class="comment">% Climb, from Table 2.1</span>
+W4_W3_ratio = 0.980;
+<span class="comment">% Decent,from Table 2.1</span>
+W7_W6_ratio = 0.990;
+<span class="comment">% Fly to alternate and descend, from Brequet's range equation, L/D = 10, c_j = 0.9</span>
+W8_W7_ratio = 1/(exp(AlternateRange/(AlternateCruiseSpeed/0.9*10)));
+<span class="comment">% Landing, Taxi and Shutdown, From Table 2.1</span>
+W9_W8_ratio = 0.992;
+</pre><p>InputParametersMatrix setup section</p><pre class="codeinput"><span class="comment">% InputParametersMatrix sizing</span>
+InputParametersMatrix_row = width(CruiseAltitudeMatrix)*width(RangeMatrix)<span class="keyword">...</span>
+                    *width(LoverD_CruiseMatrix)*width(LoverD_LoiterMatrix)<span class="keyword">...</span>
+                    *width(c_j_cruiseMatrix)*width(c_j_loiterMatrix);
+InputParametersMatrix_column = 15;
+InputParametersMatrixTemp = zeros(InputParametersMatrix_row,InputParametersMatrix_column);
+InputParametersMatrix = zeros(InputParametersMatrix_row,InputParametersMatrix_column);
+
+<span class="comment">% Create InputParametersMatrix</span>
+n=1;
+<span class="keyword">for</span> CruiseAltitude = CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax
+    <span class="keyword">for</span> Range = RangeMin:RangeInterval:RangeMax
+        <span class="keyword">for</span> LoverD_Cruise = LoverD_CruiseMin:LoverD_CruiseInterval:LoverD_CruiseMax
+            <span class="keyword">for</span> LoverD_Loiter = LoverD_LoiterMin:LoverD_LoiterInterval:LoverD_LoiterMax
+                <span class="keyword">for</span> c_j_cruise = c_j_cruiseMin:c_j_cruiseInterval:c_j_cruiseMax
+                    <span class="keyword">for</span> c_j_loiter = c_j_loiterMin:c_j_loiterInterval:c_j_loiterMax
+                        InputParametersMatrixTemp(n,1) = CruiseAltitude;
+                        InputParametersMatrixTemp(n,2) = Range;
+                        InputParametersMatrixTemp(n,3) = LoverD_Cruise;
+                        InputParametersMatrixTemp(n,4) = LoverD_Loiter;
+                        InputParametersMatrixTemp(n,5) = c_j_cruise;
+                        InputParametersMatrixTemp(n,6) = c_j_loiter;
+                        n=n+1;
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><p>Calculate CruiseSpeed/AverageClimbSpeed/ClimbTime/CruiseRange/W5_W4_ratio/W6_W5_ratio/M_ff/C</p><pre class="codeinput"><span class="keyword">parfor</span> row = 1:InputParametersMatrix_row
+
+    <span class="comment">% Temporary matrix for parallel computing</span>
+    temp = zeros(1,InputParametersMatrix_column);
+
+    <span class="comment">% Read data form InputParametersMatrixtemp</span>
+    CruiseAltitude = InputParametersMatrixTemp(row,1);
+    Range = InputParametersMatrixTemp(row,2);
+    LoverD_Cruise = InputParametersMatrixTemp(row,3);
+    LoverD_Loiter = InputParametersMatrixTemp(row,4);
+    c_j_cruise  = InputParametersMatrixTemp(row,5);
+    c_j_loiter = InputParametersMatrixTemp(row,6);
+
+    <span class="comment">% Calculate parameters</span>
+    [a]=Standard_Atmosphere(CruiseAltitude);<span class="comment">% unit:Imperial system</span>
+    CruiseSpeed = CruiseSpeed_Mach*a*ft_s_to_kt;<span class="comment">% unit: kts</span>
+    AverageClimbSpeed = CruiseSpeed*0.6;<span class="comment">% unit: kts</span>
+    ClimbTime = CruiseAltitude/AverageClimbRate;<span class="comment">% unit: minute</span>
+    ClimbRange = AverageClimbSpeed*(ClimbTime/60); <span class="comment">% unit: nm</span>
+    CruiseRange = Range - ClimbRange; <span class="comment">% unit: nm</span>
+    <span class="comment">% Cruise, from Breguet's range equation</span>
+    W5_W4_ratio = 1/(exp(CruiseRange/(CruiseSpeed/c_j_cruise*LoverD_Cruise)));
+    <span class="comment">% Loiter, from Breguet's endurance equation</span>
+    W6_W5_ratio = 1/(exp(0.5/(1/c_j_loiter*LoverD_Loiter)));
+    M_ff = W1_W_TO_guess_ratio*W2_W1_ratio*W3_W2_ratio*W4_W3_ratio*<span class="keyword">...</span>
+        W5_W4_ratio*W6_W5_ratio*W7_W6_ratio*W8_W7_ratio*W9_W8_ratio
+    C = 1-(1-M_ff)-0.005;
+
+    <span class="comment">% Output data</span>
+    temp(1) = CruiseAltitude;
+    temp(2) = Range;
+    temp(3) = LoverD_Cruise;
+    temp(4) = LoverD_Loiter;
+    temp(5) = c_j_cruise;
+    temp(6) = c_j_loiter;
+    temp(7) = CruiseSpeed;
+    temp(8) = AverageClimbSpeed;
+    temp(9) = ClimbTime;
+    temp(10) = ClimbRange;
+    temp(11) = CruiseRange;
+    temp(12) = W5_W4_ratio;
+    temp(13) = W6_W5_ratio;
+    temp(14) = M_ff;
+    temp(15) = C;
+
+    <span class="comment">% Output calculate result into InputParametersMatrix</span>
+    InputParametersMatrix(row, :) = temp;
+<span class="keyword">end</span>
+</pre><p>Find W_TO_guess_min</p><pre class="codeinput"><span class="comment">% Read data</span>
+C_max = max(InputParametersMatrix(:,14));
+
+<span class="comment">% Find the lower bound of W_To_guess</span>
+syms <span class="string">x</span>
+W_TO_guess_min = vpasolve( A + B*log10(C_max*x - D) - log10(x) == 0 );
+W_TO_guess_LowerBound = floor(W_TO_guess_min);
+</pre><p>Numerical approximation of W_TO_guess</p><pre class="codeinput"><span class="comment">% ResultMatrixApporx sizing</span>
+W_TO_Apporx_row = InputParametersMatrix_row;
+W_TO_Approx_column = 13;
+W_TO_Approx = zeros(W_TO_Apporx_row,W_TO_Approx_column);
+
+<span class="comment">% Calculate W_TO_guess</span>
+<span class="keyword">parfor</span> row = 1:W_TO_Apporx_row
+
+    <span class="comment">% Temporary matrix for parallel computing</span>
+    temp = zeros(1,W_TO_Approx_column);
+
+    <span class="comment">% Read data</span>
+    CruiseAltitude = InputParametersMatrix(row,1);
+    Range = InputParametersMatrix(row,2);
+    LoverD_Cruise = InputParametersMatrix(row,3);
+    LoverD_Loiter = InputParametersMatrix(row,4);
+    c_j_cruise  = InputParametersMatrix(row,5);
+    c_j_loiter = InputParametersMatrix(row,6);
+    CruiseSpeed = InputParametersMatrix(row,7);
+    M_ff = InputParametersMatrix(row,13);
+    C = InputParametersMatrix(row,14);
+
+    <span class="comment">% Iteration section</span>
+    <span class="keyword">for</span> W_TO_guess = 165991:182200 <span class="comment">% W_TO_guess_LowerBound:W_TO_wiki</span>
+        W_E_real = 10^((log10(W_TO_guess)-A)/B);
+        W_E_tent = C*W_TO_guess - D;
+        error = abs(W_E_tent - W_E_real)/ W_E_real;
+        <span class="keyword">if</span> error  &lt; 0.005
+            W_E_error =  abs(W_E_real - W_E_wiki)/W_E_real;
+
+            <span class="comment">% Output data</span>
+            temp(1) = CruiseAltitude;
+            temp(2) = Range;
+            temp(3) = LoverD_Cruise;
+            temp(4) = LoverD_Loiter;
+            temp(5) = c_j_cruise;
+            temp(6) = c_j_loiter;
+            temp(7) = CruiseSpeed;
+            temp(8) = M_ff;
+            temp(9) = C;
+            temp(10) = W_TO_guess;
+            temp(11) = W_E_tent;
+            temp(12) = W_E_real;
+            temp(13) = W_E_error;
+
+            <span class="comment">% Output calculate result into Result matrix</span>
+            W_TO_Approx(row, :) = temp;
+            <span class="keyword">break</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><p>Check the amount of numerical approximation solutions</p><pre class="codeinput"><span class="comment">% ResultMatrixApporxSolutions sizing</span>
+W_TO_ApproxSolutions = zeros(W_TO_Approx_column);
+n=1;
+<span class="keyword">for</span> row = 1:W_TO_Apporx_row
+    <span class="keyword">if</span> W_TO_Approx(row,10) &gt; 0 &amp;&amp; W_TO_Approx(row,10) &lt; W_TO_wiki
+        <span class="keyword">if</span> W_TO_Approx(row,13) &lt; 0.005 | W_TO_Approx(row,12) &lt; W_E_wiki
+            W_TO_ApproxSolutions(n,:) = W_TO_Approx(row,:);
+            n=n+1;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><p>W_TO_solutions sizing</p><pre class="codeinput">W_TO_solutions_row = height(W_TO_ApproxSolutions);
+W_TO_sloutions_column = width(W_TO_ApproxSolutions) ;
+W_TO_solutions = zeros(W_TO_solutions_row,W_TO_sloutions_column);
+
+x = sym(<span class="string">'x'</span>,[1 W_TO_solutions_row]);
+<span class="keyword">parfor</span> row = 1: W_TO_solutions_row
+
+    <span class="comment">% Temporary matrix for parallel computing</span>
+    temp = zeros(1,W_TO_sloutions_column);
+
+    <span class="comment">% Read data</span>
+    CruiseAltitude = W_TO_ApproxSolutions(row,1);
+    Range = W_TO_ApproxSolutions(row,2);
+    LoverD_Cruise = W_TO_ApproxSolutions(row,3);
+    LoverD_Loiter = W_TO_ApproxSolutions(row,4);
+    c_j_cruise  = W_TO_ApproxSolutions(row,5);
+    c_j_loiter = W_TO_ApproxSolutions(row,6);
+    CruiseSpeed = W_TO_ApproxSolutions(row,7);
+    M_ff = W_TO_ApproxSolutions(row,8);
+    C = W_TO_ApproxSolutions(row,9);
+
+    <span class="comment">% vpasolve</span>
+    W_TO_guess = vpasolve( A + B*log10(C*x(row) - D) - log10(x(row)) == 0 );
+
+    <span class="comment">% Calculate W_E_real/W_E_tent/W_E_error</span>
+    W_E_real = 10.^((log10(W_TO_guess)-A)/B);
+    W_E_tent = C*W_TO_guess-D;
+    W_E_error = abs(W_E_real - W_E_wiki)/W_E_real;
+
+    <span class="comment">% Output data</span>
+    temp(1) = CruiseAltitude;
+    temp(2) = Range;
+    temp(3) = LoverD_Cruise;
+    temp(4) = LoverD_Loiter;
+    temp(5) = c_j_cruise;
+    temp(6) = c_j_loiter;
+    temp(7) = CruiseSpeed;
+    temp(8) = M_ff;
+    temp(9) = C;
+    temp(10) = W_TO_guess;
+    temp(11) = W_E_tent;
+    temp(12) = W_E_real;
+    temp(13) = W_E_error;
+
+    <span class="comment">% Output calculate result into Result matrix</span>
+    W_TO_solutions(row, :) = temp;
+<span class="keyword">end</span>
+</pre><p>Sensitivity section</p><pre class="codeinput"><span class="comment">% W_TO_Senitivity sizing</span>
+W_TO_Senitivity = zeros();
+<span class="keyword">for</span> row = 1:W_TO_solutions_row
+    <span class="keyword">if</span>  W_TO_solutions(row,13) &lt; error_wiki/250
+        n = n+1;
+
+        <span class="comment">% Read data</span>
+        CruiseAltitude = W_TO_solutions(row,1);
+        Range = W_TO_solutions(row,2);
+        LoverD_Cruise = W_TO_solutions(row,3);
+        LoverD_Loiter = W_TO_solutions(row,4);
+        c_j_cruise  = W_TO_solutions(row,5);
+        c_j_loiter = W_TO_solutions(row,6);
+        CruiseSpeed = W_TO_solutions(row,7);
+        M_ff = W_TO_solutions(row,8);
+        C = W_TO_solutions(row,9);
+        W_TO = W_TO_solutions(row,10);
+        W_E_tent = W_TO_solutions(row,11);
+        W_E_real = W_TO_solutions(row,12);
+        W_E_error = W_TO_solutions(row,13);
+
+        <span class="comment">% Sensitivity calculate</span>
+        F=-B*(W_TO^2)*((C*W_TO*(1-B)-D)^-1)*(1+0)*M_ff;
+        <span class="comment">% W_TO over W_PL</span>
+        W_TO_over_W_PL = B*W_TO*(D-C*(1-B)*W_TO)^-1;
+        <span class="comment">% W_TO over W_E</span>
+        W_TO_over_W_E = B*W_TO*(10^((log10(W_TO)-A)/B))^-1;
+        <span class="comment">% W_TO over Range</span>
+        W_TO_over_Range = F*c_j_cruise*(CruiseSpeed*LoverD_Cruise)^-1;
+        <span class="comment">% W_TO over Endurance</span>
+        W_TO_over_Endurance = F*c_j_loiter*LoverD_Loiter^-1;
+        <span class="comment">% W_TO over Cruise speed</span>
+        W_TO_over_CriuseSpeed = -F*Range*c_j_cruise*(CruiseSpeed^2*LoverD_Cruise)^-1;
+        <span class="comment">% W_TO over c_j_Range</span>
+        W_TO_over_c_j_Range = F*Range*(CruiseSpeed*LoverD_Cruise)^-1;
+        <span class="comment">% W_TO over L/D_Range</span>
+        W_TO_over_LoverD_Range = -F*Range*c_j_cruise*(CruiseSpeed*LoverD_Cruise^2)^-1;
+        <span class="comment">% W_TO over c_j_Loiter</span>
+        W_TO_over_c_j_Loiter = F*Endurance*LoverD_Loiter^-1;
+        <span class="comment">% W_TO over L/D_Loiter</span>
+        W_TO_over_LoverD_Loiter = -F*Endurance*c_j_loiter*LoverD_Loiter^-2;
+
+        <span class="comment">% Output result</span>
+        W_TO_Senitivity(n,1) = CruiseAltitude;
+        W_TO_Senitivity(n,2) = Range;
+        W_TO_Senitivity(n,3) = LoverD_Cruise;
+        W_TO_Senitivity(n,4) = LoverD_Loiter;
+        W_TO_Senitivity(n,5) = c_j_cruise;
+        W_TO_Senitivity(n,6) = c_j_loiter;
+        W_TO_Senitivity(n,7) = CruiseSpeed;
+        W_TO_Senitivity(n,8) = M_ff;
+        W_TO_Senitivity(n,9) = W_TO;
+        W_TO_Senitivity(n,10) = W_E_tent;
+        W_TO_Senitivity(n,11) = W_E_real;
+        W_TO_Senitivity(n,12) = W_E_error;
+        W_TO_Senitivity(n,13) = W_TO_over_W_PL;
+        W_TO_Senitivity(n,14) = W_TO_over_W_E ;
+        W_TO_Senitivity(n,15) = W_TO_over_Range;
+        W_TO_Senitivity(n,16) = W_TO_over_Endurance;
+        W_TO_Senitivity(n,17) = W_TO_over_CriuseSpeed;
+        W_TO_Senitivity(n,18) = W_TO_over_c_j_Range;
+        W_TO_Senitivity(n,19) = W_TO_over_LoverD_Range;
+        W_TO_Senitivity(n,20) = W_TO_over_c_j_Loiter;
+        W_TO_Senitivity(n,21) = W_TO_over_LoverD_Loiter;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><p>Select Parameters from W_TO_Senitivity matrix</p><pre class="codeinput"><span class="comment">% Take-off weight</span>
+W_TO = 182043.622463998; <span class="comment">% unit: lbs</span>
+
+<span class="comment">% Parameters at CruiseAltitude</span>
+CruiseAltitude = 40000; <span class="comment">% unit: ft</span>
+[a,rho]=Standard_Atmosphere(CruiseAltitude);
+a_CruiseAltitude = a;
+rho_CruiseAltitude = rho;
+CruiseSpeed_Mach = 0.79;
+CruiseSpeed = CruiseSpeed_Mach*a_CruiseAltitude;
+q_overline = 0.5*rho_CruiseAltitude*CruiseSpeed^2;
+
+<span class="comment">% Parameters at FieldAltitude</span>
+FieldLength_TO = 11000; <span class="comment">% unit: ft</span>
+FieldLength_L = 8000; <span class="comment">% unit: ft</span>
+FieldAltitude = 2000; <span class="comment">% unit: ft</span>
+[a,rho,P]=Standard_Atmosphere(FieldAltitude);
+rho_FieldAltitude = rho;
+P_FieldAltitude = P;
+
+<span class="comment">% Parameters at sea level</span>
+[a,rho,P,Rankine]=Standard_Atmosphere(0);
+rho_SeaLevel = rho;
+P_SeaLevel = P;
+T_SeaLevel = Rankine;
+
+<span class="comment">% Ratio</span>
+P_FieldAltitude_over_P_SeaLevel = P_FieldAltitude/P_SeaLevel;
+T_95F_over_T_SeaLevel = (95+459.7)/T_SeaLevel;
+Density_ratio_TO = P_FieldAltitude_over_P_SeaLevel/T_95F_over_T_SeaLevel;
+WoverS = 0:10:200;
+c = 0.0199;
+d = 0.7531;
+S_wet = 10^(c+d*log10(W_TO));
+
+<span class="comment">% From table 3.4 correlation coefficients for parasite area versus wetted area</span>
+cf_2 = 0.003; a_2 = -2.5229; b_2 = 1;
+cf_3 = 0.004; a_3 = -2.3979; b_3 = 1;
+f_2 = 10^(a_2+b_2*log10(S_wet));
+f_3 = 10^(a_3+b_3*log10(S_wet));
+
+<span class="comment">% Coefficients</span>
+delta_CD0_TOflaps = 0.015;  <span class="comment">% From p.127, Table 3.6</span>
+delta_CDO_Lflaps = 0.065;   <span class="comment">% From p.127, Table 3.6</span>
+delta_CD0_LG = 0.02;        <span class="comment">% From p.127, Table 3.6</span>
+e_TOflaps = 0.8;            <span class="comment">% From p.127, Table 3.6</span>
+e_Lflaps = 0.75;            <span class="comment">% From p.127, Table 3.6</span>
+e_clean = 0.8;
+W_L = W_TO*0.84;            <span class="comment">% 0.84 is from p.107, Table 3.3</span>
+S = W_TO/100;               <span class="comment">% W/S = 100</span>
+CD_0_clean = f_2/S;         <span class="comment">% Take cf = 0.003</span>
+delta_C_D0 = 0.0001*2.5;    <span class="comment">% p.166 figure 3.32</span>
+C_D0_modification = CD_0_clean + delta_C_D0;
+
+W_TO_wiki = 182200; <span class="comment">% unit: lb</span>
+b = 117.833; <span class="comment">% unit: ft</span>
+S_wiki = 1370; <span class="comment">% unit: ft^2</span>
+AR = b^2/S_wiki; <span class="comment">% unit: ft</span>
+StaticThrust_TO = 26786; <span class="comment">% unit: lbs</span>
+WoverS_TO_wiki = W_TO_wiki/S_wiki; <span class="comment">% unit: lb/ft^2</span>
+ToverW_TO_wiki = StaticThrust_TO*2/W_TO_wiki;
+</pre><p>plot section</p><pre class="codeinput">hold <span class="string">on</span>
+
+<span class="comment">% FAR25 TAKEOFF DISTANCE SIZING</span>
+<span class="keyword">for</span> CL_max_TO = 1.6:0.2:2.2
+    ToverW = 37.5/(Density_ratio_TO*CL_max_TO*FieldLength_TO).*WoverS;
+    plot(WoverS,ToverW,<span class="string">'color'</span>,[0 0.4470 0.7410]); <span class="comment">% blue</span>
+<span class="keyword">end</span>
+
+<span class="comment">% FAR25 LANDING DISTANCE SIZING</span>
+<span class="keyword">for</span> CL_max_L = 1.8:0.2:2.4
+    V_stall_sqrt = FieldLength_L/(0.3*1.3^2)/ft_s_to_kt^2;
+    WoverS_landing = V_stall_sqrt/2*rho_FieldAltitude*CL_max_L;
+    WoverS_takeoff = WoverS_landing/0.84;
+    ToverW_landing = [0 1.6];
+    WoverS_takeoff = [WoverS_takeoff WoverS_takeoff];
+    plot(WoverS_takeoff,ToverW_landing,<span class="string">'color'</span>,[0.4660 0.6740 0.1880]); <span class="comment">% green</span>
+<span class="keyword">end</span>
+
+<span class="comment">% CRUISE SPEED SIZING</span>
+ToverW_cruise_reqd = C_D0_modification*q_overline./WoverS+WoverS./(q_overline*pi*AR*e_clean);
+ToverW_TO = ToverW_cruise_reqd./0.191;
+plot(WoverS,ToverW_TO,<span class="string">'color'</span>,[0.9290 0.6940 0.1250]); <span class="comment">% orange</span>
+
+<span class="comment">% FAR25 CLIMB RATE SIZING</span>
+<span class="comment">% FAR25.111 OEI (P.145)</span>
+CL_TO_max = 2;                     <span class="comment">% From Table 3.1</span>
+CL = CL_TO_max/1.2^2;              <span class="comment">% at 1.2 V_stall_TO</span>
+LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps)); <span class="comment">% CL/CD_TO_GearDown</span>
+ToverW_TO = 2*(1/LoverD+0.012);    <span class="comment">% CGR&gt;0.012</span>
+ToverW_TO1 = ToverW_TO/0.8; <span class="comment">% 50&deg;F&#25928;&#25033;(&#38500;&#20197;0.8)</span>
+
+<span class="comment">% FAR25.121 OEI</span>
+CL = CL_TO_max/1.1^2; <span class="comment">% V_LOF = 1.1 V_stall_TO</span>
+LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps));
+ToverW_TO = 2*(1/LoverD); <span class="comment">% CGR&gt;0</span>
+ToverW_TO2 = ToverW_TO/0.8; <span class="comment">% 50&deg;F&#25928;&#25033;(&#38500;&#20197;0.8)</span>
+
+<span class="comment">% FAR25.121 OEI</span>
+CL = CL_TO_max/1.2^2; <span class="comment">% at 1.2 V_stall_TO</span>
+LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+CL^2/(pi*AR*e_TOflaps));
+ToverW_TO = 2*(1/LoverD+0.024); <span class="comment">% CGR&gt;0.024</span>
+ToverW_TO3 = ToverW_TO/0.8;
+
+<span class="comment">% FAR25.121 OEI</span>
+CL_max = 1.4; <span class="comment">% From Table 3.1</span>
+CL = CL_max/1.25^2; <span class="comment">% at 1.25 V_stall</span>
+LoverD = CL/(CD_0_clean + CL^2/(pi*AR*e_clean));
+ToverW_TO = 2*(1/LoverD+0.012); <span class="comment">% CGR&gt;0.012</span>
+ToverW_TO4 = ToverW_TO/0.94/0.8; <span class="comment">% &#26368;&#22823;&#25512;&#21147;&#26657;&#27491;(&#38500;&#20197;0.94), 50&deg;F&#25928;&#25033;(&#38500;&#20197;0.8)</span>
+
+<span class="comment">% FAR25.119 AEO</span>
+CL_max_L = 2.8; <span class="comment">% From Table 3.1</span>
+CL = CL_max_L/1.3^2; <span class="comment">% at 1.3 V_stall_L</span>
+LoverD = CL/(CD_0_clean+delta_CDO_Lflaps+delta_CD0_LG+CL^2/(pi*AR*e_Lflaps));
+ToverW_L = 1/LoverD+0.032; <span class="comment">% CGR&gt;0.032</span>
+ToverW_TO5 = ToverW_L*(W_L/W_TO)/0.8;
+
+<span class="comment">% FAR25.121 OEI</span>
+CL_max_A = 2.4; <span class="comment">% From Table 3.1</span>
+CL = CL_max_A/1.5^2; <span class="comment">% at 1.5 V_stall_A</span>
+LoverD = CL/((CD_0_clean+delta_CD0_TOflaps+CD_0_clean+delta_CDO_Lflaps)/2+delta_CD0_LG+CL^2/(pi*AR*e_Lflaps));
+ToverW_L = 2*(1/LoverD+0.021); <span class="comment">% CGR&gt;0.021</span>
+ToverW_TO6 = ToverW_L*(W_L/W_TO)/0.8;
+WoverS_TO = [0 200];
+ToverW_TO1 = [ToverW_TO1 ToverW_TO1];
+ToverW_TO2 = [ToverW_TO2 ToverW_TO2];
+ToverW_TO3 = [ToverW_TO3 ToverW_TO3];
+ToverW_TO4 = [ToverW_TO4 ToverW_TO4];
+ToverW_TO5 = [ToverW_TO5 ToverW_TO5];
+ToverW_TO6 = [ToverW_TO6 ToverW_TO6];
+plot(WoverS_TO,ToverW_TO1,<span class="string">'color'</span>,[0.4940 0.1840 0.5560]) <span class="comment">% purple</span>
+plot(WoverS_TO,ToverW_TO2,<span class="string">'color'</span>,[0.4940 0.1840 0.5560]) <span class="comment">% purple</span>
+plot(WoverS_TO,ToverW_TO3,<span class="string">'color'</span>,[0.4940 0.1840 0.5560]) <span class="comment">% purple</span>
+plot(WoverS_TO,ToverW_TO4,<span class="string">'color'</span>,[0.4940 0.1840 0.5560]) <span class="comment">% purple</span>
+plot(WoverS_TO,ToverW_TO5,<span class="string">'color'</span>,[0.4940 0.1840 0.5560]) <span class="comment">% purple</span>
+plot(WoverS_TO,ToverW_TO6,<span class="string">'color'</span>,[0.4940 0.1840 0.5560]) <span class="comment">% purple</span>
+plot(WoverS_TO_wiki,ToverW_TO_wiki,<span class="string">'rx'</span>)
+
+title(<span class="string">'MATCHING RESULT FOR SIZING OF BOEING 737MAX8'</span>)
+xlabel(<span class="string">'(W/S)_{TO}'</span>);
+ylabel(<span class="string">'(T/W)_{TO}'</span>);
+hold <span class="string">off</span>
+</pre><pre class="codeinput"><span class="keyword">function</span> [a,rho,P,Rankine]=Standard_Atmosphere(h)
+
+<span class="comment">% Unit exchange</span>
+ft_to_m = 0.3048;       <span class="comment">% ft to m</span>
+m_s_to_mph = 2.236936;  <span class="comment">% m/s to mph</span>
+m_s_to_kt = 1.943844;   <span class="comment">% m/s to kt</span>
+m_s_to_ft_s = 3.280840; <span class="comment">% m/s to ft/s</span>
+ft_s_to_kt = 0.592484;  <span class="comment">% ft/s to kt</span>
+kg_to_slug = 0.068522;  <span class="comment">% kg to slug</span>
+
+h = h*ft_to_m;<span class="comment">% unit:m</span>
+[T,a,P,rho] = atmosisa(h);
+Rankine = T*1.8;<span class="comment">% unit:Rankine</span>
+rho = rho*kg_to_slug*ft_to_m^3;<span class="comment">% unit:slug^3/ft^3</span>
+a = a*m_s_to_ft_s;<span class="comment">% unit:ft/s</span>
+<span class="keyword">end</span>
 </pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2022a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Boeing 737 MAX 8 Preliminary Sizing
-
-% Clear previous data 
+% Clear previous data
 format long
 clc
 clear
@@ -765,676 +589,545 @@ m_s_to_kt = 1.943844;   % m/s to kt
 m_s_to_ft_s = 3.280840; % m/s to ft/s
 ft_s_to_kt = 0.592484;  % ft/s to kt
 
-% %% Mission profile parameters
-% 
-% % Payload weight (unit: lbs)
-% % 180 Passengers at 175 lbs each and 30 lbs of baggage each
-% W_PL = (175+30)*180;        
-% 
-% % Crew weight (unit: lbs)
-% % 2 Pilots and 6 flight attendents at 175 lbs each and 30 lbs of baggage each
-% W_crew = (175+30)*8;        
-% 
-% %
-% D = W_crew + W_PL;
-% 
-% % CruiseAltitude (unit: ft)
-% CruiseAltitudeMin = 35000;
-% CruiseAltitudeMax = 41000;
-% CruiseAltitudeInterval = 1000;
-% CruiseAltitudeMatrix = [CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax]; 
-% 
-% % Range (unit: nm)
-% RangeMin = 2000;
-% RangeMax = 3500;
-% RangeInterval = 100;
-% RangeMatrix = [RangeMin:RangeInterval:RangeMax]; %
-% 
-% % LoverD_Cruise
-% LoverD_CruiseMin = 13;
-% LoverD_CruiseMax = 14;
-% LoverD_CruiseInterval = 0.1;
-% LoverD_CruiseMatrix = [LoverD_CruiseMin:LoverD_CruiseInterval:LoverD_CruiseMax]; 
-% 
-% % LoverD_Loiter
-% LoverD_LoiterMin = 17;
-% LoverD_LoiterMax = 18;
-% LoverD_LoiterInterval = 0.1;
-% LoverD_LoiterMatrix = [LoverD_LoiterMin:LoverD_LoiterInterval:LoverD_LoiterMax]; 
-% 
-% % c_j_cruise
-% c_j_cruiseMin = 0.5;
-% c_j_cruiseMax = 0.55;
-% c_j_cruiseInterval = 0.01;
-% c_j_cruiseMatrix = [c_j_cruiseMin:c_j_cruiseInterval:c_j_cruiseMax]; 
-% 
-% % c_j_loiter
-% c_j_loiterMin = 0.55;
-% c_j_loiterMax = 0.6;
-% c_j_loiterInterval =0.01;
-% c_j_loiterMatrix = [c_j_loiterMin:c_j_loiterInterval:c_j_loiterMax]; 
-% 
-% %
-% Endurance = 0.5;            % Loiter, unit: hr
-% AverageClimbRate = 2500;    % unit: fpm
-% CruiseSpeed_Mach = 0.79;    % unit: Mach
-% AlternateCruiseSpeed = 250; % unit: kts
-% AlternateRange = 100;       % unit: nm
-% 
-% 
-% % Regression Line Constants A and B of Equation
-% % Airplane type: Transport jet
-% A = 0.0833;
-% B = 1.0383;
-% 
-% % W_TO & W_OE from wikipedia (unit: lbs)
-% W_OE_wiki = 99360;
-% W_TO_wiki = 182200;
-% W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew;
-% W_E_wiki2W_TO_guess = 10^(A+B*log10(W_E_wiki));
-% W_E_real_wiki = 10^((log10(W_TO_wiki)-A)/B);
-% error_wiki = abs(W_E_real_wiki-W_E_wiki)/W_E_real_wiki;
-% 
-% %% Fuel Fraction parameters
-% 
-% % Engine start and warm up, from Table 2.1
-% W1_W_TO_guess_ratio = 0.990;
-% % Taxi, from Table 2.1
-% W2_W1_ratio = 0.990;
-% % Take-off, from Table 2.1
-% W3_W2_ratio = 0.995;
-% % Climb, from Table 2.1
-% W4_W3_ratio = 0.980;
-% % Decent,from Table 2.1
-% W7_W6_ratio = 0.990;
-% % Fly to alternate and descend, from Brequet's range equation, L/D = 10, c_j = 0.9
-% W8_W7_ratio = 1/(exp(AlternateRange/(AlternateCruiseSpeed/0.9*10)));
-% % Landing, Taxi and Shutdown, From Table 2.1
-% W9_W8_ratio = 0.992;                                                   
-%  
-% %% InputParametersMatrix setup section
-% 
-% % InputParametersMatrix sizing
-% InputParametersMatrix_row = width(CruiseAltitudeMatrix)*width(RangeMatrix)*width(LoverD_CruiseMatrix)...
-%     *width(LoverD_LoiterMatrix)*width(c_j_cruiseMatrix)*width(c_j_loiterMatrix);
-% InputParametersMatrix_column = 15;
-% InputParametersMatrixTemp = zeros(InputParametersMatrix_row,InputParametersMatrix_column);
-% InputParametersMatrix = zeros(InputParametersMatrix_row,InputParametersMatrix_column);
-% 
-% % Create InputParametersMatrix
-% n=1;
-% for CruiseAltitude = CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax
-%     for Range = RangeMin:RangeInterval:RangeMax
-%         for LoverD_Cruise = LoverD_CruiseMin:LoverD_CruiseInterval:LoverD_CruiseMax
-%             for LoverD_Loiter = LoverD_LoiterMin:LoverD_LoiterInterval:LoverD_LoiterMax
-%                 for c_j_cruise = c_j_cruiseMin:c_j_cruiseInterval:c_j_cruiseMax
-%                     for c_j_loiter = c_j_loiterMin:c_j_loiterInterval:c_j_loiterMax
-%                         InputParametersMatrixTemp(n,1) = CruiseAltitude;
-%                         InputParametersMatrixTemp(n,2) = Range;
-%                         InputParametersMatrixTemp(n,3) = LoverD_Cruise;
-%                         InputParametersMatrixTemp(n,4) = LoverD_Loiter;
-%                         InputParametersMatrixTemp(n,5) = c_j_cruise;
-%                         InputParametersMatrixTemp(n,6) = c_j_loiter;
-%                         n=n+1;
-%                     end
-%                 end
-%             end
-%         end
-%     end
-% end
-%  
-% %% Parallel computing CruiseSpeed/AverageClimbSpeed/ClimbTime/CruiseRange/W5_W4_ratio/W6_W5_ratio/M_ff/C
-% parfor row = 1:InputParametersMatrix_row
-%     % Temporary matrix for parallel computing
-%     temp = zeros(1,InputParametersMatrix_column);
-% 
-%     % Read data form InputParametersMatrixtemp
-%     CruiseAltitude = InputParametersMatrixTemp(row,1);
-%     Range = InputParametersMatrixTemp(row,2);
-%     LoverD_Cruise = InputParametersMatrixTemp(row,3);
-%     LoverD_Loiter = InputParametersMatrixTemp(row,4);
-%     c_j_cruise  = InputParametersMatrixTemp(row,5);
-%     c_j_loiter = InputParametersMatrixTemp(row,6);
-% 
-%     % Calculate parameters
-%     [a]=Standard_Atmosphere(CruiseAltitude);                                     % unit:Imperial system
-%     CruiseSpeed = CruiseSpeed_Mach*a*ft_s_to_kt;                                 % unit: kts
-%     AverageClimbSpeed = CruiseSpeed*0.6;                                         % unit: kts
-%     ClimbTime = CruiseAltitude/AverageClimbRate;                                 % Climb time, unit: minute
-%     ClimbRange = AverageClimbSpeed*(ClimbTime/60);                               % Climb range, unit: nm
-%     CruiseRange = Range - ClimbRange;                                            % Cruise range, unit: nm
-%     W5_W4_ratio = 1/(exp(CruiseRange/(CruiseSpeed/c_j_cruise*LoverD_Cruise)));   % Cruise, from Breguet's range equation
-%     W6_W5_ratio = 1/(exp(0.5/(1/c_j_loiter*LoverD_Loiter)));                     % Loiter, from Breguet's endurance equation
-%     M_ff = W1_W_TO_guess_ratio*W2_W1_ratio*W3_W2_ratio*W4_W3_ratio*...
-%         W5_W4_ratio*W6_W5_ratio*W7_W6_ratio*W8_W7_ratio*W9_W8_ratio
-%     C = 1-(1-M_ff)-0.005;
-%  
-%     % Output data
-%     temp(1) = CruiseAltitude;
-%     temp(2) = Range;
-%     temp(3) = LoverD_Cruise;
-%     temp(4) = LoverD_Loiter;
-%     temp(5) = c_j_cruise;
-%     temp(6) = c_j_loiter;
-%     temp(7) = CruiseSpeed;
-%     temp(8) = AverageClimbSpeed;
-%     temp(9) = ClimbTime;
-%     temp(10) = ClimbRange;
-%     temp(11) = CruiseRange;
-%     temp(12) = W5_W4_ratio;
-%     temp(13) = W6_W5_ratio;
-%     temp(14) = M_ff;
-%     temp(15) = C;
-% 
-%     % Output calculate result into InputParametersMatrix
-%     InputParametersMatrix(row, :) = temp;
-% 
-% end
-% 
-% %% Find W_TO_guess_min & W_TO_guess_max
-% 
-% % Read data
-% C_min = min(InputParametersMatrix(:,14));
-% C_max = max(InputParametersMatrix(:,14));
-% 
-% % Find the lower and upper bound of W_To_guess
-% syms x
-% W_TO_guess_min = vpasolve( A + B*log10(C_max*x - D) - log10(x) == 0 );
-% W_TO_guess_max = vpasolve( A + B*log10(C_min*x - D) - log10(x) == 0 );
-% W_TO_guess_LowerBound = floor(W_TO_guess_min);
-% W_to_guess_UpperBound = ceil(W_TO_guess_max);
-% 
-% %% Numerical approximation of W_TO_guess
-% 
-% % ResultMatrixApporx sizing
-% W_TO_Apporx_row = InputParametersMatrix_row;
-% W_TO_Approx_column = 13;
-% W_TO_Approx = zeros(W_TO_Apporx_row,W_TO_Approx_column);
-% 
-% parfor row = 1:W_TO_Apporx_row
-%     % Temporary matrix for parallel computing
-%     temp = zeros(1,W_TO_Approx_column);
-% 
-%     % Read data
-%     CruiseAltitude = InputParametersMatrix(row,1);
-%     Range = InputParametersMatrix(row,2);
-%     LoverD_Cruise = InputParametersMatrix(row,3);
-%     LoverD_Loiter = InputParametersMatrix(row,4);
-%     c_j_cruise  = InputParametersMatrix(row,5);
-%     c_j_loiter = InputParametersMatrix(row,6);
-%     CruiseSpeed = InputParametersMatrix(row,7);
-%     M_ff = InputParametersMatrix(row,13);
-%     C = InputParametersMatrix(row,14);
-%   
-%     for W_TO_guess = 165991:182200 % W_TO_guess_LowerBound:W_TO_wiki
-%         W_E_real = 10^((log10(W_TO_guess)-A)/B);
-%         W_E_tent = C*W_TO_guess - D;
-%         error = abs(W_E_tent - W_E_real)/ W_E_real;
-%         if error < 0.005
-%             W_E_error =  abs(W_E_real - W_E_wiki)/W_E_real;
-% 
-%             % Output data
-%             temp(1) = CruiseAltitude;
-%             temp(2) = Range;
-%             temp(3) = LoverD_Cruise;
-%             temp(4) = LoverD_Loiter;
-%             temp(5) = c_j_cruise;
-%             temp(6) = c_j_loiter;
-%             temp(7) = CruiseSpeed;
-%             temp(8) = M_ff;
-%             temp(9) = C;
-%             temp(10) = W_TO_guess;
-%             temp(11) = W_E_tent;
-%             temp(12) = W_E_real;
-%             temp(13) = W_E_error;
-% 
-%             % Output calculate result into Result matrix
-%             W_TO_Approx(row, :) = temp;
-%             break
-%         end
-%     end
-% end
-%  
-% %% Numerical solution of W_TO_guess
-% 
-% % W_TO_solutions sizing
-% W_TO_solutions_row = height(W_TO_ApproxSolutions);
-% W_TO_sloutions_column = width(W_TO_ApproxSolutions) ;
-% W_TO_solutions = zeros(W_TO_solutions_row,W_TO_sloutions_column);
-% 
-% x = sym('x', [1,W_TO_solutions_row]);
-% parfor row = 1: W_TO_solutions_row
-%     % Temporary matrix for parallel computing
-%     temp = zeros(1,W_TO_sloutions_column);
-%    
-%             % Read data
-%             CruiseAltitude = W_TO_ApproxSolutions(row,1);
-%             Range = W_TO_ApproxSolutions(row,2);
-%             LoverD_Cruise = W_TO_ApproxSolutions(row,3);
-%             LoverD_Loiter = W_TO_ApproxSolutions(row,4);
-%             c_j_cruise  = W_TO_ApproxSolutions(row,5);
-%             c_j_loiter = W_TO_ApproxSolutions(row,6);
-%             CruiseSpeed = W_TO_ApproxSolutions(row,7);
-%             M_ff = W_TO_ApproxSolutions(row,8);
-%             C = W_TO_ApproxSolutions(row,9);
-%     
-%             % vpasolve
-%             W_TO_guess = vpasolve( A + B*log10(C*x(row) - D) - log10(x(row)) == 0 );
-%             
-%             % Computing
-%             W_E_real = 10^((log10(W_TO_guess)-A)/B);
-%             W_E_tent = C*W_TO_guess-D;
-%             W_E_error = abs(W_E_real - W_E_wiki)/W_E_real;
-%     
-%             % Output data
-%             temp(1) = CruiseAltitude;
-%             temp(2) = Range;
-%             temp(3) = LoverD_Cruise;
-%             temp(4) = LoverD_Loiter;
-%             temp(5) = c_j_cruise;
-%             temp(6) = c_j_loiter;
-%             temp(7) = CruiseSpeed;
-%             temp(8) = M_ff;
-%             temp(9) = C;
-%             temp(10) = W_TO_guess;
-%             temp(11) = W_E_tent;
-%             temp(12) = W_E_real;
-%             temp(13) = W_E_error;
-% 
-%             % Output calculate result into Result matrix
-%             W_TO_solutions(row, :) = temp;
-% end
-% % 
-% % %% Sensitivity section
-% % % W_TO_Senitivity sizing
-% % W_TO_Senitivity = zeros();
-% % 
-% % %
-% % n = 0;
-% % 
-% % % Open TransportJet_WTO_CheatingVersion_result.txt
-% % fid = fopen(Boeing737MAX8_W_TO_Senitivity_OutputDirectory,'wt');
-% % 
-% % for row = 1:W_TO_solutions_row
-% %     if  W_TO_solutions(row,13) < error_wiki/250 
-% %         n = n+1;
-% %         % Read data
-% %         CruiseAltitude = W_TO_solutions(row,1);
-% %         Range = W_TO_solutions(row,2);
-% %         LoverD_Cruise = W_TO_solutions(row,3);
-% %         LoverD_Loiter = W_TO_solutions(row,4);
-% %         c_j_cruise  = W_TO_solutions(row,5);
-% %         c_j_loiter = W_TO_solutions(row,6);
-% %         CruiseSpeed = W_TO_solutions(row,7);
-% %         M_ff = W_TO_solutions(row,8);
-% %         C = W_TO_solutions(row,9);
-% %         W_TO = W_TO_solutions(row,10);
-% %         W_E_tent = W_TO_solutions(row,11);
-% %         W_E_real = W_TO_solutions(row,12);
-% %         W_E_error = W_TO_solutions(row,13);
-% % 
-% %         % Sensitivity calculate
-% %         F=-B*(W_TO^2)*((C*W_TO*(1-B)-D)^-1)*(1+0)*M_ff;
-% %         % W_TO over W_PL
-% %         W_TO_over_W_PL = B*W_TO*(D-C*(1-B)*W_TO)^-1;
-% %         % W_TO over W_E
-% %         W_TO_over_W_E = B*W_TO*(10^((log10(W_TO)-A)/B))^-1;
-% %         % W_TO over Range
-% %         W_TO_over_Range = F*c_j_cruise*(CruiseSpeed*LoverD_Cruise)^-1;
-% %         % W_TO over Endurance
-% %         W_TO_over_Endurance = F*c_j_loiter*LoverD_Loiter^-1;
-% %         % W_TO over Cruise speed
-% %         W_TO_over_CriuseSpeed = -F*Range*c_j_cruise*(CruiseSpeed^2*LoverD_Cruise)^-1;
-% %         % W_TO over c_j_Range
-% %         W_TO_over_c_j_Range = F*Range*(CruiseSpeed*LoverD_Cruise)^-1;
-% %         % W_TO over L/D_Range
-% %         W_TO_over_LoverD_Range = -F*Range*c_j_cruise*(CruiseSpeed*LoverD_Cruise^2)^-1;
-% %         % W_TO over c_j_Loiter
-% %         W_TO_over_c_j_Loiter = F*Endurance*LoverD_Loiter^-1;
-% %         % W_TO over L/D_Loiter
-% %         W_TO_over_LoverD_Loiter = -F*Endurance*c_j_loiter*LoverD_Loiter^-2;
-% % 
-% %         % Output result
-% %         W_TO_Senitivity(n,1) = CruiseAltitude;
-% %         W_TO_Senitivity(n,2) = Range;
-% %         W_TO_Senitivity(n,3) = LoverD_Cruise;
-% %         W_TO_Senitivity(n,4) = LoverD_Loiter;
-% %         W_TO_Senitivity(n,5) = c_j_cruise;
-% %         W_TO_Senitivity(n,6) = c_j_loiter;
-% %         W_TO_Senitivity(n,7) = CruiseSpeed;
-% %         W_TO_Senitivity(n,8) = M_ff;
-% %         W_TO_Senitivity(n,9) = W_TO;
-% %         W_TO_Senitivity(n,10) = W_E_tent;
-% %         W_TO_Senitivity(n,11) = W_E_real;
-% %         W_TO_Senitivity(n,12) = W_E_error;
-% %         W_TO_Senitivity(n,13) = W_TO_over_W_PL;
-% %         W_TO_Senitivity(n,14) = W_TO_over_W_E ;
-% %         W_TO_Senitivity(n,15) = W_TO_over_Range;
-% %         W_TO_Senitivity(n,16) = W_TO_over_Endurance;
-% %         W_TO_Senitivity(n,17) = W_TO_over_CriuseSpeed;
-% %         W_TO_Senitivity(n,18) = W_TO_over_c_j_Range;
-% %         W_TO_Senitivity(n,19) = W_TO_over_LoverD_Range;
-% %         W_TO_Senitivity(n,20) = W_TO_over_c_j_Loiter;
-% %         W_TO_Senitivity(n,21) = W_TO_over_LoverD_Loiter;
-% % 
-% %     end
-% % end
-% % 
-% % %% Parameters
-% % % Take-off weight (unit: lbs)
-% % W_TO = 182043.622463998;
-% % 
-% % % Parameters at CruiseAltitude
-% % CruiseAltitude = 40000; % unit: ft
-% % [a,rho]=Standard_Atmosphere(CruiseAltitude);
-% % a_CruiseAltitude = a;
-% % rho_CruiseAltitude = rho;
-% % CruiseSpeed_Mach = 0.79;
-% % CruiseSpeed = CruiseSpeed_Mach*a_CruiseAltitude;
-% % q_overline = 0.5*rho_CruiseAltitude*CruiseSpeed^2;
-% % 
-% % % Parameters at FieldAltitude RCTP FieldLength:12467ft/FieldAltitude:106ft
-% % FieldLength = 10000; % unit: ft
-% % FieldAltitude = 106; % unit: ft
-% % [a,rho,P]=Standard_Atmosphere(FieldAltitude);
-% % rho_FieldAltitude = rho;
-% % P_FieldAltitude = P;
-% % 
-% % % Parameters at sea level
-% % [a,rho,P,Rankine]=Standard_Atmosphere(0);
-% % rho_SeaLevel = rho;
-% % P_SeaLevel = P;
-% % T_SeaLevel = Rankine;
-% % 
-% % % Ratio
-% % P_FieldAltitude_over_P_SeaLevel = P_FieldAltitude/P_SeaLevel;
-% % T_95F_over_T_SeaLevel = (95+459.7)/T_SeaLevel;
-% % Density_ratio_TO = P_FieldAltitude_over_P_SeaLevel/T_95F_over_T_SeaLevel;
-% % 
-% % %
-% % WoverS = 0:10:200;
-% % c = 0.0199;
-% % d = 0.7531;
-% % S_wet = 10^(c+d*log10(W_TO));
-% % 
-% % % From Table 3.4 Correlation Coefficients For Parasite Area Versus Wetted Area
-% % cf_2 = 0.003; a_2 = -2.5229; b_2 = 1;
-% % cf_3 = 0.004; a_3 = -2.3979; b_3 = 1;
-% % f_2 = 10^(a_2+b_2*log10(S_wet));
-% % f_3 = 10^(a_3+b_3*log10(S_wet));
-% % 
-% % %
-% % delta_CD0_TOflaps = 0.015;  % From p.127, Table 3.6
-% % delta_CDO_Lflaps = 0.065;   % From p.127, Table 3.6
-% % delta_CD0_LG = 0.02;        % From p.127, Table 3.6CD_0_clean
-% % e_TOflaps = 0.8;            % From p.127, Table 3.6
-% % e_Lflaps = 0.75;            % From p.127, Table 3.6
-% % W_L = W_TO*0.84;            % 0.84 is from p.107, Table 3.3
-% % S = W_TO/100;               % W/S = 100
-% % CD_0_clean = f_2/S         % Take cf = 0.003
-% % 
-% % %
-% % % C_D0 = 0.0184; % p.145&182 low speed,clean drag polar
-% % delta_C_D0 = 0.0001*2.5; % p.166 figure 3.32
-% % C_D0_modification = CD_0_clean + delta_C_D0;
-% % 
-% % %
-% % W_TO_wiki = 182200; % unit: lb
-% % b = 117.833; % unit: ft
-% % S_wiki = 1370; % unit: ft^2
-% % AR = b^2/S_wiki; % unit: ft
-% % S_wiki_TO = 1370; % unit: ft^2
-% % S_wet_wiki = 10^(c+d*log10(W_TO_wiki));
-% % StaticThrust_TO = 29317; % unit: lbs
-% % WoverS_TO_wiki = W_TO_wiki/S_wiki_TO; % unit: lb/ft^2
-% % ToverW_TO_wiki = StaticThrust_TO*2/W_TO_wiki; % unit: lb/lb
-% % %%
-% % hold on
-% % % FAR25 TAKEOFF DISTANCE SIZING
-% % for CL_max_TO = 1.6:0.2:2.2
-% %     ToverW = 37.5/(Density_ratio_TO*CL_max_TO*FieldLength).*WoverS;
-% %     plot(WoverS,ToverW,'color',[0 0.4470 0.7410]); % blue
-% % end
-% % 
-% % % FAR25 LANDING DISTANCE SIZING
-% % for CL_max_L = 1.8:0.2:2.4
-% %     V_stall_sqrt = FieldLength/(0.3*1.3^2)/ft_s_to_kt^2;
-% %     WoverS_landing = V_stall_sqrt/2*rho_FieldAltitude*CL_max_L;
-% %     WoverS_takeoff = WoverS_landing/0.84;
-% %     ToverW_landing = [0 1.6];
-% %     WoverS_takeoff = [WoverS_takeoff WoverS_takeoff];
-% %     plot(WoverS_takeoff,ToverW_landing,'color',[0.4660 0.6740 0.1880]); % green
-% % end
-% % 
-% % % CRUISE SPEED SIZING
-% % for e_clean = 0.8:0.05:0.85              % From p.127, Table 3.6
-% %     ToverW_cruise_reqd = C_D0_modification*q_overline./WoverS + WoverS./(q_overline*pi*AR*e_clean);
-% %     ToverW_TO = ToverW_cruise_reqd./0.191;
-% %     plot(WoverS,ToverW_TO,'color',[0.9290 0.6940 0.1250]); % orange
-% % end
-% % 
-% % % FAR25 CLIMB RATE SIZING
-% % % FAR25.111 OEI (P.145)
-% % CL_TO_max = 2;                     % From Table 3.1
-% % CL = CL_TO_max/1.2^2;              % at 1.2 V_stall_TO
-% % LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps)); % CL/CD_TO_GearDown
-% % ToverW_TO = 2*(1/LoverD+0.012);    % CGR>0.012
-% % ToverW_TO1 = ToverW_TO/0.8; % 50°F效應(除以0.8)
-% % 
-% % % FAR25.121 OEI
-% % CL = CL_TO_max/1.1^2; % V_LOF = 1.1 V_stall_TO
-% % LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps));
-% % ToverW_TO = 2*(1/LoverD); % CGR>0
-% % ToverW_TO2 = ToverW_TO/0.8; % 50°F效應(除以0.8)
-% % 
-% % % FAR25.121 OEI
-% % CL = CL_TO_max/1.2^2; % at 1.2 V_stall_TO
-% % LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+CL^2/(pi*AR*e_TOflaps));
-% % ToverW_TO = 2*(1/LoverD+0.024); % CGR>0.024
-% % ToverW_TO3 = ToverW_TO/0.8;
-% % 
-% % % FAR25.121 OEI
-% % CL_max = 1.4; % From Table 3.1
-% % CL = CL_max/1.25^2; % at 1.25 V_stall
-% % LoverD = CL/(CD_0_clean + CL^2/(pi*AR*0.85));
-% % ToverW_TO = 2*(1/LoverD+0.012); % CGR>0.012
-% % ToverW_TO4 = ToverW_TO/0.94/0.8; % 最大推力校正(除以0.94), 50°F效應(除以0.8)
-% % 
-% % % FAR25.119 AEO
-% % CL_max_L = 2.8; % From Table 3.1
-% % CL = CL_max_L/1.3^2; % at 1.3 V_stall_L
-% % LoverD = CL/(CD_0_clean+delta_CDO_Lflaps+delta_CD0_LG+CL^2/(pi*AR*e_Lflaps));
-% % ToverW_L = 1/LoverD+0.032; % CGR>0.032
-% % ToverW_TO5 = ToverW_L*(W_L/W_TO)/0.8;
-% % 
-% % % FAR25.121 OEI
-% % CL_max_A = 2.4; % From Table 3.1
-% % CL = CL_max_A/1.5^2; % at 1.5 V_stall_A
-% % LoverD = CL/((CD_0_clean+delta_CD0_TOflaps+CD_0_clean+delta_CDO_Lflaps)/2+delta_CD0_LG+CL^2/(pi*AR*e_Lflaps));
-% % ToverW_L = 2*(1/LoverD+0.021); % CGR>0.021
-% % ToverW_TO6 = ToverW_L*(W_L/W_TO)/0.8; 
-% % 
-% % WoverS_TO = [0 200];
-% % ToverW_TO1 = [ToverW_TO1 ToverW_TO1];
-% % ToverW_TO2 = [ToverW_TO2 ToverW_TO2];
-% % ToverW_TO3 = [ToverW_TO3 ToverW_TO3];
-% % ToverW_TO4 = [ToverW_TO4 ToverW_TO4];
-% % ToverW_TO5 = [ToverW_TO5 ToverW_TO5];
-% % ToverW_TO6 = [ToverW_TO6 ToverW_TO6];
-% % 
-% % plot(WoverS_TO,ToverW_TO1,'color',[0.4940 0.1840 0.5560]) % purple
-% % plot(WoverS_TO,ToverW_TO2,'color',[0.4940 0.1840 0.5560]) % purple
-% % plot(WoverS_TO,ToverW_TO3,'color',[0.4940 0.1840 0.5560]) % purple
-% % plot(WoverS_TO,ToverW_TO4,'color',[0.4940 0.1840 0.5560]) % purple
-% % plot(WoverS_TO,ToverW_TO5,'color',[0.4940 0.1840 0.5560]) % purple
-% % plot(WoverS_TO,ToverW_TO6,'color',[0.4940 0.1840 0.5560]) % purple
-% % 
-% % plot(WoverS_TO_wiki,ToverW_TO_wiki,'rx')
-% % 
-% % title('MATCHING RESULT FOR SIZING OF BOEING 737MAX8')
-% % xlabel('(W/S)_{TO}');
-% % ylabel('(T/W)_{TO}');
-% % 
-% % hold off
-% %%
-% function [a,rho,P,Rankine]=Standard_Atmosphere(h)
-% Standard Atmosphere (SI Units)
-% [C,a,P,rho,g,mu]=Standard_Atmosphere(h)
-%
-% bibliography :
-% [1] Yunus A. Cengel & John M.Cimbala°ßFLUID MECHANICS ...
-% Fundamentals and  Applications°®, McGraw-Hill., p897.
-% [2] John J. Bertin & Russell M. Cummings°ßAERODYNAMICS FOR ENGINEERS°®,
-% 5th Edition, Pearson Education International., p21-p43.
-% [3] WARREN F.PHILLIPS,°ßMECHANICS of FLIGHT°®, 2nd Edition, John Wiley.
-% p10-p14.
-% [4] John D.Anderson,"Modern Compressibe Flow", third Edition, McGraw-Hill
-% ., p585-p613.
-%
-% input arguments:
-%    h = Geometric altitude. (default : sea level)
-%
-% output arguments:
-%    Rankine = The temperature in Rankine scale.
-%    a = Speed of sound.
-%    P = The standard atmosphere at h.
-%    rho = Density.
-%    g = Is the gravitational acceleration at height h above sea level.
-%    mu = Coefficient of viscosity.
-%
-% example :
-%    % Plot C v.s geometrix altitude and P v.s geometrix altitude.
-%    >> [C,a,P,rho,g,mu]=Standard_Atmosphere(100:100:90000);
-%    >> figure, subplot(1,2,1);
-%    >> plot(C,100:100:90000);
-%    >> set(gca,'XTick',-100:20:20,'YTick',0:10000:100000,...
-%            'YTickLabel',0:10:100,'DataAspectRatio',[1 650 1]);
-%    >> title('Standard Atmosphere'); grid on;
-%    >> xlabel('Temperature (Celsius)'); ylabel('Geometrix Altitude (Km)');
-%    >> subplot(1,2,2);
-%    >> plot(P,100:100:90000);
-%    >> set(gca,'XTick',0:50000:150000,'YTick',0:10000:100000,...
-%            'XTickLabel',0:50:150,'YTickLabel',0:10:100,...
-%            'DataAspectRatio',[1 .65 1]);
-%    >> title('Standard Atmosphere'); grid on;
-%    >> xlabel('Pressure (kPa)'); ylabel('Geometrix Altitude (Km)');
+%% 
+% Mission profile parameters
 
-% Last change: 2022/07/25 14:00 pm
+% Payload weight
+% 180 Passengers at 175 lbs each and 30 lbs of baggage each
+W_PL = (175+30)*180; % unit: lbs
 
-% % Unit exchange
-% ft_to_m = 0.3048;       % ft to m
-% m_s_to_mph = 2.236936;  % m/s to mph
-% m_s_to_kt = 1.943844;   % m/s to kt
-% m_s_to_ft_s = 3.280840; % m/s to ft/s
-% ft_s_to_kt = 0.592484;  % ft/s to kt
-% kg_to_slug = 0.068522;
-% %
-% h = h*ft_to_m; % unit:m
-% 
-% % default values
-% if ~exist('h','var'), h = 0; end;  % sea level
-% 
-% % Gravitational acceleration
-% % go = Is the standard gravitational acceleration.
-% % re = Is the Earth's mean radius.
-% go = 9.806645;           % m/s^2
-% re = 6356766;            % m
-% g = go*(re./(re+h)).^2;  % m/s^2
-% 
-% % Geopotential Altitude
-% % Z = Geopotential altitude.
-% % Zi = Is the minimum geopotential altitude in the range.
-% Z = (re*h)./(re+h);                                        % m
-% Zi = [0 11000 20000 32000 47000 52000 61000 79000 90000];  % m
-% [Zig Zg] = meshgrid(Zi,Z);
-% 
-% % Temperature in Celsius
-% % B = The lapse rate (Temperature Gradient);in SI units [K/m].
-% % Bi = The lapse rate (Temperature Gradient) for the range;
-% % Ti = Inital Temperature (absolute) inthe range ; K
-% % To = Is the sea_level temperature (absolute).
-% % T = Is temperature in K.
-% Bi = [-0.0065,0,0.001,0.0028,0,-0.002,-0.004,0];
-% Ti = [288.150,216.650,216.650,228.650,270.650,270.650,252.650,180.650];
-% Big = meshgrid(Bi,Z);
-% Tig = meshgrid(Ti,Z);
-% B = Big(Zig(:,1:8) <= Zg(:,1:8) &  Zg(:,2:9) < Zig(:,2:9));     % K/m
-% To = Tig(Zig(:,1:8) <= Zg(:,1:8) &  Zg(:,2:9) < Zig(:,2:9));
-% T = To'+B'.*...
-%     (Z-(Zig(Zig(:,1:8) <= Zg(:,1:8) &  Zg(:,2:9) < Zig(:,2:9)))');
-% Rankine = T*1.8; % unit:Rankine
-% % standard atmosphere pressure
-% % R = The gas constant for air.
-% % The gas constant for air in SI units [(N*m)/(kg*K)].
-% R = 287.0528;
-% [~,n] = max(...
-%     double(Zig(:,1:7) <= Zg(:,1:7) &  Zg(:,2:8) < Zig(:,2:8)),[],2);
-% N = 0;
-% P = zeros(size(Z));
-% for n = n',
-%     N = N+1;
-%     if B(N)==0,
-%         P(N) = Pressure(n+1,go,R,Zi,Ti,Bi)*...
-%             exp((-go*(Z(N)-Zi(n)))/(R*Ti(n)));
-%     else
-%         P(N) = Pressure(n+1,go,R,Zi,Ti,Bi)*...
-%             ((T(N))/Ti(n))^(-go/(R*Bi(n)));
-%     end
-% end
-% 
-% % Recursion function.
-%     function Pi = Pressure(n,go,R,Zi,Ti,Bi)
-%         n = n-1;
-%         if (n > 1)
-%             if Bi(n-1)==0,
-%                 Pi = Pressure(n,go,R,Zi,Ti,Bi)*...
-%                     exp((-go*(Zi(n-1+1)-Zi(n-1)))/(R*Ti(n-1)));
-%             else
-%                 Pi = Pressure(n,go,R,Zi,Ti,Bi)*...
-%                     ((Ti(n-1)+Bi(n-1)*(Zi(n-1+1)-Zi(n-1)))/...
-%                     Ti(n-1))^(-go/(R*Bi(n-1)));
-%             end
-%         else
-%             % Standard atmosphere pressure at sea level.
-%             Pi = 1.01325*10^5;
-%         end
-%     end
-% 
-% % Density
-% rho = P./(R.*T);
-% rho = rho*kg_to_slug*ft_to_m^3;
-% % Coefficient of viscosity
-% if nargout > 5
-%     % Viscosity in SI units [kg/(s*m)].
-%     mu = 1.458*(10^-6)*((T.^1.5)./(T+110.4));
-% end
-% 
-% % molecular energy.
-% % Cv = Constant volime ; Cv = e(internal energy)/T.
-% % Cp = Constant pressure ; Cp = h(enthalpy)/T.
-% % e = Internal energy.
-% % e_tr = Translational energy.
-% % e_rot = Rotational energy.
-% % e_vib = Vibrational energy.
-% e_tr = (3/2).*R.*T;
-% e_rot = R.*T;
-% e_vib = (1/2).*R.*T;
-% if ( T >= 600 ) % when the air temperature reaches 600K or higher .
-%     e = e_tr+e_rot+e_vib;
-%     Cv = e./T;
-%     Cp = (e+R.*T)./T;
-% else
-%     e = e_tr+e_rot;
-%     Cv = e./T;
-%     Cp = (e+R.*T)./T;
-% end
-% 
-% % gamma = Define Cp(constant pressure)/Cv(constant volime).
-% gamma = Cp./Cv;
-% 
-% % Speed of sound .
-% a = sqrt(gamma.*R.*T);
-% a = a*m_s_to_ft_s; % unit:ft/s
-% end
+% Crew weight
+% 2 Pilots and 6 flight attendents at 175 lbs each and 30 lbs of baggage each
+W_crew = (175+30)*8; % unit: lbs
+D = W_crew + W_PL; 
+
+% CruiseAltitude (unit: ft)
+CruiseAltitudeMin = 35000;
+CruiseAltitudeMax = 41000;
+CruiseAltitudeInterval = 1000;
+CruiseAltitudeMatrix = [CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax];
+
+% Range (unit: nm)
+RangeMin = 2000;
+RangeMax = 3500;
+RangeInterval = 100;
+RangeMatrix = [RangeMin:RangeInterval:RangeMax];
+
+% LoverD_Cruise
+LoverD_CruiseMin = 13;
+LoverD_CruiseMax = 14;
+LoverD_CruiseInterval = 0.1;
+LoverD_CruiseMatrix = [LoverD_CruiseMin:LoverD_CruiseInterval:LoverD_CruiseMax];
+
+% LoverD_Loiter
+LoverD_LoiterMin = 17;
+LoverD_LoiterMax = 18;
+LoverD_LoiterInterval = 0.1;
+LoverD_LoiterMatrix = [LoverD_LoiterMin:LoverD_LoiterInterval:LoverD_LoiterMax];
+
+% c_j_cruise
+c_j_cruiseMin = 0.5;
+c_j_cruiseMax = 0.55;
+c_j_cruiseInterval = 0.01;
+c_j_cruiseMatrix = [c_j_cruiseMin:c_j_cruiseInterval:c_j_cruiseMax];
+
+% c_j_loiter
+c_j_loiterMin = 0.55;
+c_j_loiterMax = 0.6;
+c_j_loiterInterval =0.01;
+c_j_loiterMatrix = [c_j_loiterMin:c_j_loiterInterval:c_j_loiterMax];
+
+% Loiter
+Endurance = 0.5; % unit: hr
+
+%
+AverageClimbRate = 2500; % unit: fpm
+CruiseSpeed_Mach = 0.79; % unit: Mach
+AlternateCruiseSpeed = 250; % unit: kts
+AlternateRange = 100;% unit: nm
+
+% Regression Line Constants A and B of Equation
+% Airplane type: Transport jet
+A = 0.0833;
+B = 1.0383;
+
+% W_TO & W_OE from wikipedia (unit: lbs)
+W_OE_wiki = 99360;
+W_TO_wiki = 182200;
+W_E_wiki = W_OE_wiki - W_TO_wiki*0.005 - W_crew;
+W_E_wiki2W_TO_guess = 10^(A+B*log10(W_E_wiki));
+W_E_real_wiki = 10^((log10(W_TO_wiki)-A)/B);
+error_wiki = abs(W_E_real_wiki-W_E_wiki)/W_E_real_wiki;
+
+%%
+% Fuel Fraction parameters
+
+% Engine start and warm up, from Table 2.1
+W1_W_TO_guess_ratio = 0.990;
+% Taxi, from Table 2.1
+W2_W1_ratio = 0.990;
+% Take-off, from Table 2.1
+W3_W2_ratio = 0.995;
+% Climb, from Table 2.1
+W4_W3_ratio = 0.980;
+% Decent,from Table 2.1
+W7_W6_ratio = 0.990;
+% Fly to alternate and descend, from Brequet's range equation, L/D = 10, c_j = 0.9
+W8_W7_ratio = 1/(exp(AlternateRange/(AlternateCruiseSpeed/0.9*10)));
+% Landing, Taxi and Shutdown, From Table 2.1
+W9_W8_ratio = 0.992;
+
+%%
+% InputParametersMatrix setup section
+
+% InputParametersMatrix sizing
+InputParametersMatrix_row = width(CruiseAltitudeMatrix)*width(RangeMatrix)...
+                    *width(LoverD_CruiseMatrix)*width(LoverD_LoiterMatrix)...
+                    *width(c_j_cruiseMatrix)*width(c_j_loiterMatrix);
+InputParametersMatrix_column = 15;
+InputParametersMatrixTemp = zeros(InputParametersMatrix_row,InputParametersMatrix_column);
+InputParametersMatrix = zeros(InputParametersMatrix_row,InputParametersMatrix_column);
+
+% Create InputParametersMatrix
+n=1;
+for CruiseAltitude = CruiseAltitudeMin:CruiseAltitudeInterval:CruiseAltitudeMax
+    for Range = RangeMin:RangeInterval:RangeMax
+        for LoverD_Cruise = LoverD_CruiseMin:LoverD_CruiseInterval:LoverD_CruiseMax
+            for LoverD_Loiter = LoverD_LoiterMin:LoverD_LoiterInterval:LoverD_LoiterMax
+                for c_j_cruise = c_j_cruiseMin:c_j_cruiseInterval:c_j_cruiseMax
+                    for c_j_loiter = c_j_loiterMin:c_j_loiterInterval:c_j_loiterMax
+                        InputParametersMatrixTemp(n,1) = CruiseAltitude;
+                        InputParametersMatrixTemp(n,2) = Range;
+                        InputParametersMatrixTemp(n,3) = LoverD_Cruise;
+                        InputParametersMatrixTemp(n,4) = LoverD_Loiter;
+                        InputParametersMatrixTemp(n,5) = c_j_cruise;
+                        InputParametersMatrixTemp(n,6) = c_j_loiter;
+                        n=n+1;
+                    end
+                end
+            end
+        end
+    end
+end
+
+%%
+% Calculate CruiseSpeed/AverageClimbSpeed/ClimbTime/CruiseRange/W5_W4_ratio/W6_W5_ratio/M_ff/C
+parfor row = 1:InputParametersMatrix_row
+
+    % Temporary matrix for parallel computing
+    temp = zeros(1,InputParametersMatrix_column);
+
+    % Read data form InputParametersMatrixtemp
+    CruiseAltitude = InputParametersMatrixTemp(row,1);
+    Range = InputParametersMatrixTemp(row,2);
+    LoverD_Cruise = InputParametersMatrixTemp(row,3);
+    LoverD_Loiter = InputParametersMatrixTemp(row,4);
+    c_j_cruise  = InputParametersMatrixTemp(row,5);
+    c_j_loiter = InputParametersMatrixTemp(row,6);
+
+    % Calculate parameters
+    [a]=Standard_Atmosphere(CruiseAltitude);% unit:Imperial system
+    CruiseSpeed = CruiseSpeed_Mach*a*ft_s_to_kt;% unit: kts
+    AverageClimbSpeed = CruiseSpeed*0.6;% unit: kts
+    ClimbTime = CruiseAltitude/AverageClimbRate;% unit: minute
+    ClimbRange = AverageClimbSpeed*(ClimbTime/60); % unit: nm
+    CruiseRange = Range - ClimbRange; % unit: nm
+    % Cruise, from Breguet's range equation
+    W5_W4_ratio = 1/(exp(CruiseRange/(CruiseSpeed/c_j_cruise*LoverD_Cruise)));
+    % Loiter, from Breguet's endurance equation
+    W6_W5_ratio = 1/(exp(0.5/(1/c_j_loiter*LoverD_Loiter)));
+    M_ff = W1_W_TO_guess_ratio*W2_W1_ratio*W3_W2_ratio*W4_W3_ratio*...
+        W5_W4_ratio*W6_W5_ratio*W7_W6_ratio*W8_W7_ratio*W9_W8_ratio
+    C = 1-(1-M_ff)-0.005;
+
+    % Output data
+    temp(1) = CruiseAltitude;
+    temp(2) = Range;
+    temp(3) = LoverD_Cruise;
+    temp(4) = LoverD_Loiter;
+    temp(5) = c_j_cruise;
+    temp(6) = c_j_loiter;
+    temp(7) = CruiseSpeed;
+    temp(8) = AverageClimbSpeed;
+    temp(9) = ClimbTime;
+    temp(10) = ClimbRange;
+    temp(11) = CruiseRange;
+    temp(12) = W5_W4_ratio;
+    temp(13) = W6_W5_ratio;
+    temp(14) = M_ff;
+    temp(15) = C;
+
+    % Output calculate result into InputParametersMatrix
+    InputParametersMatrix(row, :) = temp;
+end
+
+%%
+% Find W_TO_guess_min
+
+% Read data
+C_max = max(InputParametersMatrix(:,14));
+
+% Find the lower bound of W_To_guess
+syms x
+W_TO_guess_min = vpasolve( A + B*log10(C_max*x - D) - log10(x) == 0 );
+W_TO_guess_LowerBound = floor(W_TO_guess_min);
+
+%%
+% Numerical approximation of W_TO_guess
+
+% ResultMatrixApporx sizing
+W_TO_Apporx_row = InputParametersMatrix_row;
+W_TO_Approx_column = 13;
+W_TO_Approx = zeros(W_TO_Apporx_row,W_TO_Approx_column);
+
+% Calculate W_TO_guess
+parfor row = 1:W_TO_Apporx_row
+
+    % Temporary matrix for parallel computing
+    temp = zeros(1,W_TO_Approx_column);
+
+    % Read data
+    CruiseAltitude = InputParametersMatrix(row,1);
+    Range = InputParametersMatrix(row,2);
+    LoverD_Cruise = InputParametersMatrix(row,3);
+    LoverD_Loiter = InputParametersMatrix(row,4);
+    c_j_cruise  = InputParametersMatrix(row,5);
+    c_j_loiter = InputParametersMatrix(row,6);
+    CruiseSpeed = InputParametersMatrix(row,7);
+    M_ff = InputParametersMatrix(row,13);
+    C = InputParametersMatrix(row,14);
+
+    % Iteration section
+    for W_TO_guess = 165991:182200 % W_TO_guess_LowerBound:W_TO_wiki
+        W_E_real = 10^((log10(W_TO_guess)-A)/B);
+        W_E_tent = C*W_TO_guess - D;
+        error = abs(W_E_tent - W_E_real)/ W_E_real;
+        if error  < 0.005
+            W_E_error =  abs(W_E_real - W_E_wiki)/W_E_real;
+
+            % Output data
+            temp(1) = CruiseAltitude;
+            temp(2) = Range;
+            temp(3) = LoverD_Cruise;
+            temp(4) = LoverD_Loiter;
+            temp(5) = c_j_cruise;
+            temp(6) = c_j_loiter;
+            temp(7) = CruiseSpeed;
+            temp(8) = M_ff;
+            temp(9) = C;
+            temp(10) = W_TO_guess;
+            temp(11) = W_E_tent;
+            temp(12) = W_E_real;
+            temp(13) = W_E_error;
+
+            % Output calculate result into Result matrix
+            W_TO_Approx(row, :) = temp;
+            break
+        end
+    end
+end
+
+%%
+% Check the amount of numerical approximation solutions
+
+% ResultMatrixApporxSolutions sizing
+W_TO_ApproxSolutions = zeros(W_TO_Approx_column);
+n=1;
+for row = 1:W_TO_Apporx_row
+    if W_TO_Approx(row,10) > 0 && W_TO_Approx(row,10) < W_TO_wiki
+        if W_TO_Approx(row,13) < 0.005 | W_TO_Approx(row,12) < W_E_wiki
+            W_TO_ApproxSolutions(n,:) = W_TO_Approx(row,:);
+            n=n+1;
+        end
+    end
+end
+
+%%
+% W_TO_solutions sizing
+W_TO_solutions_row = height(W_TO_ApproxSolutions);
+W_TO_sloutions_column = width(W_TO_ApproxSolutions) ;
+W_TO_solutions = zeros(W_TO_solutions_row,W_TO_sloutions_column);
+
+x = sym('x',[1 W_TO_solutions_row]);
+parfor row = 1: W_TO_solutions_row
+
+    % Temporary matrix for parallel computing
+    temp = zeros(1,W_TO_sloutions_column);
+
+    % Read data
+    CruiseAltitude = W_TO_ApproxSolutions(row,1);
+    Range = W_TO_ApproxSolutions(row,2);
+    LoverD_Cruise = W_TO_ApproxSolutions(row,3);
+    LoverD_Loiter = W_TO_ApproxSolutions(row,4);
+    c_j_cruise  = W_TO_ApproxSolutions(row,5);
+    c_j_loiter = W_TO_ApproxSolutions(row,6);
+    CruiseSpeed = W_TO_ApproxSolutions(row,7);
+    M_ff = W_TO_ApproxSolutions(row,8);
+    C = W_TO_ApproxSolutions(row,9);
+
+    % vpasolve
+    W_TO_guess = vpasolve( A + B*log10(C*x(row) - D) - log10(x(row)) == 0 );
+
+    % Calculate W_E_real/W_E_tent/W_E_error
+    W_E_real = 10.^((log10(W_TO_guess)-A)/B);
+    W_E_tent = C*W_TO_guess-D;
+    W_E_error = abs(W_E_real - W_E_wiki)/W_E_real;
+
+    % Output data
+    temp(1) = CruiseAltitude;
+    temp(2) = Range;
+    temp(3) = LoverD_Cruise;
+    temp(4) = LoverD_Loiter;
+    temp(5) = c_j_cruise;
+    temp(6) = c_j_loiter;
+    temp(7) = CruiseSpeed;
+    temp(8) = M_ff;
+    temp(9) = C;
+    temp(10) = W_TO_guess;
+    temp(11) = W_E_tent;
+    temp(12) = W_E_real;
+    temp(13) = W_E_error;
+
+    % Output calculate result into Result matrix
+    W_TO_solutions(row, :) = temp;
+end
+
+%%
+% Sensitivity section
+
+% W_TO_Senitivity sizing
+W_TO_Senitivity = zeros();
+for row = 1:W_TO_solutions_row
+    if  W_TO_solutions(row,13) < error_wiki/250
+        n = n+1;
+
+        % Read data
+        CruiseAltitude = W_TO_solutions(row,1);
+        Range = W_TO_solutions(row,2);
+        LoverD_Cruise = W_TO_solutions(row,3);
+        LoverD_Loiter = W_TO_solutions(row,4);
+        c_j_cruise  = W_TO_solutions(row,5);
+        c_j_loiter = W_TO_solutions(row,6);
+        CruiseSpeed = W_TO_solutions(row,7);
+        M_ff = W_TO_solutions(row,8);
+        C = W_TO_solutions(row,9);
+        W_TO = W_TO_solutions(row,10);
+        W_E_tent = W_TO_solutions(row,11);
+        W_E_real = W_TO_solutions(row,12);
+        W_E_error = W_TO_solutions(row,13);
+
+        % Sensitivity calculate
+        F=-B*(W_TO^2)*((C*W_TO*(1-B)-D)^-1)*(1+0)*M_ff;
+        % W_TO over W_PL
+        W_TO_over_W_PL = B*W_TO*(D-C*(1-B)*W_TO)^-1;
+        % W_TO over W_E
+        W_TO_over_W_E = B*W_TO*(10^((log10(W_TO)-A)/B))^-1;
+        % W_TO over Range
+        W_TO_over_Range = F*c_j_cruise*(CruiseSpeed*LoverD_Cruise)^-1;
+        % W_TO over Endurance
+        W_TO_over_Endurance = F*c_j_loiter*LoverD_Loiter^-1;
+        % W_TO over Cruise speed
+        W_TO_over_CriuseSpeed = -F*Range*c_j_cruise*(CruiseSpeed^2*LoverD_Cruise)^-1;
+        % W_TO over c_j_Range
+        W_TO_over_c_j_Range = F*Range*(CruiseSpeed*LoverD_Cruise)^-1;
+        % W_TO over L/D_Range
+        W_TO_over_LoverD_Range = -F*Range*c_j_cruise*(CruiseSpeed*LoverD_Cruise^2)^-1;
+        % W_TO over c_j_Loiter
+        W_TO_over_c_j_Loiter = F*Endurance*LoverD_Loiter^-1;
+        % W_TO over L/D_Loiter
+        W_TO_over_LoverD_Loiter = -F*Endurance*c_j_loiter*LoverD_Loiter^-2;
+
+        % Output result
+        W_TO_Senitivity(n,1) = CruiseAltitude;
+        W_TO_Senitivity(n,2) = Range;
+        W_TO_Senitivity(n,3) = LoverD_Cruise;
+        W_TO_Senitivity(n,4) = LoverD_Loiter;
+        W_TO_Senitivity(n,5) = c_j_cruise;
+        W_TO_Senitivity(n,6) = c_j_loiter;
+        W_TO_Senitivity(n,7) = CruiseSpeed;
+        W_TO_Senitivity(n,8) = M_ff;
+        W_TO_Senitivity(n,9) = W_TO;
+        W_TO_Senitivity(n,10) = W_E_tent;
+        W_TO_Senitivity(n,11) = W_E_real;
+        W_TO_Senitivity(n,12) = W_E_error;
+        W_TO_Senitivity(n,13) = W_TO_over_W_PL;
+        W_TO_Senitivity(n,14) = W_TO_over_W_E ;
+        W_TO_Senitivity(n,15) = W_TO_over_Range;
+        W_TO_Senitivity(n,16) = W_TO_over_Endurance;
+        W_TO_Senitivity(n,17) = W_TO_over_CriuseSpeed;
+        W_TO_Senitivity(n,18) = W_TO_over_c_j_Range;
+        W_TO_Senitivity(n,19) = W_TO_over_LoverD_Range;
+        W_TO_Senitivity(n,20) = W_TO_over_c_j_Loiter;
+        W_TO_Senitivity(n,21) = W_TO_over_LoverD_Loiter;
+    end
+end
+
+%%
+% Select Parameters from W_TO_Senitivity matrix
+
+% Take-off weight 
+W_TO = 182043.622463998; % unit: lbs
+
+% Parameters at CruiseAltitude 
+CruiseAltitude = 40000; % unit: ft 
+[a,rho]=Standard_Atmosphere(CruiseAltitude);
+a_CruiseAltitude = a;
+rho_CruiseAltitude = rho;
+CruiseSpeed_Mach = 0.79;
+CruiseSpeed = CruiseSpeed_Mach*a_CruiseAltitude;
+q_overline = 0.5*rho_CruiseAltitude*CruiseSpeed^2;
+
+% Parameters at FieldAltitude
+FieldLength_TO = 11000; % unit: ft
+FieldLength_L = 8000; % unit: ft
+FieldAltitude = 2000; % unit: ft
+[a,rho,P]=Standard_Atmosphere(FieldAltitude);
+rho_FieldAltitude = rho;
+P_FieldAltitude = P;
+
+% Parameters at sea level
+[a,rho,P,Rankine]=Standard_Atmosphere(0);
+rho_SeaLevel = rho;
+P_SeaLevel = P;
+T_SeaLevel = Rankine;
+
+% Ratio
+P_FieldAltitude_over_P_SeaLevel = P_FieldAltitude/P_SeaLevel;
+T_95F_over_T_SeaLevel = (95+459.7)/T_SeaLevel;
+Density_ratio_TO = P_FieldAltitude_over_P_SeaLevel/T_95F_over_T_SeaLevel;
+WoverS = 0:10:200;
+c = 0.0199;
+d = 0.7531;
+S_wet = 10^(c+d*log10(W_TO));
+
+% From table 3.4 correlation coefficients for parasite area versus wetted area
+cf_2 = 0.003; a_2 = -2.5229; b_2 = 1;
+cf_3 = 0.004; a_3 = -2.3979; b_3 = 1;
+f_2 = 10^(a_2+b_2*log10(S_wet));
+f_3 = 10^(a_3+b_3*log10(S_wet));
+
+% Coefficients
+delta_CD0_TOflaps = 0.015;  % From p.127, Table 3.6
+delta_CDO_Lflaps = 0.065;   % From p.127, Table 3.6
+delta_CD0_LG = 0.02;        % From p.127, Table 3.6
+e_TOflaps = 0.8;            % From p.127, Table 3.6
+e_Lflaps = 0.75;            % From p.127, Table 3.6
+e_clean = 0.8;
+W_L = W_TO*0.84;            % 0.84 is from p.107, Table 3.3
+S = W_TO/100;               % W/S = 100
+CD_0_clean = f_2/S;         % Take cf = 0.003
+delta_C_D0 = 0.0001*2.5;    % p.166 figure 3.32
+C_D0_modification = CD_0_clean + delta_C_D0;
+
+W_TO_wiki = 182200; % unit: lb
+b = 117.833; % unit: ft
+S_wiki = 1370; % unit: ft^2
+AR = b^2/S_wiki; % unit: ft
+StaticThrust_TO = 26786; % unit: lbs
+WoverS_TO_wiki = W_TO_wiki/S_wiki; % unit: lb/ft^2
+ToverW_TO_wiki = StaticThrust_TO*2/W_TO_wiki;
+
+%%
+% plot section
+hold on
+
+% FAR25 TAKEOFF DISTANCE SIZING
+for CL_max_TO = 1.6:0.2:2.2
+    ToverW = 37.5/(Density_ratio_TO*CL_max_TO*FieldLength_TO).*WoverS;
+    plot(WoverS,ToverW,'color',[0 0.4470 0.7410]); % blue
+end
+
+% FAR25 LANDING DISTANCE SIZING
+for CL_max_L = 1.8:0.2:2.4
+    V_stall_sqrt = FieldLength_L/(0.3*1.3^2)/ft_s_to_kt^2;
+    WoverS_landing = V_stall_sqrt/2*rho_FieldAltitude*CL_max_L;
+    WoverS_takeoff = WoverS_landing/0.84;
+    ToverW_landing = [0 1.6];
+    WoverS_takeoff = [WoverS_takeoff WoverS_takeoff];
+    plot(WoverS_takeoff,ToverW_landing,'color',[0.4660 0.6740 0.1880]); % green
+end
+
+% CRUISE SPEED SIZING
+ToverW_cruise_reqd = C_D0_modification*q_overline./WoverS+WoverS./(q_overline*pi*AR*e_clean);
+ToverW_TO = ToverW_cruise_reqd./0.191;
+plot(WoverS,ToverW_TO,'color',[0.9290 0.6940 0.1250]); % orange
+
+% FAR25 CLIMB RATE SIZING
+% FAR25.111 OEI (P.145)
+CL_TO_max = 2;                     % From Table 3.1
+CL = CL_TO_max/1.2^2;              % at 1.2 V_stall_TO
+LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps)); % CL/CD_TO_GearDown
+ToverW_TO = 2*(1/LoverD+0.012);    % CGR>0.012
+ToverW_TO1 = ToverW_TO/0.8; % 50°F效應(除以0.8)
+
+% FAR25.121 OEI
+CL = CL_TO_max/1.1^2; % V_LOF = 1.1 V_stall_TO
+LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+delta_CD0_LG+CL^2/(pi*AR*e_TOflaps));
+ToverW_TO = 2*(1/LoverD); % CGR>0
+ToverW_TO2 = ToverW_TO/0.8; % 50°F效應(除以0.8)
+
+% FAR25.121 OEI
+CL = CL_TO_max/1.2^2; % at 1.2 V_stall_TO
+LoverD = CL/(CD_0_clean+delta_CD0_TOflaps+CL^2/(pi*AR*e_TOflaps));
+ToverW_TO = 2*(1/LoverD+0.024); % CGR>0.024
+ToverW_TO3 = ToverW_TO/0.8;
+
+% FAR25.121 OEI
+CL_max = 1.4; % From Table 3.1
+CL = CL_max/1.25^2; % at 1.25 V_stall
+LoverD = CL/(CD_0_clean + CL^2/(pi*AR*e_clean));
+ToverW_TO = 2*(1/LoverD+0.012); % CGR>0.012
+ToverW_TO4 = ToverW_TO/0.94/0.8; % 最大推力校正(除以0.94), 50°F效應(除以0.8)
+
+% FAR25.119 AEO
+CL_max_L = 2.8; % From Table 3.1
+CL = CL_max_L/1.3^2; % at 1.3 V_stall_L
+LoverD = CL/(CD_0_clean+delta_CDO_Lflaps+delta_CD0_LG+CL^2/(pi*AR*e_Lflaps));
+ToverW_L = 1/LoverD+0.032; % CGR>0.032
+ToverW_TO5 = ToverW_L*(W_L/W_TO)/0.8;
+
+% FAR25.121 OEI
+CL_max_A = 2.4; % From Table 3.1
+CL = CL_max_A/1.5^2; % at 1.5 V_stall_A
+LoverD = CL/((CD_0_clean+delta_CD0_TOflaps+CD_0_clean+delta_CDO_Lflaps)/2+delta_CD0_LG+CL^2/(pi*AR*e_Lflaps));
+ToverW_L = 2*(1/LoverD+0.021); % CGR>0.021
+ToverW_TO6 = ToverW_L*(W_L/W_TO)/0.8;
+WoverS_TO = [0 200];
+ToverW_TO1 = [ToverW_TO1 ToverW_TO1];
+ToverW_TO2 = [ToverW_TO2 ToverW_TO2];
+ToverW_TO3 = [ToverW_TO3 ToverW_TO3];
+ToverW_TO4 = [ToverW_TO4 ToverW_TO4];
+ToverW_TO5 = [ToverW_TO5 ToverW_TO5];
+ToverW_TO6 = [ToverW_TO6 ToverW_TO6];
+plot(WoverS_TO,ToverW_TO1,'color',[0.4940 0.1840 0.5560]) % purple
+plot(WoverS_TO,ToverW_TO2,'color',[0.4940 0.1840 0.5560]) % purple
+plot(WoverS_TO,ToverW_TO3,'color',[0.4940 0.1840 0.5560]) % purple
+plot(WoverS_TO,ToverW_TO4,'color',[0.4940 0.1840 0.5560]) % purple
+plot(WoverS_TO,ToverW_TO5,'color',[0.4940 0.1840 0.5560]) % purple
+plot(WoverS_TO,ToverW_TO6,'color',[0.4940 0.1840 0.5560]) % purple
+plot(WoverS_TO_wiki,ToverW_TO_wiki,'rx')
+
+title('MATCHING RESULT FOR SIZING OF BOEING 737MAX8')
+xlabel('(W/S)_{TO}');
+ylabel('(T/W)_{TO}');
+hold off
+
+%%
+function [a,rho,P,Rankine]=Standard_Atmosphere(h)
+
+% Unit exchange
+ft_to_m = 0.3048;       % ft to m
+m_s_to_mph = 2.236936;  % m/s to mph
+m_s_to_kt = 1.943844;   % m/s to kt
+m_s_to_ft_s = 3.280840; % m/s to ft/s
+ft_s_to_kt = 0.592484;  % ft/s to kt
+kg_to_slug = 0.068522;  % kg to slug
+
+h = h*ft_to_m;% unit:m
+[T,a,P,rho] = atmosisa(h);
+Rankine = T*1.8;% unit:Rankine
+rho = rho*kg_to_slug*ft_to_m^3;% unit:slug^3/ft^3
+a = a*m_s_to_ft_s;% unit:ft/s
+end
 ##### SOURCE END #####
 --></body></html>
